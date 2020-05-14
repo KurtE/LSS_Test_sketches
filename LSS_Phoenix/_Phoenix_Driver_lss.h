@@ -135,6 +135,8 @@ extern void MakeSureServosAreOn(void);
 extern void DoPyPose(byte *psz);
 extern void EEPROMReadData(word wStart, uint8_t *pv, byte cnt);
 extern void EEPROMWriteData(word wStart, uint8_t *pv, byte cnt);
+extern void TCServoPositions();
+
 extern void TCTrackServos();
 extern void SetRegOnAllServos(uint8_t bReg, uint8_t bVal);
 
@@ -397,10 +399,11 @@ void ServoDriver::IdleTime(void)
   g_iIdleServoNum++;
   if (g_iIdleServoNum >= NUMSERVOS) {
     g_iIdleServoNum = 0;
-    g_iIdleLedState = 1 - g_iIdleLedState;
+    g_iIdleLedState++;
+    if (g_iIdleLedState > 7) g_iIdleLedState = 0;
   }
-  //  ax12SetRegister(pgm_read_byte(&cPinTable[g_iIdleServoNum]), AX_LED, g_iIdleLedState);
-  //  ax12ReadPacket(6);  // get the response...
+  myLSS.setServoID(cPinTable[g_iIdleServoNum]);
+  myLSS.setColorLED((LSS_LED_Color)g_iIdleLedState);
 
 }
 
@@ -449,6 +452,7 @@ void ServoDriver::ShowTerminalCommandList(void)
   DBGSerial.println(F("V - Voltage"));
   DBGSerial.println(F("M - Toggle Motors on or off"));
   DBGSerial.println(F("T - Test Servos"));
+  DBGSerial.println(F("P - Servo Positions"));
   DBGSerial.println(F("S - Track Servos"));
 #ifdef OPT_PYPOSE
   DBGSerial.println(F("P<DL PC> - Pypose"));
@@ -502,6 +506,9 @@ boolean ServoDriver::ProcessTerminalCommand(byte *psz, byte bLen)
       delay(25);
     }
   }
+  if (((*psz == 'p') || (*psz == 'P'))) {
+    TCServoPositions();
+  }
   if ((*psz == 's') || (*psz == 'S')) {
     TCTrackServos();
   }
@@ -515,7 +522,30 @@ boolean ServoDriver::ProcessTerminalCommand(byte *psz, byte bLen)
   return false;
 
 }
+//==============================================================================
+// TCServoPositions -
+//==============================================================================
+void TCServoPositions() {
+  int16_t servo_pos[NUMSERVOS];
+  int i;
 
+  for (i = 0; i < NUMSERVOS; i++) {
+    myLSS.setServoID(cPinTable[i]);
+    servo_pos[i] = myLSS.getPosition();
+    if (myLSS.getLastCommStatus() != LSS_CommStatus_ReadSuccess)
+      servo_pos[i] = 0x7fff; // out of valid range
+  }
+
+  // Not very clean
+  // Rear middle front
+  DBGSerial.println("Servo positions shown by leg joints\n(Rear)");
+  DBGSerial.println("    T     F     C |     C     F     T");
+  for (int legs = 0; legs < 3; legs++) {
+    DBGSerial.printf("%5d %5d %5d | %5d %5d %5d\n",
+                     servo_pos[FIRSTTIBIAPIN + legs], servo_pos[FIRSTFEMURPIN + legs], servo_pos[FIRSTCOXAPIN + legs],
+                     servo_pos[FIRSTCOXAPIN + legs + 3], servo_pos[FIRSTFEMURPIN + legs + 3], servo_pos[FIRSTTIBIAPIN + legs + 3]);
+  }
+}
 
 //==============================================================================
 // TCTrackServos - Lets set a mode to track servos.  Can use to help figure out
