@@ -812,13 +812,6 @@ void setup(){
   pinMode(A3, OUTPUT);
   pinMode(A4, OUTPUT);
 #endif    
-#ifdef OPT_WALK_UPSIDE_DOWN
-  g_fRobotUpsideDown = false; //Assume off... 
-#ifdef DBGSerial  
-  DBGSerial.println(IsRobotUpsideDown, DEC);
-#endif  
-#endif
-
 
 }
 
@@ -842,31 +835,6 @@ void loop(void)
     //    DebugWrite(A0, LOW);
   }
   WriteOutputs();        // Write Outputs
-
-#ifdef IsRobotUpsideDown
-    if (!fWalking){// dont do this while walking
-    g_fRobotUpsideDown = IsRobotUpsideDown;    // Grab the current state of the robot... 
-    if (g_fRobotUpsideDown != fRobotUpsideDownPrev) {
-      // Double check to make sure that it was not a one shot error
-      g_fRobotUpsideDown = IsRobotUpsideDown;    // Grab the current state of the robot... 
-      if (g_fRobotUpsideDown != fRobotUpsideDownPrev) {
-        fRobotUpsideDownPrev = g_fRobotUpsideDown;
-#ifdef DGBSerial        
-        DBGSerial.println(fRobotUpsideDownPrev, DEC);
-#endif        
-      }
-    }
-  }
-  //  DBGSerial.println(analogRead(0), DEC);
-#endif
-#ifdef OPT_WALK_UPSIDE_DOWN
-  if (g_fRobotUpsideDown){
-    g_InControlState.TravelLength.x = -g_InControlState.TravelLength.x;
-    g_InControlState.BodyPos.x = -g_InControlState.BodyPos.x;
-    g_InControlState.SLLeg.x = -g_InControlState.SLLeg.x;
-    g_InControlState.BodyRot1.z = -g_InControlState.BodyRot1.z;
-  }
-#endif
 
   //Single leg control
   SingleLegControl ();
@@ -954,13 +922,6 @@ void loop(void)
     LegPosY[LegIndex]+g_InControlState.BodyPos.y-BodyFKPosY+GaitPosY[LegIndex] - TotalTransY,
     LegPosZ[LegIndex]+g_InControlState.BodyPos.z-BodyFKPosZ+GaitPosZ[LegIndex] - TotalTransZ, LegIndex);
   }
-#ifdef OPT_WALK_UPSIDE_DOWN
-  if (g_fRobotUpsideDown){ //Need to set them back for not messing with the SmoothControl
-    g_InControlState.BodyPos.x = -g_InControlState.BodyPos.x;
-    g_InControlState.SLLeg.x = -g_InControlState.SLLeg.x;
-    g_InControlState.BodyRot1.z = -g_InControlState.BodyRot1.z;
-  }
-#endif
   //Check mechanical limits
   CheckAngles();
 
@@ -1756,14 +1717,7 @@ void BodyFK (short PosX, short PosZ, short PosY, short RotationY, byte BodyIKLeg
   SinB4 = sin4;
   CosB4 = cos4;
 
-#ifdef OPT_WALK_UPSIDE_DOWN
-  if (g_fRobotUpsideDown)
-    GetSinCos (-g_InControlState.BodyRot1.y+(-RotationY*c1DEC)+TotalYBal1) ;
-  else
-    GetSinCos (g_InControlState.BodyRot1.y+(RotationY*c1DEC)+TotalYBal1) ;
-#else
   GetSinCos (g_InControlState.BodyRot1.y+(RotationY*c1DEC)+TotalYBal1) ;
-#endif
   SinA4 = sin4;
   CosA4 = cos4;
 
@@ -1885,14 +1839,7 @@ void LegIK (short IKFeetPosX, short IKFeetPosY, short IKFeetPosZ, byte LegIKLegN
     }
 #endif
   //IKFemurAngle
-#ifdef OPT_WALK_UPSIDE_DOWN
-  if (g_fRobotUpsideDown)
-    FemurAngle1[LegIKLegNr] = (long)(IKA14 + IKA24) * 180 / 3141 - 900 + CFEMURHORNOFFSET1(LegIKLegNr);//Inverted, up side down
-  else
-    FemurAngle1[LegIKLegNr] = -(long)(IKA14 + IKA24) * 180 / 3141 + 900 + CFEMURHORNOFFSET1(LegIKLegNr);//Normal
-#else
   FemurAngle1[LegIKLegNr] = -(long)(IKA14 + IKA24) * 180 / 3141 + 900 + CFEMURHORNOFFSET1(LegIKLegNr);//Normal
-#endif  
 
   //IKTibiaAngle
   Temp1 = ((((long)(byte)pgm_read_byte(&cFemurLength[LegIKLegNr])*(byte)pgm_read_byte(&cFemurLength[LegIKLegNr])) + ((long)(byte)pgm_read_byte(&cTibiaLength[LegIKLegNr])*(byte)pgm_read_byte(&cTibiaLength[LegIKLegNr])))*c4DEC - ((long)IKSW2*IKSW2));
@@ -1909,17 +1856,10 @@ void LegIK (short IKFeetPosX, short IKFeetPosY, short IKFeetPosZ, byte LegIKLegN
     }
 #endif
     
-#ifdef OPT_WALK_UPSIDE_DOWN
-  if (g_fRobotUpsideDown)
-    TibiaAngle1[LegIKLegNr] = (1800-(long)AngleRad4*180/3141 + CTIBIAHORNOFFSET1(LegIKLegNr));//Full range tibia, wrong side (up side down)
-  else
-    TibiaAngle1[LegIKLegNr] = -(1800-(long)AngleRad4*180/3141 + CTIBIAHORNOFFSET1(LegIKLegNr));//Full range tibia, right side (up side up)
-#else
 #ifdef PHANTOMX_V2     // BugBug:: cleaner way?  
     TibiaAngle1[LegIKLegNr] = -(1450-(long)AngleRad4*180/3141 + CTIBIAHORNOFFSET1(LegIKLegNr)); //!!!!!!!!!!!!145 instead of 1800  
 #else  
     TibiaAngle1[LegIKLegNr] = -(900-(long)AngleRad4*180/3141 + CTIBIAHORNOFFSET1(LegIKLegNr));
-#endif
 #endif
 
 #ifdef c4DOF

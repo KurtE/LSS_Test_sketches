@@ -2,7 +2,6 @@
 //Project Lynxmotion Phoenix
 //Description: 
 //    This is the hardware configuration file for the 
-//    Version 2 PhantomX robot.
 //    Will first define to use their commander unit.
 //
 //Date: June 19, 2013
@@ -35,7 +34,6 @@
 #endif 
 
 // Define other optional compnents to be included or not...
-//#define PHANTOMX_V2     // Some code may depend on it being a V2 PhantomX
 //#define cFemurHornOffset1 -35
 //#define cTibiaHornOffset1 463
 #define cRRTibiaInv 0 
@@ -51,8 +49,7 @@
 #ifdef DBGSerial
 #define OPT_TERMINAL_MONITOR  
 #define OPT_TERMINAL_MONITOR_IC    // Allow the input controller to define stuff as well
-//#define OPT_FIND_SERVO_OFFSETS    // Only useful if terminal monitor is enabled
-//#define OPT_PYPOSE
+#define OPT_FIND_SERVO_OFFSETS    // Only useful if terminal monitor is enabled
 #endif
 
 //#define DEBUG_IOPINS
@@ -215,8 +212,8 @@
 //[LEG DIMENSIONS]
 //Universal dimensions for each leg in mm
 #define cXXCoxaLength     52    // PhantomX leg dimensions.
-#define cXXFemurLength    66    // MEASURE THIS!!! Guessed now :-)
-#define cXXTibiaLength    133  // MEASURE THIS!!! Guessed now :-)
+#define cXXFemurLength    80    // MEASURE THIS!!! Guessed now :-)
+#define cXXTibiaLength    100  // MEASURE THIS!!! Guessed now :-)
 
 #define cRRCoxaLength     cXXCoxaLength	    //Right Rear leg
 #define cRRFemurLength    cXXFemurLength
