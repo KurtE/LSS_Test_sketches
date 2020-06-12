@@ -1,0 +1,627 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"LATER",
+				"LATER"
+			],
+			[
+				"valu",
+				"valueStr"
+			],
+			[
+				"RA",
+				"RAWHID_RX_SIZE"
+			],
+			[
+				"map",
+				"mapIndexToModelNumber"
+			],
+			[
+				"current",
+				"currentcolor"
+			],
+			[
+				"new",
+				"newcolor_index"
+			],
+			[
+				"curre",
+				"currentcolor_index"
+			],
+			[
+				"colo",
+				"color_names"
+			],
+			[
+				"debug",
+				"debug_touch"
+			],
+			[
+				"MAD",
+				"MADCTL_MH"
+			],
+			[
+				"count",
+				"count_connections_"
+			],
+			[
+				"next",
+				"next_dcid_"
+			],
+			[
+				"_cs",
+				"_cs_flex_pin"
+			],
+			[
+				"_mo",
+				"_mosi_flex_pin"
+			],
+			[
+				"sck",
+				"_sck_flex_pin"
+			],
+			[
+				"last",
+				"last_16Bit_color"
+			],
+			[
+				"or",
+				"origin_x"
+			],
+			[
+				"pin",
+				"pinIsMOSI"
+			],
+			[
+				"__MK",
+				"__MK66FX1M0__"
+			],
+			[
+				"waitF",
+				"waitFifoNotFull"
+			],
+			[
+				"ILI",
+				"ILI9488_TFTWIDTH"
+			],
+			[
+				"color_index",
+				"color_index"
+			],
+			[
+				"_pall",
+				"_pallet"
+			],
+			[
+				"_pallet",
+				"_pallet_count"
+			],
+			[
+				"writec",
+				"write16BitColor"
+			],
+			[
+				"write",
+				"writedata16_cont"
+			],
+			[
+				"inq",
+				"inquiry_mode"
+			],
+			[
+				"joystick",
+				"joystickType_"
+			],
+			[
+				"uint",
+				"uint8_t"
+			],
+			[
+				"jo",
+				"joystickType"
+			],
+			[
+				"get",
+				"getButtons"
+			],
+			[
+				"fr",
+				"free_string_buffer"
+			],
+			[
+				"dev",
+				"device_driver_"
+			],
+			[
+				"changed",
+				"changed_mask"
+			],
+			[
+				"connec",
+				"connection_complete_"
+			],
+			[
+				"interrupt",
+				"interrupt_scid_"
+			],
+			[
+				"interr",
+				"interrupt_dcid_"
+			],
+			[
+				"chan",
+				"channelHigh"
+			],
+			[
+				"chann",
+				"channelLow"
+			],
+			[
+				"spe",
+				"special_case_device"
+			],
+			[
+				"MSB",
+				"MSBFIRST"
+			],
+			[
+				"ch",
+				"ch_out"
+			],
+			[
+				"CCM_ANALOG",
+				"CCM_ANALOG_PLL_VIDEO_CLR"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "_Phoenix_Driver_lss.h",
+			"settings":
+			{
+				"buffer_size": 39595,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"New Sketch"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"Verify"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"Tools Set"
+				]
+			],
+			[
+				"Packages/User/Teensy.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Deviot: ",
+				"Deviot: Show Deviot Console"
+			],
+			[
+				"usb",
+				"USB Logic Packet format"
+			],
+			[
+				"regreplace: r",
+				"RegReplace: Settings"
+			],
+			[
+				"regreplace edit",
+				"RegReplace: Edit Regular Expression Rule"
+			],
+			[
+				"regreplace ",
+				"RegReplace: Create New Regular Expression Rule"
+			],
+			[
+				"regreplace:",
+				"RegReplace: Quick Start Guide"
+			],
+			[
+				"regreplace: ",
+				"RegReplace: Create New Regular Expression Rule"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"packag",
+				"Package Control: Install Package"
+			],
+			[
+				"disa",
+				"Package Control: Disable Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 286.0,
+		"history":
+		[
+			"view.run_command(\"example\")",
+			"view.run_command(\"example\""
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSS_Phoenix",
+		"/D/GitHub/LSS_Library_Arduino"
+	],
+	"file_history":
+	[
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/serialEvent1.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/serialEvent2.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/pins_teensy.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/yield.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serialEvent1.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial2.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/core_pins.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial1.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial3.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial4.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial5.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial6.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serial1.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serialEvent6.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/EventResponder.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial2.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/usb_inst.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/wiring_private.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/kinetis.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/EventResponder.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/serialEventUSB2.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/EventResponder.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/yield.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/core_pins.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/mk20dx128.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial1.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serialEvent2.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serialEvent3.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serialEvent4.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/serialEvent5.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial.cpp",
+		"/C/Users/kurte/AppData/Local/Temp/arduino_build_LSS_Phoenix.ino/sketch/_Phoenix_Driver_lss.h",
+		"/C/Users/kurte/AppData/Local/Temp/arduino_build_LSS_Phoenix.ino/sketch/_Phoenix_Input_Commander.h",
+		"/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSS_Phoenix/Compile.cmd",
+		"/C/Users/kurte/Documents/Arduino/libraries/AlternativeLSS/src/LynxmotionLSS.cpp",
+		"/C/Users/kurte/Documents/Arduino/libraries/AlternativeLSS/src/LynxmotionLSS.h",
+		"/C/Users/kurte/Documents/Arduino/Teensy Tests/Configure_test_graphicstest9488/libraries/Configure/ILI9488_sketch_options.h",
+		"/C/Users/kurte/Documents/Arduino/libraries/ILI9488_options/ILI9488_sketch_options.h",
+		"/C/Users/kurte/Documents/Arduino/libraries/ILI9488_t3/src/ILI9488_enable_extmem.h",
+		"/C/Users/kurte/Documents/Arduino/libraries/ILI9341_t3n/src/ILI9341_t3n.h",
+		"/C/Users/kurte/Documents/Arduino/libraries/ILI9341_t3n/src/ILI9341_t3n.cpp",
+		"/C/Users/kurte/Documents/Arduino/libraries/Ra8876LiteTeensy/src/RA8876_t3.h",
+		"/C/Users/kurte/Documents/Arduino/libraries/Ra8876LiteTeensy/src/RA8876_t3.cpp",
+		"/C/Users/kurte/Documents/Arduino/libraries/Ra8876LiteTeensy/src/Ra8876_Lite.h",
+		"/C/Users/kurte/Documents/Arduino/libraries/ILI9488_t3/ILI9488_t3.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/ILI9488_t3/ILI9488_t3.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/eeprom.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/digital.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial5.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial3.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/HardwareSerial8.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/AudioStream.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/pwm.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/startup.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/RA8875/_settings/RA8875UserSettings.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/bootdata.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/avr/eeprom.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/analog.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/RA8875/RA8875.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/RA8875/RA8875.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/platform.txt",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/USBHost_t36/mouse.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/USBHost_t36/keyboard.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/USBHost_t36/hid.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/USBHost_t36/rawhid.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/USBHost_t36/enumeration.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/USBHost_t36/print.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/ST7735_t3/examples/ILI_Ada_FontTest4/ILI_Ada_FontTest4.ino",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/DMAChannel.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/DMAChannel.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/ST7735_t3/ST7735_t3.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/ST7735_t3/ST7735_t3.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/boards.txt",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/SPI/SPI.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/SPI/SPI.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/IntervalTimer.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Encoder/Encoder.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Wire/WireKinetis.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/IntervalTimer.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/mk66fx1m0.ld",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/WString.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Wire/WireKinetis.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Wire/WireIMXRT.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/imxrt1062.ld",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/mk20dx128.ld",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/mk20dx256.ld",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/mk64fx512.ld",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Wire/WireIMXRT.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/FreqMeasureMulti/FreqMeasureMultiIMXRT.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/usb_desc.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/usb.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/usb_desc.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/usb_dev.h",
+		"/D/GitHub/cores/teensy4/usb_rawhid.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/usb_rawhid.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/debug/printf.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/debugprintf.c",
+		"/C/Users/kurte/Desktop/mouse_v1.txt",
+		"/C/Users/kurte/Desktop/u2",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/FreqMeasure/FreqMeasure.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/FreqMeasure/FreqMeasure.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/FreqMeasure/util/FreqMeasureCapture.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/FreqMeasureMulti/FreqMeasureMulti.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/FreqMeasureMulti/FreqMeasureMulti.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/pins_arduino.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Servo/Servo.cpp",
+		"/D/GitHub/SPI/SPI.cpp",
+		"/D/GitHub/SPI/SPI.h",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/imxrt1062_t41.ld",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/usb_desc.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Adafruit_GFX/fontconvert/fontconvert.c",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Adafruit_GFX/Adafruit_SPITFT.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/new.cpp",
+		"/C/arduino-1.8.12/hardware/teensy/avr/libraries/Adafruit_GFX/Adafruit_GFX.cpp",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_desc.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_undef.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_joystick.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/WProgram.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_joystick.c",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_desc.c",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy4/pins_arduino.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/libraries/Encoder/utility/direct_pin_read.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/libraries/Encoder/Encoder.h",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy4/usb.c",
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_dev.c"
+	],
+	"find":
+	{
+		"height": 43.0
+	},
+	"find_in_files":
+	{
+		"height": 113.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "_Phoenix_Driver_lss.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 39595,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								38094,
+								38094
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 25078.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 31.0
+	},
+	"input":
+	{
+		"height": 43.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.astyle_error_message":
+	{
+		"height": 0.0
+	},
+	"output.deviot":
+	{
+		"height": 150.0
+	},
+	"output.exec":
+	{
+		"height": 336.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.reg_replace":
+	{
+		"height": 313.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 363.0
+	},
+	"pinned_build_system": "",
+	"project": "LSS_Phoenix.sublime-project",
+	"replace":
+	{
+		"height": 78.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"550",
+				"ArduCAM\\examples\\mini\\ArduCAM_Mini_5MP_OV5640_AutoFocus\\ArduCAM_Mini_5MP_OV5640_AutoFocus.ino"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "CCM_CCGR2",
+		"selected_items":
+		[
+			[
+				"CCM_CCGR2",
+				"CCM_CCGR2"
+			]
+		],
+		"width": 592.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 469.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
