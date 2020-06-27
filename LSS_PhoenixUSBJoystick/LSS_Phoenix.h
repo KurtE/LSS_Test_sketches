@@ -24,8 +24,11 @@
 //
 //=============================================================================
 //==============================================================================
-#ifndef _PHOENIX_CORE_H_
-#define _PHOENIX_CORE_H_
+#ifndef _LSS_PHOENIX_H_
+#define _LSS_PHOENIX_H_
+
+#include "Hex_Cfg.h"
+
 #include <stdarg.h>
 //#include <EEPROM.h>
 #if defined(__SAM3X8E__)
@@ -57,16 +60,8 @@
 #define c4DEC       10000
 #define c6DEC       1000000
 
-#ifdef QUADMODE
-enum {
-  cRR=0, cRF, cLR, cLF, CNT_LEGS};
-#elif defined(OCTOMODE)
-enum {
-  cRR=0, cRMR, cRMF, cRF, cLR, cLMR, cLMF, cLF, CNT_LEGS};
-#else
 enum {
   cRR=0, cRM, cRF, cLR, cLM, cLF, CNT_LEGS};
-#endif
 
 #define WTIMERTICSPERMSMUL      64  // BAP28 is 16mhz need a multiplyer and divider to make the conversion with /8192
 #define WTIMERTICSPERMSDIV      125 // 
@@ -183,13 +178,6 @@ typedef struct _PhoenixGait {
   byte            TLDivFactor;         //Number of steps that a leg is on the floor while walking
   byte            HalfLiftHeight;      // How high to lift at halfway up.
 
-#ifdef QUADMODE
-  // Extra information used in the Quad balance mode
-  word            COGAngleStart1;      // COG shifting starting angle
-  word            COGAngleStep1;       // COG Angle Steps in degrees
-  byte            COGRadius;           // COG Radius; the amount the body shifts
-  boolean         COGCCW;              // COG Gait sequence runs counter clock wise
-#endif    
   byte            GaitLegNr[CNT_LEGS]; //Init position of the leg
 #ifdef DISPLAY_GAIT_NAMES
   PGM_P           pszName;             // The gait name

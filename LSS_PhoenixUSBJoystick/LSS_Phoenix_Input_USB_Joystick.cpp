@@ -1,5 +1,3 @@
-#ifdef USEJOYSTICK
-#define DEBUG_COMMANDER
 
 //====================================================================
 //Project Lynxmotion Phoenix
@@ -71,9 +69,13 @@
 //====================================================================
 // [Include files]
 
-#include "USBHost_t36.h"
-//#include "debug_tt.h"
+#include <Arduino.h>
+#include <TeensyDebug.h>
+#include <EEPROM.h>
+#include <avr/pgmspace.h>
 
+#include "LSS_Phoenix.h"
+#include <USBHost_t36.h>
 
 
 //[CONSTANTS]
@@ -110,8 +112,17 @@ enum {AXIS_LX, AXIS_LY, AXIS_RX, AXIS_LT, AXIS_RT, AXIS_RY};  // Order of PS3
 const static uint32_t PS3_BTNS[] = { 0x400, 0x100, 0x2, 0x800, 0x200, 0x4,
     0x1000, 0x8000, 0x4000, 0x2000,
     0x10000, 0x1, 0x8,
+    // UP  DN    LFT   RHT
     0x10, 0x40, 0x80, 0x20
 };
+
+const static uint32_t PS4_BTNS[] = { 0x10, 0x40, 0x400, 0x20, 0x80, 0x800,
+    0x8, 0x1, 0x2, 0x4,
+    0x1000, 0x200, 0x2000,       // PS, options, Track
+    0x10, 0x40, 0x80, 0x20       // HAT 
+};
+const static uint8_t PS4_MAP_HAT_MAP[] = {
+    0x10, 0x30, 0x20, 0x60, 0x40, 0xc0, 0x80, 0x90, 0x00 };
 
 const uint32_t *BTN_MASKS = PS3_BTNS;
 
@@ -254,6 +265,10 @@ void USBJoystickInputController::ControlInput(void)
 #endif
     // [SWITCH MODES]
     g_buttons = joystick1.getButtons();
+    if (joystick1.joystickType() == JoystickController::PS4) {
+        int hat = joystick1.getAxis(9);  // get hat
+        if ((hat >= 0) && (hat < 8)) g_buttons |= PS4_MAP_HAT_MAP[hat];
+    }
 
     if ((g_buttons & BTN_MASKS[BUT_PS3]) && !(g_buttons_prev & BTN_MASKS[BUT_PS3])) {
         if ((joystick1.joystickType() == JoystickController::PS3) &&
@@ -664,6 +679,16 @@ void UpdateActiveDeviceInfo() {
         // See if this is our joystick object...
         if (hiddrivers[i] == &joystick1) {
           DBGSerial.printf("  Joystick type: %d\n", joystick1.joystickType());
+          switch (joystick1.joystickType()) {
+          case JoystickController::PS4:
+              BTN_MASKS = PS4_BTNS;
+              break;
+          default:
+          case JoystickController::PS3:
+              BTN_MASKS = PS3_BTNS;
+              break;
+          }
+
 #ifdef LATER
           if (joystick1.joystickType() == JoystickController::PS3_MOTION) {
             DBGSerial.println("  PS3 Motion detected");
@@ -700,4 +725,3 @@ void UpdateActiveDeviceInfo() {
 
 //==============================================================================
 //==============================================================================
-#endif // USEJOYSTICK

@@ -3,7 +3,15 @@
 //
 // Servo Driver - This version is setup to use Lynxmotion type servos using the
 //====================================================================
-#include <Arduino.h> // Arduino 1.0
+#include <Arduino.h>
+#include <TeensyDebug.h>
+#include <EEPROM.h>
+
+#include <avr/pgmspace.h>
+
+#include "LSS_Phoenix.h"
+#include <LSS.h>
+
 
 #ifdef c4DOF
 #define NUMSERVOSPERLEG 4
@@ -27,8 +35,6 @@
 #define VOLTAGE_MAX_TIME_BETWEEN_CALLS 1000    // call at least once per second...
 #define VOLTAGE_TIME_TO_ERROR          3000    // Error out if no valid item is returned in 3 seconds...
 
-#include <LSS.h>
-
 
 
 // Current positions in AX coordinates
@@ -50,28 +56,6 @@ int16_t      g_goal_servo_pos[NUMSERVOS];
 //=============================================================================
 // Global - Local to this file only...
 //=============================================================================
-#ifdef QUADMODE
-static const byte cPinTable[] PROGMEM = {
-  cRRCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLFCoxaPin,
-  cRRFemurPin, cRFFemurPin, cLRFemurPin, cLFFemurPin,
-  cRRTibiaPin, cRFTibiaPin, cLRTibiaPin, cLFTibiaPin
-#ifdef c4DOF
-  , cRRTarsPin,  cRFTarsPin,  cLRTarsPin,  cLFTarsPin
-#endif
-#ifdef cTurretRotPin
-  , cTurretRotPin, cTurretTiltPin
-#endif
-};
-#elif defined(OCTOMODE)
-static const byte cPinTable[] PROGMEM = {
-  cRRCoxaPin,  cRMRCoxaPin,  cRMFCoxaPin,  cRFCoxaPin,  cLRCoxaPin,   cLMRCoxaPin,  cLMFCoxaPin,  cLFCoxaPin,
-  cRRFemurPin, cRMRFemurPin, cRMFFemurPin, cRFFemurPin, cLRFemurPin,  cLMRFemurPin, cLMFFemurPin, cLFFemurPin,
-  cRRTibiaPin, cRMRTibiaPin, cRMFTibiaPin, cRFTibiaPin, cLRTibiaPin,  cLMRTibiaPin, cLMFTibiaPin, cLFTibiaPin
-#ifdef c4DOF
-  , cRRTarsPin, cRMRTarsPin, cRMFTarsPin,  cRFTarsPin, cLRTarsPin, cLMRTarsPin, cLMFTarsPin, cLFTarsPin
-#endif
-};
-#else
 static const byte cPinTable[] PROGMEM = {
   cRRCoxaPin,  cRMCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLMCoxaPin,  cLFCoxaPin,
   cRRFemurPin, cRMFemurPin, cRFFemurPin, cLRFemurPin, cLMFemurPin, cLFFemurPin,
@@ -81,9 +65,9 @@ static const byte cPinTable[] PROGMEM = {
 #endif
 #ifdef cTurretRotPin
   , cTurretRotPin, cTurretTiltPin
-#endif
+#endif  
 };
-#endif
+
 #define FIRSTCOXAPIN     0
 #define FIRSTFEMURPIN    (CNT_LEGS)
 #define FIRSTTIBIAPIN    (CNT_LEGS*2)
