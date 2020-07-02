@@ -248,12 +248,15 @@ word ServoDriver::GetBatteryVoltage(void) {
 void ServoDriver::BeginServoUpdate(void)    // Start the update
 {
 	MakeSureServosAreOn();
+#if 0
 	if (ServosEnabled) {
 		// If we are trying our own Servo control need to save away the new positions...
 		for (byte i = 0; i < NUMSERVOS; i++) {
 			g_cur_servo_pos[i] = g_goal_servo_pos[i];
 		}
 	}
+#endif
+
 }
 
 //------------------------------------------------------------------------------------------
@@ -345,10 +348,13 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
 	g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 	if (ServosEnabled) {
 		for (int i = 0; i < NUMSERVOS; i++) {
-			// Set the id
-			int servo_id = pgm_read_byte(&cPinTable[i]);
-			myLSS.setServoID(servo_id);
-			myLSS.moveT(g_goal_servo_pos[i], wMoveTime);
+			if (g_cur_servo_pos[i] != g_goal_servo_pos[i]) {
+				g_cur_servo_pos[i] = g_goal_servo_pos[i];
+				// Set the id
+				int servo_id = pgm_read_byte(&cPinTable[i]);
+				myLSS.setServoID(servo_id);
+				myLSS.moveT(g_goal_servo_pos[i], wMoveTime);
+			}
 		}
 	}
 	else {
@@ -417,8 +423,11 @@ void MakeSureServosAreOn(void)
 
 		g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 
-		LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to go limp
+		LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position.
 
+		for (int i = 0; i < NUMSERVOS; i++) {
+			g_cur_servo_pos[i] = 32768; // set to a value that is not valid to force next output
+		}
 		g_InputController.AllowControllerInterrupts(true);
 		g_fServosFree = false;
 	}
