@@ -24,20 +24,16 @@
     <ClInclude Include="Hex_Cfg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_Phoenix.h">
+    <ClInclude Include="LSS_Phoenix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_Phoenix_Code.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="_Phoenix_Driver_lss.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="_Phoenix_Input_Commander.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="_Phoenix_Input_USB_Joystick.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LSS_Phoenix_Driver_lss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LSS_Phoenix_Input_USB_Joystick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

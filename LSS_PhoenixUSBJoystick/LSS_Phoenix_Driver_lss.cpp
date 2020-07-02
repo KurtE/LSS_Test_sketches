@@ -351,6 +351,17 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
 			myLSS.moveT(g_goal_servo_pos[i], wMoveTime);
 		}
 	}
+	else {
+		// Rear middle front
+		//DBGSerial.println("Servo positions shown by leg joints\n(Rear)");
+		//DBGSerial.println("    T     F     C |     C     F     T");
+		for (int legs = 0; legs < 3; legs++) {
+			DBGSerial.printf("%5d %5d %5d | %5d %5d %5d || ",
+				g_goal_servo_pos[FIRSTTIBIAPIN + legs], g_goal_servo_pos[FIRSTFEMURPIN + legs], g_goal_servo_pos[FIRSTCOXAPIN + legs],
+				g_goal_servo_pos[FIRSTCOXAPIN + legs + 3], g_goal_servo_pos[FIRSTFEMURPIN + legs + 3], g_goal_servo_pos[FIRSTTIBIAPIN + legs + 3]);
+		}
+		Serial.printf("%u\n", wMoveTime);
+	}
 #ifdef DEBUG_SERVOS
 	if (g_fDebugOutput)
 		DBGSerial.println(wMoveTime, DEC);
@@ -456,10 +467,14 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 {
 	if ((bLen == 1) && ((*psz == 'm') || (*psz == 'M'))) {
 		g_fEnableServos = !g_fEnableServos;
-		if (g_fEnableServos)
+		if (g_fEnableServos) {
+
 			DBGSerial.println(F("Motors are on"));
-		else
+		}
+		else {
 			DBGSerial.println(F("Motors are off"));
+			FreeServos();	// make sure we turn off servos. 
+		}
 
 		return true;
 	}
@@ -563,9 +578,9 @@ void TCTrackServos()
 		for (int i = 0; i < NUMSERVOS; i++) {
 			myLSS.setServoID(cPinTable[i]);
 			uPos = myLSS.getPosition();
-			if (uPos > servo_maxs[i]) servo_maxs[i] = uPos;
-			if (uPos < servo_mins[i]) servo_mins[i] = uPos;
 			if (myLSS.getLastCommStatus() == LSS_CommStatus_ReadSuccess) {
+				if (uPos > servo_maxs[i]) servo_maxs[i] = uPos;
+				if (uPos < servo_mins[i]) servo_mins[i] = uPos;
 				// Lets put in a littl delta or shows lots
 				if (abs(auPos[i] - uPos) > 2) {
 					auPos[i] = uPos;
@@ -584,20 +599,31 @@ void TCTrackServos()
 		delay(25);
 	}
 	// Print out Mins and Max.
+	//DBGSerial.println("    T     F     C |     C     F     T");
+	static const char* apszLegs[] = {
+	  "RR", "RM", "RF", "LR", "LM", "LF"
+	};      // Leg Order
+
+	for (int legs = 0; legs < 6; legs++) {
+		DBGSerial.printf("#define c%sCoxaMin1\t%d\n", apszLegs[legs], servo_mins[FIRSTCOXAPIN + legs]);
+		DBGSerial.printf("#define c%sCoxaMax1\t%d\n", apszLegs[legs], servo_maxs[FIRSTCOXAPIN + legs]);
+		DBGSerial.printf("#define c%sFemurMin1\t%d\n", apszLegs[legs], servo_mins[FIRSTFEMURPIN + legs]);
+		DBGSerial.printf("#define c%sFemurMax1\t%d\n", apszLegs[legs], servo_maxs[FIRSTFEMURPIN + legs]);
+		DBGSerial.printf("#define c%sTibiaMin1\t%d\n", apszLegs[legs], servo_mins[FIRSTTIBIAPIN + legs]);
+		DBGSerial.printf("#define c%sTibiaMax1\t%d\n", apszLegs[legs], servo_maxs[FIRSTTIBIAPIN + legs]);
+	}
+#if 0
 	DBGSerial.println("\nExit Track servos - Min/Max values");
 	for (int i = 0; i < NUMSERVOS; i++) {
 		if (servo_maxs[i] != servo_mins[i]) {
 			DBGSerial.print(cPinTable[i], DEC);
-			DBGSerial.print("Min: ");
+			DBGSerial.print(" Min: ");
 			DBGSerial.print(servo_mins[i], DEC);
 			DBGSerial.print(" Max: ");
 			DBGSerial.println(servo_maxs[i], DEC);
 		}
-		myLSS.setServoID(cPinTable[i]);
-		uPos = myLSS.getPosition();
-		if (uPos > servo_maxs[i]) servo_maxs[i] = uPos;
-		if (uPos < servo_mins[i]) servo_mins[i] = uPos;
 	}
+#endif
 }
 
 

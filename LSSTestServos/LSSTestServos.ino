@@ -115,7 +115,7 @@ uint8_t g_count_servos_found = 0;
 
 // Values to use for servo position...
 byte          g_bServoID;
-uint32_t          g_wServoGoalPos;
+int32_t          g_wServoGoalPos;
 uint32_t          g_wServoMoveTime;
 
 //====================================================================================================
@@ -184,57 +184,57 @@ void loop() {
     Serial.println(g_aszCmdLine);
     g_iszCmdLine = 1;  // skip over first byte...
     switch (g_aszCmdLine[0]) {
-    case '0':
-      AllServosOff();
-      break;
-    case '1':
-      AllServosCenter();
-      break;
-    case '2':
-      SetServoPosition();
-      break;
-    case '3':
-      break;
-    case '4':
-      GetServoPositions();
-      break;
-    case '5':
-      FindServos();
-      break;
-    case '9':
-      PrintServoValues();
-      break;
-    case 'b':
-    case 'B':
-      SetBaudRate();
-      break;
-    case 'f':
-    case 'F':
-      HoldOrFreeServos(0);
-      break;
-    case 'h':
-    case 'H':
-      HoldOrFreeServos(1);
-      break;
-    case 'r':
-    case 'R':
-      RebootServos();
-      break;
-    case 't':
-    case 'T':
-      g_fTrackServos = !g_fTrackServos;
-      if (g_fTrackServos) {
-        Serial.println("Tracking On");
-        TrackServos(true);  // call to initialize all of the positions.
-      }
-      else
-        Serial.println("Tracking Off");
-      TrackPrintMinsMaxs();
-      break;
-    case 'w':
-    case 'W':
-      WriteServoValues();
-      break;
+      case '0':
+        AllServosOff();
+        break;
+      case '1':
+        AllServosCenter();
+        break;
+      case '2':
+        SetServoPosition();
+        break;
+      case '3':
+        break;
+      case '4':
+        GetServoPositions();
+        break;
+      case '5':
+        FindServos();
+        break;
+      case '9':
+        PrintServoValues();
+        break;
+      case 'b':
+      case 'B':
+        SetBaudRate();
+        break;
+      case 'f':
+      case 'F':
+        HoldOrFreeServos(0);
+        break;
+      case 'h':
+      case 'H':
+        HoldOrFreeServos(1);
+        break;
+      case 'r':
+      case 'R':
+        RebootServos();
+        break;
+      case 't':
+      case 'T':
+        g_fTrackServos = !g_fTrackServos;
+        if (g_fTrackServos) {
+          Serial.println("Tracking On");
+          TrackServos(true);  // call to initialize all of the positions.
+        }
+        else
+          Serial.println("Tracking Off");
+        TrackPrintMinsMaxs();
+        break;
+      case 'w':
+      case 'W':
+        WriteServoValues();
+        break;
     }
   }
 }
@@ -281,18 +281,26 @@ uint8_t GetCommandLine(void) {
 }
 
 //=======================================================================================
-boolean FGetNextCmdNum(uint32_t * pw ) {
-  // Skip all leading num number characters...
-  while ((g_aszCmdLine[g_iszCmdLine] < '0') || (g_aszCmdLine[g_iszCmdLine] > '9')) {
+boolean FGetNextCmdNum(int32_t * pw ) {
+  // Skip all leading none number characters...
+  while (((g_aszCmdLine[g_iszCmdLine] < '0') || (g_aszCmdLine[g_iszCmdLine] > '9')) 
+      && (g_aszCmdLine[g_iszCmdLine] != '-')) {
     if (g_aszCmdLine[g_iszCmdLine] == 0)
       return false;  // end of the line...
     g_iszCmdLine++;
   }
   *pw = 0;
+  int32_t sign = 1;
+  if (g_aszCmdLine[g_iszCmdLine] == '-') {
+    sign = -1;
+    g_iszCmdLine++;
+  }
+  
   while ((g_aszCmdLine[g_iszCmdLine] >= '0') && (g_aszCmdLine[g_iszCmdLine] <= '9')) {
     *pw = *pw * 10 + (g_aszCmdLine[g_iszCmdLine] - '0');
     g_iszCmdLine++;
   }
+  *pw *= sign;
   return true;
 }
 
@@ -323,7 +331,7 @@ void AllServosCenter(void) {
 
 //=======================================================================================
 void HoldOrFreeServos(byte fHold) {
-  uint32_t iServo;
+  int32_t iServo;
   if (!FGetNextCmdNum(&iServo)) {
     if (fHold) AllServosOn();
     else AllServosOff();
@@ -344,8 +352,8 @@ void RebootServos() {
 
 //=======================================================================================
 void SetServoPosition(void) {
-  uint32_t w1;
-  uint32_t w2;
+  int32_t w1;
+  int32_t w2;
   g_wServoMoveTime = 0;
   if (!FGetNextCmdNum(&w1))
     return;    // no parameters so bail.
@@ -451,7 +459,7 @@ void TrackServos(boolean fInit) {
         if (!fInit) {
           // only print if we moved more than some deltas
           if (abs(pos - g_asPositionsPrev[i]) > 5) {
-            for (int j= 0; j < NUM_SERVOS; j++) {
+            for (int j = 0; j < NUM_SERVOS; j++) {
               if (g_ids[i] == pgm_axdIDs[j]) {
                 Serial.print(IKPinsNames[j]);
                 break;
@@ -538,7 +546,7 @@ const LSSQLIST query_list[] = {
 
 void PrintServoValues(void) {
 
-  uint32_t wID;
+  int32_t wID;
   if (!FGetNextCmdNum(&wID))
     return;
   Serial.printf("\nServo %u values\n", wID);
@@ -582,9 +590,9 @@ void PrintServoValues(void) {
 //=======================================================================================
 void WriteServoValues() {
 #ifdef LATER
-  uint32_t wID;
-  uint32_t wReg;
-  uint32_t wVal;
+  int32_t wID;
+  int32_t wReg;
+  int32_t wVal;
   uint8_t error;
   int retval;
   if (!FGetNextCmdNum(&wID))
@@ -631,7 +639,7 @@ void WriteServoValues() {
 //=======================================================================================
 void SetBaudRate()
 {
-  uint32_t wBaud;
+  int32_t wBaud;
 
   if (!FGetNextCmdNum(&wBaud))
     return;    // no parameters so bail.
@@ -664,7 +672,7 @@ void initMemoryUsageTest()
 
   // Print out some memory information
   Serial.printf("Estimated global data size: %d\n", g_start_heap_pointer & 0xffff);
-//  Serial.printf("starting Heap info: start: %x current: %x\n", g_start_heap_pointer, (uint32_t)_sbrk(0));
+  //  Serial.printf("starting Heap info: start: %x current: %x\n", g_start_heap_pointer, (uint32_t)_sbrk(0));
   Serial.printf("Start Stack info: end: %x current: %x\n", g_end_stack_pointer, (uint32_t)stack_ptr);
   Serial.println("Try to init memory");
   Serial.flush(); // make sure it has chance to write out.

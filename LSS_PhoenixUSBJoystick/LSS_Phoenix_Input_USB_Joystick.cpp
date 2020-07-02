@@ -355,10 +355,10 @@ void USBJoystickInputController::ControlInput(void)
     // We move each pass through this by a percentage of how far we are from center in each direction
     // We get feedback with height by seeing the robot move up and down.  For Speed, I put in sounds
     // which give an idea, but only for those whoes robot has a speaker
-    int lx = joystick1.getAxis(AXIS_LX);
-    int ly = joystick1.getAxis(AXIS_LY);
-    int rx = joystick1.getAxis(AXIS_RX);
-    int ry = joystick1.getAxis(AXIS_RY);
+    int lx = joystick1.getAxis(AXIS_LX) - 127;
+    int ly = joystick1.getAxis(AXIS_LY) - 127;
+    int rx = joystick1.getAxis(AXIS_RX) - 127;
+    int ry = joystick1.getAxis(AXIS_RY) - 127;
     if (g_fDebugJoystick) {
         Serial.printf("BTNS: %x LX: %d, LY: %d, RX: %d, RY: %d LT: %d RT: %d\r\n", g_buttons, 
             lx, ly, rx, ry, joystick1.getAxis(AXIS_LT), joystick1.getAxis(AXIS_RT));

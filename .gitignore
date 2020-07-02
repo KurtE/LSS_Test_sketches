@@ -5,3 +5,6 @@
 *.hex
 *.elf
 *.lst
+*.vs/
+*_vm/
+*/Release/*
