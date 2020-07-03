@@ -35,6 +35,26 @@
 #endif
 #endif 
 
+// Lets put in option to use ST7789
+#define USE_ST7789
+#define TFT_CS		10
+#define TFT_DC		9
+#define TFT_RST		28		// Reset
+#define TFT_BL		29		// backlight
+#define TFT_WIDTH	240
+#define TFT_HEIGHT	240
+
+#define TFT_Y_MODE	120
+#define TFT_Y_GAIT	140
+
+#ifdef USE_ST7789
+#include <ST7735_t3.h>
+#include <ST7789_t3.h>
+extern ST7789_t3 tft;
+#endif
+
+#define DISPLAY_GAIT_NAMES
+
 // Define other optional compnents to be included or not...
 //#define cFemurHornOffset1 -35
 //#define cTibiaHornOffset1 463

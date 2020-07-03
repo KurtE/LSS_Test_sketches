@@ -1,6 +1,5 @@
 
 // Warning setup to build for standard hexapod, octopod, or for quad.
-//  #define DISPLAY_GAIT_NAMES
 //=============================================================================
 //Project Lynxmotion Phoenix
 //Description: Phoenix software
@@ -36,6 +35,8 @@
 #include <LSS.h>
 
 #include "LSS_Phoenix.h"
+#include "logo.h"
+
 
 
 #define BalanceDivFactor CNT_LEGS    //;Other values than 6 can be used, testing...CAUTION!! At your own risk ;)
@@ -451,7 +452,9 @@ byte NUM_GAITS = sizeof(APG) / sizeof(APG[0]) + sizeof(APG_EXTRA) / sizeof(APG_E
 byte NUM_GAITS = sizeof(APG) / sizeof(APG[0]);
 #endif
 
-
+#ifdef USE_ST7789
+ST7789_t3 tft = ST7789_t3(TFT_CS, TFT_DC, TFT_RST);
+#endif
 
 //=============================================================================
 // Function prototypes
@@ -482,6 +485,21 @@ extern boolean TerminalMonitor(void);
 // SETUP: the main arduino setup function.
 //--------------------------------------------------------------------------
 void setup() {
+#ifdef USE_ST7789
+#ifndef TFT_MODE
+    tft.init(TFT_WIDTH, TFT_HEIGHT);
+#else
+    tft.init(TFT_WIDTH, TFT_HEIGHT, TFT_MODE);
+#endif
+#ifdef TFT_BL
+    pinMode(TFT_BL, OUTPUT);
+    digitalWriteFast(TFT_BL, HIGH);
+#endif
+    // have some fun display logo
+    tft.fillScreen(ST77XX_RED);
+    tft.writeRect((tft.width()-LOGO_WIDTH) / 2, 0, LOGO_WIDTH, LOGO_HEIGHT, (uint16_t*)lynxmotion_logo);
+#endif
+
 #ifdef DBGSerial    
     while (!DBGSerial && millis() < 4000);
     DBGSerial.println("Program Start");
@@ -490,6 +508,7 @@ void setup() {
     debug.begin(SerialUSB1);
 
 #endif
+
     g_fShowDebugPrompt = true;
     g_fDebugOutput = false;
     // Init our ServoDriver
@@ -979,6 +998,15 @@ void GaitSelect(void)
         g_InControlState.gaitCur = APG[g_InControlState.GaitType];
 #endif
     }
+
+#if defined(USE_ST7789) && defined(DISPLAY_GAIT_NAMES)
+    tft.setCursor(0, TFT_Y_GAIT);
+    tft.setTextSize(2);
+    tft.setTextColor(ST77XX_WHITE, ST77XX_RED);
+    tft.print(g_InControlState.gaitCur.pszName);
+    tft.fillRect(tft.getCursorX(), tft.getCursorY(), tft.width(), 15, ST77XX_RED);
+#endif
+
 
 #ifdef DBGSerial  
     if (g_fDebugOutput) {

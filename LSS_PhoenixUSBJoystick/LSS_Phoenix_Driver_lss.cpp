@@ -424,10 +424,39 @@ void MakeSureServosAreOn(void)
 		g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 
 		LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position.
-
+		boolean servos_reset = false;
 		for (int i = 0; i < NUMSERVOS; i++) {
 			g_cur_servo_pos[i] = 32768; // set to a value that is not valid to force next output
+			// lets make sure that servos are not in an error state.   
+			myLSS.setServoID(cPinTable[i]);
+			LSS_Status servo_status = myLSS.getStatus();
+			switch (servo_status) {
+			case LSS_StatusUnknown:
+			case LSS_StatusLimp:
+				break;	// don't need to do anything
+			case LSS_StatusFreeMoving:
+			case LSS_StatusAccelerating:
+			case LSS_StatusTravelling:
+			case LSS_StatusDecelerating:
+			case LSS_StatusHolding:
+			case LSS_StatusOutsideLimits:
+			case LSS_StatusStuck:
+			case LSS_StatusBlocked:
+			case LSS_StatusSafeMode:
+			default:
+				DBGSerial.printf("EnableServos: Servo %d reset due to status: %d\n", cPinTable[i], servo_status);
+				myLSS.reset();
+				servos_reset = true;
+				break;
+			}
 		}
+
+		if (servos_reset) {
+			delay(3000);  // give servos some time to reset.
+			// try again to hold servos. 
+			LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position
+		}
+
 		g_InputController.AllowControllerInterrupts(true);
 		g_fServosFree = false;
 	}
@@ -538,13 +567,18 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 //==============================================================================
 void TCServoPositions() {
 	int16_t servo_pos[NUMSERVOS];
+	LSS_Status servo_status[NUMSERVOS];
 	int i;
 
 	for (i = 0; i < NUMSERVOS; i++) {
 		myLSS.setServoID(cPinTable[i]);
 		servo_pos[i] = myLSS.getPosition();
-		if (myLSS.getLastCommStatus() != LSS_CommStatus_ReadSuccess)
+		LSS_LastCommStatus lss_status = myLSS.getLastCommStatus();
+		if (lss_status != LSS_CommStatus_ReadSuccess) {
 			servo_pos[i] = 0x7fff; // out of valid range
+			DBGSerial.printf("%u fail: %x\n", cPinTable[i], (uint32_t)lss_status);
+		}
+		servo_status[i] = myLSS.getStatus();
 	}
 
 	// Not very clean
@@ -552,9 +586,13 @@ void TCServoPositions() {
 	DBGSerial.println("Servo positions shown by leg joints\n(Rear)");
 	DBGSerial.println("    T     F     C |     C     F     T");
 	for (int legs = 0; legs < 3; legs++) {
-		DBGSerial.printf("%5d %5d %5d | %5d %5d %5d\n",
-			servo_pos[FIRSTTIBIAPIN + legs], servo_pos[FIRSTFEMURPIN + legs], servo_pos[FIRSTCOXAPIN + legs],
-			servo_pos[FIRSTCOXAPIN + legs + 3], servo_pos[FIRSTFEMURPIN + legs + 3], servo_pos[FIRSTTIBIAPIN + legs + 3]);
+		DBGSerial.printf("%5d(%u) %5d(%u) %5d(%u) | %5d(%u) %5d(%u) %5d(%u)\n",
+			servo_pos[FIRSTTIBIAPIN + legs], 	 servo_status[FIRSTTIBIAPIN + legs], 
+			servo_pos[FIRSTFEMURPIN + legs], 	 servo_status[FIRSTFEMURPIN + legs], 
+			servo_pos[FIRSTCOXAPIN + legs], 	 servo_status[FIRSTCOXAPIN + legs],
+			servo_pos[FIRSTCOXAPIN + legs + 3],  servo_status[FIRSTCOXAPIN + legs + 3], 
+			servo_pos[FIRSTFEMURPIN + legs + 3], servo_status[FIRSTFEMURPIN + legs + 3], 
+			servo_pos[FIRSTTIBIAPIN + legs + 3], servo_status[FIRSTTIBIAPIN + legs + 3]);
 	}
 }
 

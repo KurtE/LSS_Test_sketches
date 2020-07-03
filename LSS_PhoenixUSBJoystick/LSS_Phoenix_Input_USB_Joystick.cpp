@@ -87,7 +87,10 @@ enum {
   MODECNT};
 enum {
   NORM_NORM=0, NORM_LONG, HIGH_NORM, HIGH_LONG};
+#ifdef USE_ST7789
+const char* mode_names[] PROGMEM = {"Walk", "Translate", "Rotate", "Single"};
 
+#endif
 
 #define cTravelDeadZone 6      //The deadzone for the analog input from the remote
 
@@ -327,6 +330,14 @@ void USBJoystickInputController::ControlInput(void)
 #endif
       }
 #endif
+      // If we have display display new mode
+#ifdef USE_ST7789
+      tft.setCursor(0, TFT_Y_MODE);
+      tft.setTextSize(2);
+      tft.setTextColor(ST77XX_WHITE, ST77XX_RED);
+      tft.print(mode_names[ControlMode]);
+      tft.fillRect(tft.getCursorX(), tft.getCursorY(), tft.width(), 15, ST77XX_RED);
+#endif
     }
 
     //[Common functions]
@@ -413,7 +424,7 @@ void USBJoystickInputController::ControlInput(void)
 #endif    
     //[Walk functions]
     if (ControlMode == WALKMODE) {
-      //Switch gates
+      //Switch Gaits
       if (((g_buttons & BTN_MASKS[BUT_SELECT]) && !(g_buttons_prev & BTN_MASKS[BUT_SELECT]))
         && abs(g_InControlState.TravelLength.x)<cTravelDeadZone //No movement
       && abs(g_InControlState.TravelLength.z)<cTravelDeadZone 

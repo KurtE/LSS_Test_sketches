@@ -27,12 +27,18 @@
     <ClInclude Include="LSS_Phoenix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="logo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LSS_Phoenix_Driver_lss.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LSS_Phoenix_Input_USB_Joystick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
