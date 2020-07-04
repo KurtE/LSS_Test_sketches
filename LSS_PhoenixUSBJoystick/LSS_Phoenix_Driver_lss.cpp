@@ -56,7 +56,12 @@ int16_t      g_goal_servo_pos[NUMSERVOS];
 //=============================================================================
 // Global - Local to this file only...
 //=============================================================================
-static const byte cPinTable[] PROGMEM = {
+static const char *lss_status_text[] PROGMEM  = {
+	"Unknown",	"Limp",	"FreeMoving",	"Accelerating",	"Travelling",	"Decelerating",
+	"Holding",	"OutsideLimits",	"Stuck",  "Blocked", 
+	"SafeMode", "Last" };
+
+static const byte cPinTable[] = {
   cRRCoxaPin,  cRMCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLMCoxaPin,  cLFCoxaPin,
   cRRFemurPin, cRMFemurPin, cRFFemurPin, cLRFemurPin, cLMFemurPin, cLFFemurPin,
   cRRTibiaPin, cRMTibiaPin, cRFTibiaPin, cLRTibiaPin, cLMTibiaPin, cLFTibiaPin
@@ -399,6 +404,12 @@ static uint8_t g_iIdleLedState = 1;  // what state to we wish to set...
 void ServoDriver::IdleTime(void)
 {
 	// Each time we call this set servos LED on or off...
+	// Lets just have one on at a time.
+	if (g_iIdleServoNum < NUMSERVOS) {
+		myLSS.setServoID(cPinTable[g_iIdleServoNum]);
+		myLSS.setColorLED(LSS_LED_Black);
+	}
+
 	g_iIdleServoNum++;
 	if (g_iIdleServoNum >= NUMSERVOS) {
 		g_iIdleServoNum = 0;
@@ -408,6 +419,19 @@ void ServoDriver::IdleTime(void)
 	myLSS.setServoID(cPinTable[g_iIdleServoNum]);
 	myLSS.setColorLED((LSS_LED_Color)g_iIdleLedState);
 
+}
+
+//--------------------------------------------------------------------
+//Function that gets called from the main loop if the robot is not logically
+//     on.  Gives us a chance to play some...
+//--------------------------------------------------------------------
+void ServoDriver::showUserFeedback(int feedback_state) {
+	switch (feedback_state) {
+		case 0:
+			// turn off all leds... 
+			LSS::genericWrite(LSS_BroadcastID, LSS_ActionColorLED, LSS_LED_Black);
+			break;
+	}
 }
 
 //--------------------------------------------------------------------
@@ -432,19 +456,21 @@ void MakeSureServosAreOn(void)
 			LSS_Status servo_status = myLSS.getStatus();
 			switch (servo_status) {
 			case LSS_StatusUnknown:
-			case LSS_StatusLimp:
+			case LSS_StatusHolding:
 				break;	// don't need to do anything
+			case LSS_StatusLimp:
 			case LSS_StatusFreeMoving:
 			case LSS_StatusAccelerating:
 			case LSS_StatusTravelling:
 			case LSS_StatusDecelerating:
-			case LSS_StatusHolding:
 			case LSS_StatusOutsideLimits:
 			case LSS_StatusStuck:
 			case LSS_StatusBlocked:
 			case LSS_StatusSafeMode:
 			default:
-				DBGSerial.printf("EnableServos: Servo %d reset due to status: %d\n", cPinTable[i], servo_status);
+				DBGSerial.printf("EnableServos: Servo %d reset due to status: %s(%d)\n", cPinTable[i], 
+						(servo_status < (sizeof(lss_status_text)/sizeof(lss_status_text[0]))) ? lss_status_text[servo_status] : "?",
+						servo_status); 
 				myLSS.reset();
 				servos_reset = true;
 				break;

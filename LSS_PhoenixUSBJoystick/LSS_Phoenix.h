@@ -269,6 +269,7 @@ public:
   void            FreeServos(void);
   
   void            IdleTime(void);        // called when the main loop when the robot is not on
+  void            showUserFeedback(int feedback_state); 
 
   // Allow for background process to happen...
 #ifdef OPT_BACKGROUND_PROCESS

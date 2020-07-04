@@ -28,7 +28,7 @@ REM defragster was here
 set model=teensy41
 set speed=600
 set opt=o2std
-set usb=serial2
+set usb=serial
 cd.
 
 rem set keys=de-de
@@ -75,7 +75,7 @@ if not "%1"=="0" (
   if "%errorlevel%"=="0" (
     "%TyTools%\TyCommanderC.exe" upload --autostart --wait  "%temp1%\%sketchname%.%model%.hex"
     "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gcc-nm.exe" -n "%temp1%\%sketchname%.elf" | "%tools%\imxrt_size.exe"
-    start "%tools%\GDB.cmd" "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gdb.exe" "%temp1%\%sketchname%.elf"
+    REM start "%tools%\GDB.cmd" "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gdb.exe" "%temp1%\%sketchname%.elf"
   )  
 )
 

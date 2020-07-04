@@ -23,7 +23,7 @@
 #define USEJOYSTICK		// Use T3.6 or T4.x USB Host control
 
 #define LSS_SERIAL_PORT     Serial1
-#define LSS_BAUD            500000
+#define LSS_BAUD            250000
 // Global defines to control which configuration we are using.  Note: Only define one of these...
 // 
 // Which type of control(s) do you want to compile in

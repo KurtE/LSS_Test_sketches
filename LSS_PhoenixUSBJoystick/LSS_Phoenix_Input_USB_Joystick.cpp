@@ -77,6 +77,10 @@
 #include "LSS_Phoenix.h"
 #include <USBHost_t36.h>
 
+#if __has_include(<TeensyDebug.h>)
+#include <TeensyDebug.h>
+#endif
+
 
 //[CONSTANTS]
 enum {
@@ -416,9 +420,18 @@ void USBJoystickInputController::ControlInput(void)
     }
     if ((g_buttons & BTN_MASKS[BUT_L3]) && !(g_buttons_prev & BTN_MASKS[BUT_L3])) {
         MSound(1, 50, 2000);
-        g_fDebugOutput = !g_fDebugOutput;
-        if (g_fDebugOutput) DBGSerial.println(F("Debug is on"));
-        else DBGSerial.println(F("Debug is off"));
+        #if defined(TEENSY_DEBUG_H)
+        if (debug.isGDBConnected()) {
+            DBGSerial.println(F("Trying to break in to GDB"));
+            halt();
+        }
+        else
+        #endif
+        {
+            g_fDebugOutput = !g_fDebugOutput;
+            if (g_fDebugOutput) DBGSerial.println(F("Debug is on"));
+            else DBGSerial.println(F("Debug is off"));
+        }
 
     }
 #endif    

@@ -1,5 +1,5 @@
-static const uint32_t from_speed = 115200;
-static const uint32_t to_speed = 500000;
+static const uint32_t from_speed = 500000;
+static const uint32_t to_speed = 250000;
 void setup()
 {
   while (!Serial && millis() < 5000) ;
@@ -14,7 +14,7 @@ void loop() {
     while (Serial.read() == -1) ;
     while (Serial.read() != -1) ;
     delay(250);
-    Serial.println("Try set baud cammand");
+    Serial.println("Try set baud command");
     Serial1.printf("#254CB%u\r", to_speed);
     delay(250);
     Serial.println("Reset");

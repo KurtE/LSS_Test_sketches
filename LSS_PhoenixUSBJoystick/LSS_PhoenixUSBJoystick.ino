@@ -705,7 +705,7 @@ void loop(void)
 #ifdef USEXBEE
             XBeePlaySounds(3, 60, 2000, 80, 2250, 100, 2500);
 #endif            
-
+            g_ServoDriver.showUserFeedback(0);  // Will change this soon
             Eyes = 1;
         }
 
@@ -1052,15 +1052,6 @@ void GaitSeq(void)
             || (abs(g_InControlState.TravelLength.y) > cTravelDeadZone);
 
         if (TravelRequest) {
-#ifdef QUADCODE
-            // just start walking - Try to guess a good foot to start off on...
-            if (g_InControlState.TravelLength.z < 0)
-                g_InControlState.GaitStep = ((g_InControlState.TravelLength.X < 0) ? g_InControlState.gaitCur.GaitLegNr[cLR] : g_InControlState.gaitCur.GaitLegNr[cRR]);
-            else
-                g_InControlState.GaitStep = ((g_InControlState.TravelLength.X < 0) ? g_InControlState.gaitCur.GaitLegNr[cLF] : g_InControlState.gaitCur.GaitLegNr[cRF]);
-            // And lets backup a few Gaitsteps before this to allow it to start the up swing... 
-            g_InControlState.GaitStep = ((g_InControlState.GaitStep > g_InControlState.gaitCur.FrontDownPos) ? (g_InControlState.GaitStep - g_InControlState.gaitCur.FrontDownPos) : (g_InControlState.GaitStep + g_InControlState.gaitCur.StepsInGait - g_InControlState.gaitCur.FrontDownPos);
-#endif      
         }
         else {    //Clear values under the cTravelDeadZone
             g_InControlState.TravelLength.x = 0;
@@ -1113,11 +1104,9 @@ void Gait(byte GaitCurrentLegNr)
         GaitPosZ[GaitCurrentLegNr] = -g_InControlState.TravelLength.z / g_InControlState.gaitCur.LiftDivFactor;
         GaitRotY[GaitCurrentLegNr] = -g_InControlState.TravelLength.y / g_InControlState.gaitCur.LiftDivFactor;
     }
-    // _A_      
     // Optional Half heigth front (2, 3, 5 lifted positions)
     else if ((g_InControlState.gaitCur.NrLiftedPos >= 2) && (LegStep == 1 || LegStep == -(g_InControlState.gaitCur.StepsInGait - 1)) && TravelRequest) {
         GaitPosX[GaitCurrentLegNr] = g_InControlState.TravelLength.x / g_InControlState.gaitCur.LiftDivFactor;
-        GaitPosY[GaitCurrentLegNr] = -3 * g_InControlState.LegLiftHeight / (3 + g_InControlState.gaitCur.HalfLiftHeight); // Easier to shift between div factor: /1 (3/3), /2 (3/6) and 3/4
         GaitPosZ[GaitCurrentLegNr] = g_InControlState.TravelLength.z / g_InControlState.gaitCur.LiftDivFactor;
         GaitRotY[GaitCurrentLegNr] = g_InControlState.TravelLength.y / g_InControlState.gaitCur.LiftDivFactor;
     }
@@ -1602,10 +1591,10 @@ void LegIK(short IKFeetPosX, short IKFeetPosY, short IKFeetPosZ, byte LegIKLegNr
 //[CHECK ANGLES] Checks the mechanical limits of the servos
 //--------------------------------------------------------------------
 #ifdef DEBUG
-short CheckServoAngleBounds(short sID, short sVal, const short* sMin /*PROGMEM*/, const short* sMax /*PROGMEM*/) {
+short CheckServoAngleBounds(short sID, short sVal, const short* sMin /*PROGMEM*/, const short* sMax /*PROGMEM*/) 
 #else
-short CheckServoAngleBounds(short sID __attribute__((unused)), short sVal, /*PROGMEM*/ const short* sMin, /*PROGMEM*/ const short* sMax) {
 #endif
+{
     // Pull into simple function as so I can report errors on debug 
     // Note ID is bogus, but something to let me know which one.
     short s = (short)pgm_read_word(sMin);
@@ -1951,6 +1940,9 @@ boolean TerminalMonitor(void)
     // See if we need to output a prompt.
     if (g_fShowDebugPrompt) {
         DBGSerial.println(F("Arduino Phoenix Monitor"));
+#if defined(TEENSY_DEBUG_H)
+        DBGSerial.println(F("G - Break into GDB debug"));
+#endif
         DBGSerial.println(F("D - Toggle debug on or off"));
 #ifdef OPT_DUMP_EEPROM
         DBGSerial.println(F("E - Dump EEPROM"));
@@ -1997,6 +1989,18 @@ boolean TerminalMonitor(void)
         if (!ich) {
             g_fShowDebugPrompt = true;
         }
+#if defined(TEENSY_DEBUG_H)
+        else if ((ich == 1) && ((szCmdLine[0] == 'g') || (szCmdLine[0] == 'G'))) {
+            if (debug.isGDBConnected()) {
+                DBGSerial.println(F("Trying to break in to GDB"));
+                halt();
+            }
+            else {
+                DBGSerial.println(F("GDB is not connected"));
+            }
+
+        }
+#endif
         else if ((ich == 1) && ((szCmdLine[0] == 'd') || (szCmdLine[0] == 'D'))) {
             g_fDebugOutput = !g_fDebugOutput;
             if (g_fDebugOutput)
