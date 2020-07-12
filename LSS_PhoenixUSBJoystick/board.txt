@@ -1,0 +1,4 @@
+# LSS_PhoenixUSBJoystick build property overrides
+#
+midebugger.stop.commands=quit
+

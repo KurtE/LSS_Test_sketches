@@ -73,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\LSS_PhoenixUSBJoystick;$(ProjectDir)..\..\..\libraries\TeensyDebug;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\EEPROM;$(ProjectDir)..\..\..\libraries\LSS_Library_Arduino\src;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\SoftwareSerial;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\ST7735_t3;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\SPI;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\USBHost_t36;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\USBHost_t36\utility;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4\avr;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4\debug;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4\util;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\lib\gcc\arm-none-eabi\5.4.1\include;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1\tr1;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1\bits;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1\arm-none-eabi;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\LSS_PhoenixUSBJoystick;$(ProjectDir)..\..\..\libraries\TeensyDebug;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\libraries\EEPROM;$(ProjectDir)..\..\..\libraries\LSS_Library_Arduino\src;$(ProjectDir)..\..\..\libraries\SoftwareSerial;$(ProjectDir)..\..\..\libraries\ST7735_t3;$(ProjectDir)..\..\..\libraries\SPI;$(ProjectDir)..\..\..\libraries\USBHost_t36;$(ProjectDir)..\..\..\libraries\USBHost_t36\utility;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4\avr;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4\debug;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy\avr\cores\teensy4\util;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\lib\gcc\arm-none-eabi\5.4.1\include;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1\tr1;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1\bits;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\tools\arm\arm-none-eabi\include\c++\5.4.1\arm-none-eabi;$(ProjectDir)..\..\..\..\..\..\..\ARDUIN~1.13\hardware\teensy\avr\cores\teensy4;$(ProjectDir)..\..\..\..\..\DOCUME~1\Arduino\LIBRAR~1\TED276~1;$(ProjectDir)..\..\..\..\..\..\..\ARDUIN~1.13\hardware\teensy\avr\LIBRAR~1\EEPROM;$(ProjectDir)..\..\..\..\..\DOCUME~1\Arduino\LIBRAR~1\LSS_LI~1\src;$(ProjectDir)..\..\..\..\..\DOCUME~1\Arduino\LIBRAR~1\SOFTWA~1;$(ProjectDir)..\..\..\..\..\DOCUME~1\Arduino\LIBRAR~1\ST7735~1;$(ProjectDir)..\..\..\..\..\DOCUME~1\Arduino\LIBRAR~1\SPI;$(ProjectDir)..\..\..\..\..\DOCUME~1\Arduino\LIBRAR~1\USBHOS~1;$(ProjectDir)..\..\..\..\..\..\..\arduino-1.8.13\hardware\teensy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.LSS_PhoenixUSBJoystick.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PreprocessorDefinitions>__HARDWARE_imxrt1062__;__HARDWARE_IMXRT1062__;__IMXRT1062__;TEENSYDUINO=153;ARDUINO=108013;ARDUINO_TEENSY41;F_CPU=600000000;USB_DUAL_SERIAL;LAYOUT_US_ENGLISH;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -120,6 +120,9 @@
     <ClCompile Include="LSS_Phoenix_Driver_lss.cpp" />
     <ClCompile Include="LSS_Phoenix_Input_USB_Joystick.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="board.txt" />
+  </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
@@ -128,7 +131,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM32" config.Release.customdebug_teensy41_debugger_type="hwdebugger" config.Release.customdebug_teensy41_hwdebugger="teensy" custom_teensy41_usb="serial2" />
+      <UserProperties arduino.upload.port="COM33" config.Release.customdebug_teensy41_debugger_type="hwdebugger" config.Release.customdebug_teensy41_hwdebugger="teensy" custom_teensy41_opt="ogstd" custom_teensy41_usb="serial2" debug.local.portname="COM32" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
