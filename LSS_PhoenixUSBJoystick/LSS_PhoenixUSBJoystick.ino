@@ -813,14 +813,17 @@ void loop(void)
         // Allow the Servo driver to do stuff durint our idle time
         g_ServoDriver.IdleTime();
 
-        // We also have a simple debug monitor that allows us to 
-        // check things. call it here..
-#ifdef OPT_TERMINAL_MONITOR  
-        if (TerminalMonitor())
-            return;
-#endif
         delay(20);  // give a pause between times we call if nothing is happening
     }
+
+    // lets see if it interfers too much to allow call while active
+    // may want to restrict some of the commands. 
+    // We also have a simple debug monitor that allows us to 
+    // check things. call it here..
+#ifdef OPT_TERMINAL_MONITOR  
+    if (TerminalMonitor())
+        return;
+#endif
 
     PrevServoMoveTime = ServoMoveTime;
 
@@ -1992,8 +1995,10 @@ boolean TerminalMonitor(void)
 #if defined(TEENSY_DEBUG_H)
         else if ((ich == 1) && ((szCmdLine[0] == 'g') || (szCmdLine[0] == 'G'))) {
             if (debug.isGDBConnected()) {
+                extern void loop(void);
                 DBGSerial.println(F("Trying to break in to GDB"));
-                halt();
+                debug.setBreakpoint((void*)&loop);
+                //halt();
             }
             else {
                 DBGSerial.println(F("GDB is not connected"));

@@ -14,7 +14,7 @@
 // Options...
 //=============================================================================
 #define LSS_SERIAL Serial1
-#define LSS_BAUD   500000
+#define LSS_BAUD   250000
 #define MAX_SERVO_NUM 32
 //=============================================================================
 // Define differnt robots..

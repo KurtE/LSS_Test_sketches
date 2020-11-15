@@ -81,6 +81,19 @@
 #include <TeensyDebug.h>
 #endif
 
+#ifdef USBHOST_DEGUG_MEMORY_STREAM
+#ifdef ARDUINO_TEENSY41
+uint8_t debug_stream_buffer[2048 * 1024] EXTMEM;
+extern "C"
+{
+  extern uint8_t external_psram_size;
+}
+#else
+uint8_t debug_stream_buffer[256 * 1024] DMAMEM;
+#endif
+DebugMemoryStream USBHostDebugStream(debug_stream_buffer, sizeof(debug_stream_buffer));
+#endif
+
 
 //[CONSTANTS]
 enum {
@@ -133,7 +146,7 @@ const static uint32_t PS4_BTNS[] = {
 	0x1000, 0x200, 0x100,       // PS, options, Share
 	0x10000, 0x40000, 0x80000, 0x20000       // HAT 
 };
-const static uint8_t PS4_MAP_HAT_MAP[] = {
+const static uint32_t PS4_MAP_HAT_MAP[] = {
 	//0x10, 0x30, 0x20, 0x60, 0x40, 0xc0, 0x80, 0x90, 0x00 };
 	0x10000, 0x30000, 0x20000, 0x60000, 0x40000, 0xC0000, 0x80000, 0x90000, 0x0 };
  uint32_t const * BTN_MASKS = PS3_BTNS;
@@ -217,6 +230,24 @@ void USBJoystickInputController::Init(void)
 #ifdef DBGSerial  
 	DBGSerial.print("USB Joystick Init: ");
 #endif  
+#ifdef USBHOST_DEGUG_MEMORY_STREAM
+#ifdef ARDUINO_TEENSY41
+	if (external_psram_size == 0) {
+		uint8_t* debug_buffer = (uint8_t*)malloc(256 * 1024);
+		if (debug_buffer) {
+			Serial.println("\n*** USBHost Debug data - No external PSRAM using DMAMEM ***");
+			USBHostDebugStream.setBuffer(debug_buffer, 256 * 1024);
+		}
+		else {
+			Serial.println("\n*** USBHost Debug data - No external PSRAM malloc failed ***");
+			USBHostDebugStream.setBuffer(debug_buffer, 0);
+			USBHostDebugStream.enable(false);
+
+		}
+	}
+#endif
+#endif
+
 	myusb.begin();
 	GPSeq = 0;  // init to something...
 
@@ -243,6 +274,8 @@ void USBJoystickInputController::AllowControllerInterrupts(boolean fAllow __attr
 //==============================================================================
 void USBJoystickInputController::ControlInput(void)
 {
+	// Make sure USB gets chance to process stuff. 
+	myusb.Task();
 	// check to see if the device list has changed:
 	UpdateActiveDeviceInfo();
 	//  processPS3MotionTimer();  - not sure yet support this yet. 
@@ -433,7 +466,7 @@ void USBJoystickInputController::ControlInput(void)
 			if (debug.isGDBConnected()) {
 				DBGSerial.println(F("Trying to break in to GDB"));
 				// lets try it through setting breakpoint at loop
-				debug.setBreakpoint(&loop);
+				debug.setBreakpoint((void*)&loop);
 				//halt();
 			}
 			else
@@ -650,6 +683,9 @@ void JoystickTurnRobotOff(void)
 void USBJoystickInputController::ShowTerminalCommandList(void)
 {
 	DBGSerial.println(F("J - Show Joystick data"));
+#ifdef USBHOST_DEGUG_MEMORY_STREAM
+	DBGSerial.println(F("U <DCFL> USB Host Dump, Clear, First, Last"));
+#endif
 }
 
 boolean USBJoystickInputController::ProcessTerminalCommand(byte* psz, byte bLen)
@@ -660,6 +696,31 @@ boolean USBJoystickInputController::ProcessTerminalCommand(byte* psz, byte bLen)
 		else DBGSerial.println("\n*** Joystick Debug OFF ***");
 		return true;
 	}
+#ifdef USBHOST_DEGUG_MEMORY_STREAM
+	else if ((*psz == 'u') || (*psz == 'U')) {
+		psz++;
+
+		if ((*psz == 'c') || (*psz == 'C')) {
+			DBGSerial.println("\n*** Clear USB Host Debug data ***");
+				USBHostDebugStream.clear();
+		}
+		else if ((*psz == 'f') || (*psz == 'F')) {
+			DBGSerial.println("\n*** Save first received USBHost debug bytes ***");
+			USBHostDebugStream.stopWritesOnOverflow(true);
+		}
+		else if ((*psz == 'l') || (*psz == 'L')) {
+			DBGSerial.println("\n*** Save last received USBHost debug bytes ***");
+			USBHostDebugStream.stopWritesOnOverflow(false);
+		}
+		else {
+			DBGSerial.println("\n*** dump the USBHost Debug data ***");
+			int ch;
+			while ((ch = USBHostDebugStream.read()) != -1) DBGSerial.write(ch);
+		}
+		return true;
+	}
+#endif
+
 	return false;
 
 }
