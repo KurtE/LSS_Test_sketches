@@ -1,5 +1,6 @@
 @echo off
 SETLOCAL DisableDelayedExpansion EnableExtensions
+title TSET Arduino CMD line build
 rem *******************************
 rem Frank Bösing 11/2018
 rem Windows Batch to compile Arduino sketches
@@ -12,9 +13,9 @@ rem - Attention: Place compile.cmd in Sketch folder!
 rem
 rem Edit these paths:
 
-set arduino=C:\arduino-1.8.12
-rem set TyTools=C:\Program Files\TyQt
-set TyTools=C:\Users\kurte\Desktop\TyTools-0.9.0-9-g058715b-win64
+set arduino=C:\arduino-1.8.13
+set TyTools=C:\Program Files\TyQt
+rem set TyTools=D:\GitHub\tytools\build\win64_new\Release
 set libs=C:\Users\kurte\Documents\Arduino\libraries
 set tools=D:\GitHub\Tset
 
@@ -28,8 +29,9 @@ REM defragster was here
 set model=teensy41
 set speed=600
 set opt=o2std
-set usb=serial
+set usb=serial2
 cd.
+set sketchcmd=~
 
 rem set keys=de-de
 set keys=en-us
@@ -38,7 +40,10 @@ rem *******************************
 rem Don't edit below this line
 rem *******************************
 
-for %%i in (*.ino) do set sketchname=%%i
+if EXIST %sketchcmd% (
+  set sketchname=%sketchcmd%
+) ELSE for %%i in (*.ino) do set sketchname=%%i
+
 if "%sketchname%"=="" (
   echo No Arduino Sketch found!
   exit 1
@@ -67,13 +72,19 @@ if not exist %temp2% mkdir %temp2%
 REM if not exist %temp1%\pch mkdir %temp1%\pch
 REM if exist userConfig.h copy userConfig.h %temp1%\pch
 
+if exist %arduino%\portable\sketchbook\libraries\.  set libs=%arduino%\portable\sketchbook\libraries
+if exist %arduino%\portable\sketchbook\libraries\.  echo Building PORTABLE: %libs% 
+
 echo Building Sketch: %ino%
 "%arduino%\arduino-builder" -verbose=1 -warnings=more -compile -logger=human -hardware "%arduino%\hardware" -hardware "%LOCALAPPDATA%\Arduino15\packages" -tools "%arduino%\tools-builder" -tools "%arduino%\hardware\tools\avr" -tools "%LOCALAPPDATA%\Arduino15\packages" -built-in-libraries "%arduino%\libraries" -libraries "%libs%" -fqbn=%fqbn% -build-path %temp1% -build-cache "%temp2%"  %ino%
 
 if not "%1"=="0" (
 	REM Use TyComm with IDE to reboot for TeensyLoader Update // tycmd reset -b
   if "%errorlevel%"=="0" (
-    "%TyTools%\TyCommanderC.exe" upload --autostart --wait  "%temp1%\%sketchname%.%model%.hex"
+REM when TyComm integrated this .model. file will exist
+    if EXIST "%temp1%\%sketchname%.%model%.hex" (
+      "%TyTools%\TyCommanderC.exe" upload --autostart --wait  "%temp1%\%sketchname%.%model%.hex" ) else ( 
+      "%TyTools%\TyCommanderC.exe" upload --autostart --wait --delegate "%temp1%\%sketchname%.hex" )
     "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gcc-nm.exe" -n "%temp1%\%sketchname%.elf" | "%tools%\imxrt_size.exe"
     REM start "%tools%\GDB.cmd" "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gdb.exe" "%temp1%\%sketchname%.elf"
   )  
