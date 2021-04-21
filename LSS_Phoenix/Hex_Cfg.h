@@ -4,11 +4,7 @@
 //    This is the hardware configuration file for the 
 //    Will first define to use their commander unit.
 //
-//Date: June 19, 2013
-//Programmer: Kurt (aka KurtE)
 //
-//NEW IN V1.0
-//   - First Release - Changes from Trossen member KingPin
 //
 //====================================================================
 #ifndef HEX_CFG_H
@@ -21,7 +17,7 @@
 //==================================================================================================================================
 #define USECOMMANDER
 #define LSS_SERIAL_PORT     Serial1
-#define LSS_BAUD            500000
+#define LSS_BAUD            250000
 // Global defines to control which configuration we are using.  Note: Only define one of these...
 // 
 // Which type of control(s) do you want to compile in

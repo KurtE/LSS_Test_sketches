@@ -26,7 +26,13 @@
 // Header Files
 //=============================================================================
 #include <Arduino.h>
+
+//#define USE_TEENSY_DEBUG
+
+#ifdef USE_TEENSY_DEBUG
 #include <TeensyDebug.h>
+#endif
+
 #define DEFINE_HEX_GLOBALS
 #include <Arduino.h>
 #include <EEPROM.h>
@@ -505,8 +511,9 @@ void setup() {
     DBGSerial.println("Program Start");
 
     // Debugger will use second USB Serial; this line is not need if using menu option
+#ifdef USE_TEENSY_DEBUG
     debug.begin(SerialUSB1);
-
+#endif
 #endif
 
     g_fShowDebugPrompt = true;

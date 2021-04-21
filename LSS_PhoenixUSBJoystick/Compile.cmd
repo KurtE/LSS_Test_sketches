@@ -14,8 +14,8 @@ rem
 rem Edit these paths:
 
 set arduino=C:\arduino-1.8.13
-set TyTools=C:\Program Files\TyQt
-rem set TyTools=D:\GitHub\tytools\build\win64_new\Release
+rem set TyTools=C:\Program Files\TyQt
+set TyTools=D:\GitHub\tytools\build\win64\Release
 set libs=C:\Users\kurte\Documents\Arduino\libraries
 set tools=D:\GitHub\Tset
 
@@ -29,7 +29,7 @@ REM defragster was here
 set model=teensy41
 set speed=600
 set opt=o2std
-set usb=serial2
+set usb=serial
 cd.
 set sketchcmd=~
 
@@ -51,10 +51,12 @@ if "%sketchname%"=="" (
 
 set myfolder=.\
 set ino="%myfolder%%sketchname%"
-set temp1="%temp%\\arduino_build_%sketchname%"
-set temp2="%temp%\\arduino_cache_%sketchname%"
+if "x%TsetTemp%"=="%TsetTemp%x" set TsetTemp=%temp%
+set temp1="%TsetTemp%\\arduino_build_%sketchname%"
+set temp2="%TsetTemp%\\arduino_cache_%sketchname%"
 set fqbn=teensy:avr:%model%:usb=%usb%,speed=%speed%,opt=%opt%,keys=%keys%
 
+if "%model%"=="teensyMM" set model=TEENSY_MICROMOD
 rem Comment line below to build prior to TeensyDuino 1.50
 if "%model%"=="teensy31" set model=teensy32
 
@@ -85,7 +87,7 @@ REM when TyComm integrated this .model. file will exist
     if EXIST "%temp1%\%sketchname%.%model%.hex" (
       "%TyTools%\TyCommanderC.exe" upload --autostart --wait  "%temp1%\%sketchname%.%model%.hex" ) else ( 
       "%TyTools%\TyCommanderC.exe" upload --autostart --wait --delegate "%temp1%\%sketchname%.hex" )
-    "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gcc-nm.exe" -n "%temp1%\%sketchname%.elf" | "%tools%\imxrt_size.exe"
+    rem "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gcc-nm.exe" -n "%temp1%\%sketchname%.elf" | "%tools%\imxrt_size.exe"
     REM start "%tools%\GDB.cmd" "%arduino%\hardware\tools\arm\bin\arm-none-eabi-gdb.exe" "%temp1%\%sketchname%.elf"
   )  
 )

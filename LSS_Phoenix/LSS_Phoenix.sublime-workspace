@@ -187,6 +187,108 @@
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
+		},
+		{
+			"file": "LSS_Phoenix.ino",
+			"settings":
+			{
+				"buffer_size": 1943,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			},
+			"undo_stack":
+			[
+				[
+					3,
+					7,
+					"left_delete",
+					null,
+					"BwAAAIACAAAAAAAAgAIAAAAAAAAeAAAAZSBBcmJvdGl4IFJvYm9jb250cm9sbGVyIGJvYXJkfwIAAAAAAAB/AgAAAAAAAAEAAABofgIAAAAAAAB+AgAAAAAAAAEAAAB0fQIAAAAAAAB9AgAAAAAAAAEAAAAgfAIAAAAAAAB8AgAAAAAAAAEAAAByewIAAAAAAAB7AgAAAAAAAAEAAABvegIAAAAAAAB6AgAAAAAAAAEAAABm",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACeAgAAAAAAAIACAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					4,
+					1,
+					"insert",
+					{
+						"characters": "for"
+					},
+					"AwAAAHoCAAAAAAAAewIAAAAAAAAAAAAAewIAAAAAAAB8AgAAAAAAAAAAAAB8AgAAAAAAAH0CAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6AgAAAAAAAHoCAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					5,
+					1,
+					"insert",
+					{
+						"characters": " Lynxm"
+					},
+					"BgAAAH0CAAAAAAAAfgIAAAAAAAAAAAAAfgIAAAAAAAB/AgAAAAAAAAAAAAB/AgAAAAAAAIACAAAAAAAAAAAAAIACAAAAAAAAgQIAAAAAAAAAAAAAgQIAAAAAAACCAgAAAAAAAAAAAACCAgAAAAAAAIMCAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB9AgAAAAAAAH0CAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					8,
+					1,
+					"left_delete",
+					null,
+					"AQAAAFgCAAAAAAAAWAIAAAAAAAAsAAAALy8gYW5kIGlzIHNwZWNpZmljYWxseSBjb25maWd1cmVkIGZvciBMeW54bQo",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABYAgAAAAAAAIQCAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					12,
+					1,
+					"left_delete",
+					null,
+					"AQAAAC0DAAAAAAAALQMAAAAAAABhAAAALy8KLy8gVGhpcyBjb25maWd1cmF0aW9uIHNob3VsZCBob3BlZnVsbHkgcnVuIG9uIGEgc3RvY2sgUGhhbnRvbVgsIHdpdGhvdXQgYW55Ci8vIG9mIG15IGNoYW5nZXMuCg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAtAwAAAAAAAI4DAAAAAAAAAAAAAAAAAAA"
+				]
+			]
+		},
+		{
+			"file": "Hex_Cfg.h",
+			"settings":
+			{
+				"buffer_size": 13209,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			},
+			"undo_stack":
+			[
+				[
+					4,
+					2,
+					"left_delete",
+					null,
+					"AgAAAKMEAAAAAAAAowQAAAAAAAABAAAAMKIEAAAAAAAAogQAAAAAAAABAAAANQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACkBAAAAAAAAKQEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					5,
+					1,
+					"insert",
+					{
+						"characters": "25"
+					},
+					"AgAAAKIEAAAAAAAAowQAAAAAAAAAAAAAowQAAAAAAACkBAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACiBAAAAAAAAKIEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					10,
+					1,
+					"left_delete",
+					null,
+					"AQAAABsBAAAAAAAAGwEAAAAAAABJAAAALy9ORVcgSU4gVjEuMAovLyAgIC0gRmlyc3QgUmVsZWFzZSAtIENoYW5nZXMgZnJvbSBUcm9zc2VuIG1lbWJlciBLaW5nUGluCg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAbAQAAAAAAAGQBAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					13,
+					1,
+					"left_delete",
+					null,
+					"AQAAAOMAAAAAAAAA4wAAAAAAAAA1AAAALy9EYXRlOiBKdW5lIDE5LCAyMDEzCi8vUHJvZ3JhbW1lcjogS3VydCAoYWthIEt1cnRFKQo",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADjAAAAAAAAABgBAAAAAAAAAAAAAAAAAAA"
+				]
+			]
 		}
 	],
 	"build_system": "",
@@ -466,15 +568,16 @@
 		[
 		],
 		"reverse": false,
+		"scrollbar_highlights": true,
 		"show_context": true,
 		"use_buffer2": true,
+		"use_gitignore": true,
 		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
 				{
@@ -498,13 +601,75 @@
 						{
 							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
 							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 24550.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "LSS_Phoenix.ino",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1943,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								813,
+								813
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 25078.0,
+						"translation.y": 352.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Hex_Cfg.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13209,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								227,
+								227
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"stack_multiselect": false,
 					"type": "text"
 				}
 			]

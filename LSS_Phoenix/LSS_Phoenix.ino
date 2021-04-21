@@ -14,14 +14,10 @@
 //   Kåre Halvorsen aka Zenta - Makes everything work correctly!     
 //
 // This version of the Phoenix code was ported over to the Arduino Environement
-// and is specifically configured for the Arbotix Robocontroller board
 //
 //=============================================================================
 // Warning:: This configuration does not check voltages, so you should be careful to
 // not allow the lipo to discharge too far. 
-//
-// This configuration should hopefully run on a stock PhantomX, without any
-// of my changes.
 //
 //KNOWN BUGS:
 //    - Lots ;)
