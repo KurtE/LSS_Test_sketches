@@ -189,6 +189,22 @@
 			}
 		},
 		{
+			"file": "/D/GitHub/LSS_Library_Arduino/src/LSS.h",
+			"settings":
+			{
+				"buffer_size": 10711,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "LSS_Phoenix.sublime-project",
+			"settings":
+			{
+				"buffer_size": 99,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "LSS_Phoenix.ino",
 			"settings":
 			{
@@ -204,7 +220,7 @@
 					"left_delete",
 					null,
 					"BwAAAIACAAAAAAAAgAIAAAAAAAAeAAAAZSBBcmJvdGl4IFJvYm9jb250cm9sbGVyIGJvYXJkfwIAAAAAAAB/AgAAAAAAAAEAAABofgIAAAAAAAB+AgAAAAAAAAEAAAB0fQIAAAAAAAB9AgAAAAAAAAEAAAAgfAIAAAAAAAB8AgAAAAAAAAEAAAByewIAAAAAAAB7AgAAAAAAAAEAAABvegIAAAAAAAB6AgAAAAAAAAEAAABm",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACeAgAAAAAAAIACAAAAAAAAAAAAAAAA8L8"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACeAgAAAAAAAIACAAAAAAAAAAAAAAAA8L8"
 				],
 				[
 					4,
@@ -214,7 +230,7 @@
 						"characters": "for"
 					},
 					"AwAAAHoCAAAAAAAAewIAAAAAAAAAAAAAewIAAAAAAAB8AgAAAAAAAAAAAAB8AgAAAAAAAH0CAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6AgAAAAAAAHoCAAAAAAAAAAAAAAAA8L8"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6AgAAAAAAAHoCAAAAAAAAAAAAAAAA8L8"
 				],
 				[
 					5,
@@ -224,7 +240,7 @@
 						"characters": " Lynxm"
 					},
 					"BgAAAH0CAAAAAAAAfgIAAAAAAAAAAAAAfgIAAAAAAAB/AgAAAAAAAAAAAAB/AgAAAAAAAIACAAAAAAAAAAAAAIACAAAAAAAAgQIAAAAAAAAAAAAAgQIAAAAAAACCAgAAAAAAAAAAAACCAgAAAAAAAIMCAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB9AgAAAAAAAH0CAAAAAAAAAAAAAAAA8L8"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB9AgAAAAAAAH0CAAAAAAAAAAAAAAAA8L8"
 				],
 				[
 					8,
@@ -232,7 +248,7 @@
 					"left_delete",
 					null,
 					"AQAAAFgCAAAAAAAAWAIAAAAAAAAsAAAALy8gYW5kIGlzIHNwZWNpZmljYWxseSBjb25maWd1cmVkIGZvciBMeW54bQo",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABYAgAAAAAAAIQCAAAAAAAAAAAAAAAAAAA"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABYAgAAAAAAAIQCAAAAAAAAAAAAAAAAAAA"
 				],
 				[
 					12,
@@ -240,9 +256,57 @@
 					"left_delete",
 					null,
 					"AQAAAC0DAAAAAAAALQMAAAAAAABhAAAALy8KLy8gVGhpcyBjb25maWd1cmF0aW9uIHNob3VsZCBob3BlZnVsbHkgcnVuIG9uIGEgc3RvY2sgUGhhbnRvbVgsIHdpdGhvdXQgYW55Ci8vIG9mIG15IGNoYW5nZXMuCg",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAtAwAAAAAAAI4DAAAAAAAAAAAAAAAAAAA"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAtAwAAAAAAAI4DAAAAAAAAAAAAAAAAAAA"
 				]
 			]
+		},
+		{
+			"file": "/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSSTestServos/LSSTestServos.ino",
+			"settings":
+			{
+				"buffer_size": 20185,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/kurte/Documents/Arduino/libraries/LSS_Library_Arduino/src/LSS.cpp",
+			"settings":
+			{
+				"buffer_size": 28409,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			},
+			"undo_stack":
+			[
+				[
+					8,
+					2,
+					"left_delete",
+					null,
+					"AgAAAO8YAAAAAAAA7xgAAAAAAAABAAAAbu4YAAAAAAAA7hgAAAAAAAABAAAAbA",
+					"BAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAA8BgAAAAAAADwGAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					9,
+					1,
+					"insert",
+					{
+						"characters": "f"
+					},
+					"AQAAAO4YAAAAAAAA7xgAAAAAAAAAAAAA",
+					"BAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAA7hgAAAAAAADuGAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"contents": "Searching 30 files for \"flush\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1012        DBGSerial.print(\" LFZ:\");\n 1013        DBGSerial.println(LegPosZ[cLF],DEC);\n 1014:       DBGSerial.flush();  // see if forcing it to output helps...\n 1015      }\n 1016  #endif\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  587    int cbRead;\n  588    while (XBeeSerial.read() != -1)\n  589:     ;  // Flush out anything still pending. \n  590    XBeeSerial.print(\"AT\");  \n  591    XBeeSerial.println(pszID);  // Lets print out the ID;\n  592:   XBeeSerial.flush();\n  593    cbRead = XBeeSerial.readBytesUntil('\\r', ab, sizeof(ab));\n  594    if (cbRead) {\n  ...\n  608      delay(15);  // see if we have fast command mode enabled.\n  609      XBeeSerial.print(F(\"+++\")); \n  610:     XBeeSerial.flush();\n  611      XBeeSerial.setTimeout(20);  // give a little extra time\n  612      if (XBeeSerial.readBytesUntil('\\r', ab, 10) > 0) {\n  ...\n  683  #ifdef CHECK_AND_CONFIG_XBEE\n  684    while (XBeeSerial.read() != -1)\n  685:     ;  // flush anything out...\n  686    // First lets see if we have a real short command time\n  687    delay(15);  // see if we have fast command mode enabled.\n  688    XBeeSerial.print(F(\"+++\")); \n  689:   XBeeSerial.flush();\n  690    XBeeSerial.setTimeout(20);  // give a little extra time\n  691    if (XBeeSerial.readBytesUntil('\\r', ab, 10) > 0) {\n  ...\n  696    delay(1100);\n  697    while (XBeeSerial.read() != -1)\n  698:     ;  // flush anything out...\n  699    XBeeSerial.print(F(\"+++\"));\n  700    XBeeSerial.setTimeout(1100);  // little over a second\n  ...\n  711    XBeeSerial.begin(9600);\n  712    while (XBeeSerial.read() != -1)\n  713:     ;  // flush anything out...\n  714  \n  715    delay(1100);\n  ...\n  738      XBeeSerial.println(F(\"ATWR\"));\t// Write out the changes\n  739      XBeeSerial.println(F(\"ATCN\"));\t// and exit command mode\n  740:     XBeeSerial.flush();              // make sure all has been output\n  741      // lets do a quick and dirty test\n  742      delay(250);  // Wait a bit for responses..\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  177  \n  178    Serial.print(\":\");\n  179:   Serial.flush();  // make sure the complete set of prompts has been output...\n  180    // Get a command\n  181    if (GetCommandLine()) {\n  ...\n  676    Serial.printf(\"Start Stack info: end: %x current: %x\\n\", g_end_stack_pointer, (uint32_t)stack_ptr);\n  677    Serial.println(\"Try to init memory\");\n  678:   Serial.flush(); // make sure it has chance to write out.\n  679    uint8_t *sp_minus = stack_ptr - 10;  // leave a little slop\n  680    for (uint8_t *p = (uint8_t*)_sbrk(0); p < sp_minus; p++) *p = 0xff; // init to ff\n\n11 matches across 3 files\n",
+			"settings":
+			{
+				"buffer_size": 2817,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
 		},
 		{
 			"file": "Hex_Cfg.h",
@@ -260,7 +324,7 @@
 					"left_delete",
 					null,
 					"AgAAAKMEAAAAAAAAowQAAAAAAAABAAAAMKIEAAAAAAAAogQAAAAAAAABAAAANQ",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACkBAAAAAAAAKQEAAAAAAAAAAAAAAAA8L8"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACkBAAAAAAAAKQEAAAAAAAAAAAAAAAA8L8"
 				],
 				[
 					5,
@@ -270,7 +334,7 @@
 						"characters": "25"
 					},
 					"AgAAAKIEAAAAAAAAowQAAAAAAAAAAAAAowQAAAAAAACkBAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACiBAAAAAAAAKIEAAAAAAAAAAAAAAAA8L8"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACiBAAAAAAAAKIEAAAAAAAAAAAAAAAA8L8"
 				],
 				[
 					10,
@@ -278,7 +342,7 @@
 					"left_delete",
 					null,
 					"AQAAABsBAAAAAAAAGwEAAAAAAABJAAAALy9ORVcgSU4gVjEuMAovLyAgIC0gRmlyc3QgUmVsZWFzZSAtIENoYW5nZXMgZnJvbSBUcm9zc2VuIG1lbWJlciBLaW5nUGluCg",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAbAQAAAAAAAGQBAAAAAAAAAAAAAAAAAAA"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAbAQAAAAAAAGQBAAAAAAAAAAAAAAAAAAA"
 				],
 				[
 					13,
@@ -286,7 +350,7 @@
 					"left_delete",
 					null,
 					"AQAAAOMAAAAAAAAA4wAAAAAAAAA1AAAALy9EYXRlOiBKdW5lIDE5LCAyMDEzCi8vUHJvZ3JhbW1lcjogS3VydCAoYWthIEt1cnRFKQo",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADjAAAAAAAAABgBAAAAAAAAAAAAAAAAAAA"
+					"CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADjAAAAAAAAABgBAAAAAAAAAAAAAAAAAAA"
 				]
 			]
 		}
@@ -410,10 +474,12 @@
 	"expanded_folders":
 	[
 		"/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSS_Phoenix",
-		"/D/GitHub/LSS_Library_Arduino"
+		"/D/GitHub/LSS_Library_Arduino",
+		"/D/GitHub/LSS_Library_Arduino/src"
 	],
 	"file_history":
 	[
+		"/D/GitHub/LSS_Library_Arduino/src/LSS.cpp",
 		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/serialEvent1.cpp",
 		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy4/serialEvent2.cpp",
 		"/C/arduino-1.8.12/hardware/teensy/avr/cores/teensy3/HardwareSerial.cpp",
@@ -540,18 +606,18 @@
 		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy4/pins_arduino.h",
 		"/C/arduino-1.8.11/hardware/teensy/avr/libraries/Encoder/utility/direct_pin_read.h",
 		"/C/arduino-1.8.11/hardware/teensy/avr/libraries/Encoder/Encoder.h",
-		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy4/usb.c",
-		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy3/usb_dev.c"
+		"/C/arduino-1.8.11/hardware/teensy/avr/cores/teensy4/usb.c"
 	],
 	"find":
 	{
-		"height": 43.0
+		"height": 31.0
 	},
 	"find_in_files":
 	{
 		"height": 113.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -559,6 +625,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"flush",
+			"genericwrite",
+			"::timedread",
+			"->print",
+			".print",
+			"printf",
+			"genericRead_Blocking_s16",
+			"read"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -583,6 +657,7 @@
 				{
 					"buffer": 0,
 					"file": "_Phoenix_Driver_lss.h",
+					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
@@ -593,8 +668,8 @@
 						"selection":
 						[
 							[
-								38094,
-								38094
+								497,
+								497
 							]
 						],
 						"settings":
@@ -604,7 +679,69 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 24550.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/D/GitHub/LSS_Library_Arduino/src/LSS.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10711,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7686,
+								7686
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5557.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "LSS_Phoenix.sublime-project",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 99,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								69,
+								88
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSON/JSON.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -612,9 +749,8 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 3,
 					"file": "LSS_Phoenix.ino",
-					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
@@ -639,12 +775,161 @@
 						"translation.y": 352.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 4,
+					"file": "/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSSTestServos/LSSTestServos.ino",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 20185,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4472,
+								4472
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3168.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/Users/kurte/Documents/Arduino/libraries/LSS_Library_Arduino/src/LSS.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28409,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3939,
+								3940
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4457.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2817,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										231,
+										236
+									],
+									[
+										486,
+										491
+									],
+									[
+										639,
+										644
+									],
+									[
+										874,
+										879
+									],
+									[
+										1112,
+										1117
+									],
+									[
+										1322,
+										1327
+									],
+									[
+										1542,
+										1547
+									],
+									[
+										1761,
+										1766
+									],
+									[
+										1975,
+										1980
+									],
+									[
+										2273,
+										2278
+									],
+									[
+										2580,
+										2585
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "Hex_Cfg.h",
 					"semi_transient": false,
 					"settings":
@@ -668,7 +953,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 7,
 					"stack_multiselect": false,
 					"type": "text"
 				}
@@ -738,7 +1023,7 @@
 	"project": "LSS_Phoenix.sublime-project",
 	"replace":
 	{
-		"height": 78.0
+		"height": 58.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -756,12 +1041,16 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"D:\\GitHub\\LSS_Library_Arduino\\examples\\LSS_Query\\LSS_Query.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
@@ -783,8 +1072,8 @@
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": false,
-	"side_bar_width": 469.0,
+	"side_bar_visible": true,
+	"side_bar_width": 355.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

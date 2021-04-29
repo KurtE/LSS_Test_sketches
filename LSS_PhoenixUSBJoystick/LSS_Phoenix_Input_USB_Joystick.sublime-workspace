@@ -203,25 +203,329 @@
 			"file": "LSS_PhoenixUSBJoystick.ino",
 			"settings":
 			{
-				"buffer_size": 85773,
+				"buffer_size": 85864,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
-			}
+			},
+			"undo_stack":
+			[
+				[
+					35,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAEwEAAAAAAAATQQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABMBAAAAAAAAEwEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					37,
+					1,
+					"insert",
+					{
+						"characters": "#ifdef"
+					},
+					"BgAAAEwEAAAAAAAATQQAAAAAAAAAAAAATQQAAAAAAABOBAAAAAAAAAAAAABOBAAAAAAAAE8EAAAAAAAAAAAAAE8EAAAAAAAAUAQAAAAAAAAAAAAAUAQAAAAAAABRBAAAAAAAAAAAAABRBAAAAAAAAFIEAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABMBAAAAAAAAEwEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					38,
+					1,
+					"insert",
+					{
+						"characters": " USE_TE"
+					},
+					"BwAAAFIEAAAAAAAAUwQAAAAAAAAAAAAAUwQAAAAAAABUBAAAAAAAAAAAAABUBAAAAAAAAFUEAAAAAAAAAAAAAFUEAAAAAAAAVgQAAAAAAAAAAAAAVgQAAAAAAABXBAAAAAAAAAAAAABXBAAAAAAAAFgEAAAAAAAAAAAAAFgEAAAAAAAAWQQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABSBAAAAAAAAFIEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					39,
+					1,
+					"insert",
+					{
+						"characters": "ENSY_DEB"
+					},
+					"CAAAAFkEAAAAAAAAWgQAAAAAAAAAAAAAWgQAAAAAAABbBAAAAAAAAAAAAABbBAAAAAAAAFwEAAAAAAAAAAAAAFwEAAAAAAAAXQQAAAAAAAAAAAAAXQQAAAAAAABeBAAAAAAAAAAAAABeBAAAAAAAAF8EAAAAAAAAAAAAAF8EAAAAAAAAYAQAAAAAAAAAAAAAYAQAAAAAAABhBAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABZBAAAAAAAAFkEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					40,
+					1,
+					"insert",
+					{
+						"characters": "UG"
+					},
+					"AgAAAGEEAAAAAAAAYgQAAAAAAAAAAAAAYgQAAAAAAABjBAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABhBAAAAAAAAGEEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					44,
+					5,
+					"left_delete",
+					null,
+					"BQAAAFEEAAAAAAAAUQQAAAAAAAABAAAAZlAEAAAAAAAAUAQAAAAAAAABAAAAZU8EAAAAAAAATwQAAAAAAAABAAAAZE4EAAAAAAAATgQAAAAAAAABAAAAZk0EAAAAAAAATQQAAAAAAAABAAAAaQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABSBAAAAAAAAFIEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					45,
+					1,
+					"insert",
+					{
+						"characters": "define"
+					},
+					"BgAAAE0EAAAAAAAATgQAAAAAAAAAAAAATgQAAAAAAABPBAAAAAAAAAAAAABPBAAAAAAAAFAEAAAAAAAAAAAAAFAEAAAAAAAAUQQAAAAAAAAAAAAAUQQAAAAAAABSBAAAAAAAAAAAAABSBAAAAAAAAFMEAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABNBAAAAAAAAE0EAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					50,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAHoEAAAAAAAAewQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6BAAAAAAAAHoEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					52,
+					1,
+					"paste",
+					null,
+					"AQAAAHoEAAAAAAAAkwQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6BAAAAAAAAHoEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					54,
+					1,
+					"insert",
+					{
+						"characters": "\\"
+					},
+					"AQAAAHoEAAAAAAAAewQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6BAAAAAAAAHoEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					55,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHoEAAAAAAAAegQAAAAAAAABAAAAXA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB7BAAAAAAAAHsEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					56,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAHoEAAAAAAAAewQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6BAAAAAAAAHoEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					60,
+					1,
+					"insert",
+					{
+						"characters": "ifdef"
+					},
+					"BgAAAHwEAAAAAAAAfQQAAAAAAAAAAAAAfQQAAAAAAAB9BAAAAAAAAAYAAABkZWZpbmV9BAAAAAAAAH4EAAAAAAAAAAAAAH4EAAAAAAAAfwQAAAAAAAAAAAAAfwQAAAAAAACABAAAAAAAAAAAAACABAAAAAAAAIEEAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB8BAAAAAAAAIIEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					64,
+					1,
+					"left_delete",
+					null,
+					"AQAAAJMEAAAAAAAAkwQAAAAAAAABAAAACg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACTBAAAAAAAAJQEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					66,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAKwEAAAAAAAArQQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACsBAAAAAAAAKwEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					68,
+					1,
+					"insert",
+					{
+						"characters": "#endif"
+					},
+					"BgAAAKwEAAAAAAAArQQAAAAAAAAAAAAArQQAAAAAAACuBAAAAAAAAAAAAACuBAAAAAAAAK8EAAAAAAAAAAAAAK8EAAAAAAAAsAQAAAAAAAAAAAAAsAQAAAAAAACxBAAAAAAAAAAAAACxBAAAAAAAALIEAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACsBAAAAAAAAKwEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					69,
+					1,
+					"insert_completion",
+					{
+						"completion": "endofTransmission",
+						"format": "snippet",
+						"keep_prefix": false,
+						"must_insert": false,
+						"trigger": "endofTransmission"
+					},
+					"AgAAAK0EAAAAAAAArQQAAAAAAAAFAAAAZW5kaWatBAAAAAAAAL4EAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACyBAAAAAAAALIEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					70,
+					14,
+					"left_delete",
+					null,
+					"DgAAAL0EAAAAAAAAvQQAAAAAAAABAAAAbrwEAAAAAAAAvAQAAAAAAAABAAAAb7sEAAAAAAAAuwQAAAAAAAABAAAAaboEAAAAAAAAugQAAAAAAAABAAAAc7kEAAAAAAAAuQQAAAAAAAABAAAAc7gEAAAAAAAAuAQAAAAAAAABAAAAabcEAAAAAAAAtwQAAAAAAAABAAAAbbYEAAAAAAAAtgQAAAAAAAABAAAAc7UEAAAAAAAAtQQAAAAAAAABAAAAbrQEAAAAAAAAtAQAAAAAAAABAAAAYbMEAAAAAAAAswQAAAAAAAABAAAAcrIEAAAAAAAAsgQAAAAAAAABAAAAVLEEAAAAAAAAsQQAAAAAAAABAAAAZrAEAAAAAAAAsAQAAAAAAAABAAAAbw",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAC+BAAAAAAAAL4EAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					71,
+					1,
+					"insert",
+					{
+						"characters": "if"
+					},
+					"AgAAALAEAAAAAAAAsQQAAAAAAAAAAAAAsQQAAAAAAACyBAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACwBAAAAAAAALAEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					72,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAALIEAAAAAAAAswQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACyBAAAAAAAALIEAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					109,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAIhPAAAAAAAAiU8AAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACITwAAAAAAAIhPAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					111,
+					1,
+					"paste",
+					null,
+					"AQAAAIhPAAAAAAAAoE8AAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACITwAAAAAAAIhPAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					112,
+					1,
+					"left_delete",
+					null,
+					"AQAAAJ9PAAAAAAAAn08AAAAAAAABAAAACg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACgTwAAAAAAAKBPAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					114,
+					1,
+					"insert",
+					{
+						"characters": "#emd"
+					},
+					"BAAAAL1PAAAAAAAAvk8AAAAAAAAAAAAAvk8AAAAAAAC/TwAAAAAAAAAAAAC/TwAAAAAAAMBPAAAAAAAAAAAAAMBPAAAAAAAAwU8AAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAC9TwAAAAAAAL1PAAAAAAAAAAAAAAAAbkA"
+				],
+				[
+					115,
+					2,
+					"left_delete",
+					null,
+					"AgAAAMBPAAAAAAAAwE8AAAAAAAABAAAAZL9PAAAAAAAAv08AAAAAAAABAAAAbQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADBTwAAAAAAAMFPAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					116,
+					1,
+					"insert",
+					{
+						"characters": "ndif"
+					},
+					"BAAAAL9PAAAAAAAAwE8AAAAAAAAAAAAAwE8AAAAAAADBTwAAAAAAAAAAAADBTwAAAAAAAMJPAAAAAAAAAAAAAMJPAAAAAAAAw08AAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAC/TwAAAAAAAL9PAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					124,
+					1,
+					"insert",
+					{
+						"characters": "//"
+					},
+					"AgAAAHsEAAAAAAAAfAQAAAAAAAAAAAAAfAQAAAAAAAB9BAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB7BAAAAAAAAHsEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					127,
+					2,
+					"left_delete",
+					null,
+					"AgAAAHwEAAAAAAAAfAQAAAAAAAABAAAAL3sEAAAAAAAAewQAAAAAAAABAAAALw",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB9BAAAAAAAAH0EAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					134,
+					1,
+					"cut",
+					null,
+					"AQAAAEwEAAAAAAAATAQAAAAAAAAZAAAAI2RlZmluZSBVU0VfVEVFTlNZX0RFQlVHCg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABMBAAAAAAAAGUEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					136,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAGIEAAAAAAAAYwQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABiBAAAAAAAAGIEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					138,
+					1,
+					"paste",
+					null,
+					"AQAAAGIEAAAAAAAAewQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABiBAAAAAAAAGIEAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					140,
+					1,
+					"insert",
+					{
+						"characters": "//"
+					},
+					"AgAAAGIEAAAAAAAAYwQAAAAAAAAAAAAAYwQAAAAAAABkBAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABiBAAAAAAAAGIEAAAAAAAAAAAAAAAAAAA"
+				]
+			]
 		},
 		{
-			"contents": "HID Bluetooth Library Started\nBTD ConfigureDevice\nBTD Init\nAddr: 01\nEndpoint descriptor:\nLength:\t\t07\nType:\t\t05\nAddress:\t81\nAttributes:\t03\nMaxPktSize:\t0010\nPoll Intrv:\t01\nEndpoint descriptor:\nLength:\t\t07\nType:\t\t05\nAddress:\t02\nAttributes:\t02\nMaxPktSize:\t0040\nPoll Intrv:\t01\nEndpoint descriptor:\nLength:\t\t07\nType:\t\t05\nAddress:\t82\nAttributes:\t02\nMaxPktSize:\t0040\nPoll Intrv:\t01\nBluetooth Dongle Initialized\nNo response to HCI Reset\nHCI Reset complete\nWrite class of device\nLocal Bluetooth Address: 00:1A:7D:DA:71:11\nHCI version: 06\nPage number: 00\nMaximum page number: 00\nExtended LMP features: FF FF 8F FE DB FF 5B 87\nDongle supports secure simple pairing (controller support)\nSimple pairing was enabled\nPlease enable discovery of your device\nNumber of responses: 1\nClass of device: 00 05 08\nGamepad found\nHID device found\nNow just create the instance like so:\nBTHID bthid(&Btd);\nAnd then press any button on the device\nRemote Name: Xbox Wireless Controller\nConnecting to HID device\nConnection established\nConnected to HID device\nL2CAP Connection Request - PSM: 00 01 SCID: 00 40 Identifier: 01\nSDP Incoming Connection Request\nPage number: 00\nMaximum page number: 03\nExtended LMP features: BF 3E 8D FE DB FD 7B 87\nRemote supports secure simple pairing (controller support)\nSDP Configuration Request\nReceived Key Request\nSDP Configuration Complete\nSDP Successfully Configured\nSDP_SERVICE_SEARCH_ATTRIBUTE_REQUEST\nUUID: 1200\nLength: 000D\nData: 35 03 19 12 00 00 64 35 03 09 00 01 00 \nPairing Failed: 05\nSDP_SERVICE_SEARCH_REQUEST\nHCI Disconnected from Device\nWait For Incoming Connection Request",
+			"file": "Hex_Cfg.h",
 			"settings":
 			{
-				"buffer_size": 1590,
-				"line_ending": "Windows",
-				"name": "HID Bluetooth Library Started"
+				"buffer_size": 14307,
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "/D/GitHub/USBHost_t36/USBHost_t36.h",
 			"settings":
 			{
-				"buffer_size": 74659,
+				"buffer_size": 79815,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -230,26 +534,29 @@
 			"file": "/D/GitHub/USBHost_t36/bluetooth.cpp",
 			"settings":
 			{
-				"buffer_size": 64744,
+				"buffer_size": 62357,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 112 files for \"HID_CTRL_PSM\" (regex)\n\nD:\\GitHub\\USBHost_t36\\bluetooth.cpp:\n  106  \n  107  /* Bluetooth L2CAP PSM - see http://www.bluetooth.org/Technical/AssignedNumbers/logical_link.htm */\n  108: #define HID_CTRL_PSM    0x11 // HID_Control PSM Value\n  109  #define HID_INTR_PSM    0x13 // HID_Interrupt PSM Value\n  110  \n  ...\n  823  \t\t// The PS4 requires a connection request to it. \n  824  \t\tdelay(1);\n  825: \t\tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n  826  #if 0\t\t\n  827  \t\tdelay(1);\n  ...\n  938  \t// Start up lcap connection...\n  939  \tconnections_[current_connection_].connection_rxid_ = 0;\n  940: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n  941  }\n  942  \n  ...\n 1427  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 1428  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 1429: \tif (psm == HID_CTRL_PSM) {\n 1430  \t\tconnections_[current_connection_].control_scid_ = scid;\n 1431  \t\tsendl2cap_ConnectionResponse(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, connections_[current_connection_].control_scid_, PENDING);\n\nD:\\GitHub\\USBHost_t36\\examples\\USBHost_viewer\\Release\\USBHost_viewer.ino.lst:\n 20141  \n 20142  00005804 <BluetoothController::handle_hci_remote_name_complete()>:\n 20143: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20144  }\n 20145  \n .....\n 20153  \tif (rxbuf_[2] == 0) {\n 20154      5806:\tf890 3482 \tldrb.w\tr3, [r0, #1154]\t; 0x482\n 20155: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20156  }\n 20157  \n .....\n 20909  \t\tdelay(1);\n 20910      5ade:\t2001      \tmovs\tr0, #1\n 20911: \t\tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20912      5ae0:\t2511      \tmovs\tr5, #17\n 20913  \t\tsendHCIAuthenticationRequested();\n .....\n 20918  \t\tdelay(1);\n 20919      5ae2:\tf00b f89b \tbl\t10c1c <delay>\n 20920: \t\tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20921      5ae6:\tf894 30a1 \tldrb.w\tr3, [r4, #161]\t; 0xa1\n 20922      5aea:\t4620      \tmov\tr0, r4\n .....\n 21221      5c76:\tf894 50a1 \tldrb.w\tr5, [r4, #161]\t; 0xa1\n 21222      5c7a:\t2600      \tmovs\tr6, #0\n 21223: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21224      5c7c:\t2711      \tmovs\tr7, #17\n 21225      5c7e:\t4620      \tmov\tr0, r4\n .....\n 21231  \tconnections_[current_connection_].connection_rxid_ = 0;\n 21232      5c80:\teb05 05c5 \tadd.w\tr5, r5, r5, lsl #3\n 21233: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21234      5c84:\t4632      \tmov\tr2, r6\n 21235  {\n .....\n 21240  \tconnections_[current_connection_].connection_rxid_ = 0;\n 21241      5c86:\teb04 0585 \tadd.w\tr5, r4, r5, lsl #2\n 21242: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21243      5c8a:\t8aeb      \tldrh\tr3, [r5, #22]\n 21244      5c8c:\t8da9      \tldrh\tr1, [r5, #44]\t; 0x2c\n .....\n 21250  \tconnections_[current_connection_].connection_rxid_ = 0;\n 21251      5c8e:\t82ae      \tstrh\tr6, [r5, #20]\n 21252: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21253      5c90:\t9700      \tstr\tr7, [sp, #0]\n 21254      5c92:\tf7ff fee3 \tbl\t5a5c <BluetoothController::sendl2cap_ConnectionRequest(unsigned short, unsigned char, unsigned short, unsigned short)>\n .....\n 22046  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22047  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22048: \tif (psm == HID_CTRL_PSM) {\n 22049      5f92:\t2b11      \tcmp\tr3, #17\n 22050  void  BluetoothController::process_l2cap_connection_request(uint8_t *data) {\n .....\n 22069  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22070  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22071: \tif (psm == HID_CTRL_PSM) {\n 22072      5f9c:\td010      \tbeq.n\t5fc0 <BluetoothController::process_l2cap_connection_request(unsigned char*)+0x50>\n 22073  \t\tconnections_[current_connection_].control_scid_ = scid;\n .....\n 22094      5fa8:\t8b23      \tldrh\tr3, [r4, #24]\n 22095      5faa:\t8da1      \tldrh\tr1, [r4, #44]\t; 0x2c\n 22096: \tif (psm == HID_CTRL_PSM) {\n 22097  \t\tconnections_[current_connection_].control_scid_ = scid;\n 22098  \t\tsendl2cap_ConnectionResponse(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, connections_[current_connection_].control_scid_, PENDING);\n .....\n 22115  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22116  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22117: \tif (psm == HID_CTRL_PSM) {\n 22118  \t\tconnections_[current_connection_].control_scid_ = scid;\n 22119  \t\tsendl2cap_ConnectionResponse(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, connections_[current_connection_].control_scid_, PENDING);\n .....\n 22125  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22126  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22127: \tif (psm == HID_CTRL_PSM) {\n 22128  \t\tconnections_[current_connection_].control_scid_ = scid;\n 22129      5fc6:\t83a6      \tstrh\tr6, [r4, #28]\n\nD:\\GitHub\\USBHost_t36\\examples\\USBHost_viewer\\Release\\USBHost_viewer.lst:\n 20141  \n 20142  00005804 <BluetoothController::handle_hci_remote_name_complete()>:\n 20143: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20144  }\n 20145  \n .....\n 20153  \tif (rxbuf_[2] == 0) {\n 20154      5806:\tf890 3482 \tldrb.w\tr3, [r0, #1154]\t; 0x482\n 20155: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20156  }\n 20157  \n .....\n 20909  \t\tdelay(1);\n 20910      5ade:\t2001      \tmovs\tr0, #1\n 20911: \t\tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20912      5ae0:\t2511      \tmovs\tr5, #17\n 20913  \t\tsendHCIAuthenticationRequested();\n .....\n 20918  \t\tdelay(1);\n 20919      5ae2:\tf00b f89b \tbl\t10c1c <delay>\n 20920: \t\tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 20921      5ae6:\tf894 30a1 \tldrb.w\tr3, [r4, #161]\t; 0xa1\n 20922      5aea:\t4620      \tmov\tr0, r4\n .....\n 21221      5c76:\tf894 50a1 \tldrb.w\tr5, [r4, #161]\t; 0xa1\n 21222      5c7a:\t2600      \tmovs\tr6, #0\n 21223: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21224      5c7c:\t2711      \tmovs\tr7, #17\n 21225      5c7e:\t4620      \tmov\tr0, r4\n .....\n 21231  \tconnections_[current_connection_].connection_rxid_ = 0;\n 21232      5c80:\teb05 05c5 \tadd.w\tr5, r5, r5, lsl #3\n 21233: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21234      5c84:\t4632      \tmov\tr2, r6\n 21235  {\n .....\n 21240  \tconnections_[current_connection_].connection_rxid_ = 0;\n 21241      5c86:\teb04 0585 \tadd.w\tr5, r4, r5, lsl #2\n 21242: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21243      5c8a:\t8aeb      \tldrh\tr3, [r5, #22]\n 21244      5c8c:\t8da9      \tldrh\tr1, [r5, #44]\t; 0x2c\n .....\n 21250  \tconnections_[current_connection_].connection_rxid_ = 0;\n 21251      5c8e:\t82ae      \tstrh\tr6, [r5, #20]\n 21252: \tsendl2cap_ConnectionRequest(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, HID_CTRL_PSM);\n 21253      5c90:\t9700      \tstr\tr7, [sp, #0]\n 21254      5c92:\tf7ff fee3 \tbl\t5a5c <BluetoothController::sendl2cap_ConnectionRequest(unsigned short, unsigned char, unsigned short, unsigned short)>\n .....\n 22046  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22047  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22048: \tif (psm == HID_CTRL_PSM) {\n 22049      5f92:\t2b11      \tcmp\tr3, #17\n 22050  void  BluetoothController::process_l2cap_connection_request(uint8_t *data) {\n .....\n 22069  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22070  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22071: \tif (psm == HID_CTRL_PSM) {\n 22072      5f9c:\td010      \tbeq.n\t5fc0 <BluetoothController::process_l2cap_connection_request(unsigned char*)+0x50>\n 22073  \t\tconnections_[current_connection_].control_scid_ = scid;\n .....\n 22094      5fa8:\t8b23      \tldrh\tr3, [r4, #24]\n 22095      5faa:\t8da1      \tldrh\tr1, [r4, #44]\t; 0x2c\n 22096: \tif (psm == HID_CTRL_PSM) {\n 22097  \t\tconnections_[current_connection_].control_scid_ = scid;\n 22098  \t\tsendl2cap_ConnectionResponse(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, connections_[current_connection_].control_scid_, PENDING);\n .....\n 22115  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22116  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22117: \tif (psm == HID_CTRL_PSM) {\n 22118  \t\tconnections_[current_connection_].control_scid_ = scid;\n 22119  \t\tsendl2cap_ConnectionResponse(connections_[current_connection_].device_connection_handle_, connections_[current_connection_].connection_rxid_, connections_[current_connection_].control_dcid_, connections_[current_connection_].control_scid_, PENDING);\n .....\n 22125  \t//      RXID Len  LEN  DCID DCID  SCID SCID RES 0     0    0\n 22126  \t// 0x03 0x02 0x08 0x00 0x70 0x00 0x43 0x00 0x01 0x00 0x00 0x00\n 22127: \tif (psm == HID_CTRL_PSM) {\n 22128  \t\tconnections_[current_connection_].control_scid_ = scid;\n 22129      5fc6:\t83a6      \tstrh\tr6, [r4, #28]\n\n30 matches across 3 files\n\n\nSearching 112 files for \"EV_COMMAND_STATUS\" (regex)\n\nD:\\GitHub\\USBHost_t36\\bluetooth.cpp:\n  134  \t\t,EV_AUTHENTICATION_COMPLETE= 0x06,EV_REMOTE_NAME_COMPLETE= 0x07,EV_ENCRYPTION_CHANGE= 0x08,EV_CHANGE_CONNECTION_LINK= 0x09,EV_ROLE_CHANGED= 0x12\n  135  \t\t,EV_NUM_COMPLETE_PKT= 0x13,EV_PIN_CODE_REQUEST= 0x16,EV_LINK_KEY_REQUEST= 0x17,EV_LINK_KEY_NOTIFICATION= 0x18,EV_DATA_BUFFER_OVERFLOW= 0x1A\n  136: \t\t,EV_MAX_SLOTS_CHANGE= 0x1B,EV_READ_REMOTE_VERSION_INFORMATION_COMPLETE= 0x0C,EV_QOS_SETUP_COMPLETE= 0x0D,EV_COMMAND_COMPLETE= 0x0E,EV_COMMAND_STATUS= 0x0F\n  137  \t\t,EV_LOOPBACK_COMMAND= 0x19,EV_PAGE_SCAN_REP_MODE= 0x20, EV_INQUIRY_RESULTS_WITH_RSSI=0x22, EV_EXTENDED_INQUIRY_RESULT=0x2F };\n  138  \n  ...\n  394  \t        \thandle_hci_command_complete();// Check if command succeeded\n  395  \t            break;\n  396:             case EV_COMMAND_STATUS:\t//0x0f\n  397              \thandle_hci_command_status();\n  398              \tbreak;\n\nD:\\GitHub\\USBHost_t36\\examples\\USBHost_viewer\\Release\\USBHost_viewer.elf:\n    <binary>\n\nD:\\GitHub\\USBHost_t36\\examples\\USBHost_viewer\\Release\\USBHost_viewer.ino.elf:\n    <binary>\n\nD:\\GitHub\\USBHost_t36\\examples\\USBHost_viewer\\Release\\USBHost_viewer.ino.lst:\n 21360  \t        \thandle_hci_command_complete();// Check if command succeeded\n 21361  \t            break;\n 21362:             case EV_COMMAND_STATUS:\t//0x0f\n 21363              \thandle_hci_command_status();\n 21364      5d36:\t4620      \tmov\tr0, r4\n\nD:\\GitHub\\USBHost_t36\\examples\\USBHost_viewer\\Release\\USBHost_viewer.lst:\n 21360  \t        \thandle_hci_command_complete();// Check if command succeeded\n 21361  \t            break;\n 21362:             case EV_COMMAND_STATUS:\t//0x0f\n 21363              \thandle_hci_command_status();\n 21364      5d36:\t4620      \tmov\tr0, r4\n\n6 matches across 5 files\n",
-			"settings":
-			{
-				"buffer_size": 13740,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
+			},
+			"undo_stack":
+			[
+				[
+					7,
+					1,
+					"insert",
+					{
+						"characters": "//"
+					},
+					"AgAAAMAFAAAAAAAAwQUAAAAAAAAAAAAAwQUAAAAAAADCBQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADABQAAAAAAAMAFAAAAAAAAAAAAAAAAAAA"
+				]
+			]
 		},
 		{
 			"file": "/D/GitHub/USBHost_t36/joystick.cpp",
 			"settings":
 			{
-				"buffer_size": 41737,
+				"buffer_size": 41739,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -259,30 +566,6 @@
 			"settings":
 			{
 				"buffer_size": 28796,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "\n\nUSB Host Testing\n\n960\n\n\n*** USBHost Debug data - No external PSRAM using DMAMEM ***\n\n*** Device Bluet a12:1 - connected ***\n  product: CSR8510 A10\n  BDADDR: 11:71:da:7d:1a:0\n*** BTHID Device Joystick1 0:0 - connected ***\n  product: Xbox Wireless Controller\n  Serial:  \n\n *** dump the USBHost Debug data ***\n\nUSB2 PLL running\n\n reset waited 6\n\nUSBHS_ASYNCLISTADDR = 0\n\nUSBHS_PERIODICLISTBASE = 20008000\n\nperiodictable = 20008000\n\nport change: 10001803\n\n    connect\n\n  begin reset\n\nport change: 10001805\n\n  port enabled\n\n  end recovery\n\nnew_Device: 12 Mbit/sec\n\nnew_Pipe\n\nenumeration:\n\nenumeration:\n\nenumeration:\n\nDevice Descriptor:\n\n  12 01 00 02 E0 01 01 40 12 0A 01 00 91 88 00 02 00 01 \n\n    VendorID = 0A12, ProductID = 0001, Version = 8891\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n    Number of Configurations = 1\n\nenumeration:\n\nenumeration:\n\nProduct: CSR8510 A10\n\nenumeration:\n\nConfig data length = 177\n\nenumeration:\n\nConfiguration Descriptor:\n\n  09 02 B1 00 02 01 00 E0 32 \n\n    NumInterfaces = 2\n\n    ConfigurationValue = 1\n\n  09 04 00 00 03 E0 01 01 00 \n\n    Interface = 0\n\n    Number of endpoints = 3\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 81 03 10 00 01 \n\n    Endpoint = 1 IN\n\n    Type = Interrupt\n\n    Max Size = 16\n\n    Polling Interval = 1\n\n  07 05 02 02 40 00 01 \n\n    Endpoint = 2 OUT\n\n    Type = Bulk\n\n    Max Size = 64\n\n    Polling Interval = 1\n\n  07 05 82 02 40 00 01 \n\n    Endpoint = 2 IN\n\n    Type = Bulk\n\n    Max Size = 64\n\n    Polling Interval = 1\n\n  09 04 01 00 02 E0 01 01 00 \n\n    Interface = 1\n\n    Number of endpoints = 2\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 03 01 00 00 01 \n\n    Endpoint = 3 OUT\n\n    Type = Isochronous\n\n    Max Size = 0\n\n    Polling Interval = 1\n\n  07 05 83 01 00 00 01 \n\n    Endpoint = 3 IN\n\n    Type = Isochronous\n\n    Max Size = 0\n\n    Polling Interval = 1\n\n  09 04 01 01 02 E0 01 01 00 \n\n    Interface = 1\n\n    Number of endpoints = 2\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 03 01 09 00 01 \n\n    Endpoint = 3 OUT\n\n    Type = Isochronous\n\n    Max Size = 9\n\n    Polling Interval = 1\n\n  07 05 83 01 09 00 01 \n\n    Endpoint = 3 IN\n\n    Type = Isochronous\n\n    Max Size = 9\n\n    Polling Interval = 1\n\n  09 04 01 02 02 E0 01 01 00 \n\n    Interface = 1\n\n    Number of endpoints = 2\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 03 01 11 00 01 \n\n    Endpoint = 3 OUT\n\n    Type = Isochronous\n\n    Max Size = 17\n\n    Polling Interval = 1\n\n  07 05 83 01 11 00 01 \n\n    Endpoint = 3 IN\n\n    Type = Isochronous\n\n    Max Size = 17\n\n    Polling Interval = 1\n\n  09 04 01 03 02 E0 01 01 00 \n\n    Interface = 1\n\n    Number of endpoints = 2\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 03 01 19 00 01 \n\n    Endpoint = 3 OUT\n\n    Type = Isochronous\n\n    Max Size = 25\n\n    Polling Interval = 1\n\n  07 05 83 01 19 00 01 \n\n    Endpoint = 3 IN\n\n    Type = Isochronous\n\n    Max Size = 25\n\n    Polling Interval = 1\n\n  09 04 01 04 02 E0 01 01 00 \n\n    Interface = 1\n\n    Number of endpoints = 2\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 03 01 21 00 01 \n\n    Endpoint = 3 OUT\n\n    Type = Isochronous\n\n    Max Size = 33\n\n    Polling Interval = 1\n\n  07 05 83 01 21 00 01 \n\n    Endpoint = 3 IN\n\n    Type = Isochronous\n\n    Max Size = 33\n\n    Polling Interval = 1\n\n  09 04 01 05 02 E0 01 01 00 \n\n    Interface = 1\n\n    Number of endpoints = 2\n\n    Class/Subclass/Protocol = 224 / 1 / 1\n\n  07 05 03 01 31 00 01 \n\n    Endpoint = 3 OUT\n\n    Type = Isochronous\n\n    Max Size = 49\n\n    Polling Interval = 1\n\n  07 05 83 01 31 00 01 \n\n    Endpoint = 3 IN\n\n    Type = Isochronous\n\n    Max Size = 49\n\n    Polling Interval = 1\n\nenumeration:\n\nUSBHub memory usage = 960\n\nUSBHub claim_device this=20005AC0\n\nUSBHub memory usage = 960\n\nUSBHub claim_device this=20005E80\n\nHIDParser claim this=200041E0\n\nHIDParser claim this=20004800\n\nHIDParser claim this=200062E0\n\nHIDParser claim this=20004E40\n\nHIDParser claim this=20005460\n\nJoystickController claim this=200070E0\n\nBluetoothController claim this=200069C0\n\nBluetoothController claim this=200069c0 vid:pid=a12:1\n    9 4 0 0 3 e0 1 1 0 7 5 81 3 10 0 1 7 5 2 2 40 0 1 7 5 82 2 40 0 1 9 4 1 0 2 e0 1 1 0 7 5 3 1 0 0 1 7 5 83 1 0 0 1 9 4 1 1 2 e0 1 1 0 7 5 \n    3 1 9 0 1 7 5 83 1 9 0 1 9 4 1 2 2 e0 1 1 0 7 5 3 1 11 0 1 7 5 83 1 11 0 1 9 4 1 3 2 e0 1 1 0 7 5 3 1 19 0 1 7 5 83 1 19 0 1 9 4 1 4 2 e0 \n    1 1 0 7 5 3 1 21 0 1 7 5 83 1 21 0 1 9 4 1 5 2 e0 1 1 0 7 5 3 1 31 0 1 7 5 83 1 31 0 1 \n      rxep=1(16) txep=2(64) rx2ep=2(64)\nBluetoothController, rxep=1(16), txep=2(64)\n\nnew_Pipe\n\nallocate_interrupt_pipe_bandwidth\n\n best_bandwidth = 3, at offset = 0, shift= 0\n\nnew_Pipe\n\nallocate_interrupt_pipe_bandwidth\n\n best_bandwidth = 6, at offset = 0, shift= 1\n\nnew_Pipe\n\nHCI_RESET called (03 0c 00 )\n    control callback (bluetooth) 1\n\n    Control callback (bluetooth): 1 : 3 c 0 \n0E 04 01 03 0C 00 \n\nBT rx_data(6): e 4 1 3 c 0 \n    Command Completed! \nHCI_WRITE_CLASS_OF_DEV called (24 0c 03 04 08 00 )\n    control callback (bluetooth) 3\n\n    Control callback (bluetooth): 3 : 24 c 3 4 8 0 \n0E 04 01 24 0C 00 \n\nBT rx_data(6): e 4 1 24 c 0 \n    Command Completed! \nHCI_Read_BD_ADDR called (09 10 00 )\n    control callback (bluetooth) 4\n\n    Control callback (bluetooth): 4 : 9 10 0 \n0E 0A 01 09 10 00 11 71 DA 7D 1A 00 \n\nBT rx_data(12): e a 1 9 10 0 11 71 da 7d 1a 0 \n    Command Completed! \n   BD Addr 0:1a:7d:da:71:11\nHCI_Read_Local_Version_Information called (01 10 00 )\n    control callback (bluetooth) 4\n\n    Control callback (bluetooth): 4 : 1 10 0 \n0E 0C 01 01 10 00 06 BB 22 06 0A 00 BB 22 \n\nBT rx_data(14): e c 1 1 10 0 6 bb 22 6 a 0 bb 22 \n    Command Completed! \n    Local Version: 6\nHCI_WRITE_INQUIRY_MODE called (45 0c 01 02 )\n    control callback (bluetooth) 6\n\n    Control callback (bluetooth): 6 : 45 c 1 2 \n0E 04 01 45 0C 00 \n\nBT rx_data(6): e 4 1 45 c 0 \n    Command Completed! \nHCI_Set_Event_Mask called (01 0c 08 ff ff ff ff ff 5f 00 00 )\n    control callback (bluetooth) 7\n\n    Control callback (bluetooth): 7 : 1 c 8 ff ff ff ff ff 5f 0 0 \n0E 04 01 01 0C 00 \n\nBT rx_data(6): e 4 1 1 c 0 \n    Command Completed! \nHCI_INQUIRY called (01 04 05 33 8b 9e 30 0a )\n    control callback (bluetooth) 8\n\n    Control callback (bluetooth): 8 : 1 4 5 33 8b 9e 30 a \n0F 04 00 01 01 04 \n\nBT rx_data(6): f 4 0 1 1 4 \n    Command 401 Status 0\n2F FF 01 DC 13 D6 1B AA 9C 01 02 08 05 00 59 7E \n\nBT rx_data(16): 2f ff 1 dc 13 d6 1b aa 9c 1 2 8 5 0 59 7e \nCF 19 09 58 62 6F 78 20 57 69 72 65 6C 65 73 73 \n\nBT rx_data(16): cf 19 9 58 62 6f 78 20 57 69 72 65 6c 65 73 73 \n20 43 6F 6E 74 72 6F 6C 6C 65 72 03 03 24 11 00 \n\nBT rx_data(16): 20 43 6f 6e 74 72 6f 6c 6c 65 72 3 3 24 11 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n\nBT rx_data(16): 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n00 \n\nBT rx_data(1): 0 \n    Extended Inquiry Result - Count: 1\n      BD:dc:13:d6:1b:aa:9c, PS:1, class: 508\n      Local Name: Xbox Wireless Controller\n      Peripheral device\n        Gamepad\nBluetoothController::find_driver  driver 200070f8\nJoystickController::claim_bluetooth TRUE\n  JoystickController::mapNameToJoystickType 200070e0 Xbox Wireless Controller - set to XBOXONE\n  Joystick Type: 3\n    *** Claimed ***\nHCI_INQUIRY_CANCEL called (02 04 00 )\n    control callback (bluetooth) 64\n\n    Control callback (bluetooth): 100 : 2 4 0 \n0E 04 01 02 04 00 \n\nBT rx_data(6): e 4 1 2 4 0 \n    Command Completed! \nHCI_CREATE_CONNECTION called (05 04 0d dc 13 d6 1b aa 9c 18 cc 01 00 00 00 00 )\n    control callback (bluetooth) 65\n\n    Control callback (bluetooth): 101 : 5 4 d dc 13 d6 1b aa 9c 18 cc 1 0 0 0 0 \n0F 04 00 01 05 04 \n\nBT rx_data(6): f 4 0 1 5 4 \n    Command 405 Status 0\n03 0B 00 48 00 DC 13 D6 1B AA 9C 01 00 \n\nBT rx_data(13): 3 b 0 48 0 dc 13 d6 1b aa 9c 1 0 \n    Connection Complete - ST:0 LH:48\nHCI_AUTH_REQUESTED called (11 04 02 48 00 )\n    control callback (bluetooth) 6E\n\n    Control callback (bluetooth): 110 : 11 4 2 48 0 \n0F 04 00 00 11 04 \n\nBT rx_data(6): f 4 0 0 11 4 \n    Command 411 Status 0\n\n=====================\nBT rx2_data(16): 48 20 c 0 8 0 1 0 2 1 4 0 1 0 40 0 \n    L2CAP Connection Request: ID: 1, PSM: 1, SCID: 40\n1B 03 48 00 05 \n\nBT rx_data(5): 1b 3 48 0 5 \n17 06 DC 13 D6 1B AA 9C \n\nBT rx_data(8): 17 6 dc 13 d6 1b aa 9c \n    Event: Link Key Request dc:13:d6:1b:aa:9c\nHCI_LINK_KEY_NEG_REPLY called (0c 04 06 dc 13 d6 1b aa 9c )\n0F 04 00 01 00 00 \n\nBT rx_data(6): f 4 0 1 0 0 \n    Command 0 Status 0\n    control callback (bluetooth) 78\n\n    Control callback (bluetooth): 120 : c 4 6 dc 13 d6 1b aa 9c \n0E 0A 01 0C 04 00 DC 13 D6 1B AA 9C \n\nBT rx_data(12): e a 1 c 4 0 dc 13 d6 1b aa 9c \n    Command Completed! \n16 06 DC 13 D6 1B AA 9C \n\nBT rx_data(8): 16 6 dc 13 d6 1b aa 9c \n    Event: Pin Code Request dc:13:d6:1b:aa:9c\nHCI_PIN_CODE_REPLY called (0d 04 17 dc 13 d6 1b aa 9c 04 30 30 30 30 00 00 00 00 00 00 00 00 00 00 00 00 )\n    control callback (bluetooth) 82\n\n    Control callback (bluetooth): 130 : d 4 17 dc 13 d6 1b aa 9c 4 30 30 30 30 0 0 0 0 0 0 0 0 0 0 0 0 \n0E 0A 01 0D 04 00 DC 13 D6 1B AA 9C \n\nBT rx_data(12): e a 1 d 4 0 dc 13 d6 1b aa 9c \n    Command Completed! \n06 03 06 48 00 \n\nBT rx_data(5): 6 3 6 48 0 \n    Event: HCI Authentication complete(6): handle: 48\nConnectionRequest called(48 20 0c 00 08 00 01 00 02 00 04 00 11 00 70 00 )\n    tx_data(bluetooth) 82\n\ntx_data callback (bluetooth): 0 : 48 20 c 0 8 0 1 0 2 0 4 0 11 0 70 0 \n13 05 01 48 00 01 00 \n\nBT rx_data(7): 13 5 1 48 0 1 0 \n\n=====================\nBT rx2_data(20): 48 20 10 0 c 0 1 0 3 0 8 0 40 0 70 0 3 0 0 0 \n    L2CAP Connection Response: ID: 0, Dest:40, Source:70, Result:3, Status: 0\n      Control Response\nL2CAP_ConfigRequest called(48 20 10 00 0c 00 01 00 04 00 08 00 40 00 00 00 01 02 ff ff )\n    tx_data(bluetooth) 82\n\ntx_data callback (bluetooth): 0 : 48 20 10 0 c 0 1 0 4 0 8 0 40 0 0 0 1 2 ff ff \n13 05 01 48 00 01 00 \n\nBT rx_data(7): 13 5 1 48 0 1 0 \n\n=====================\nBT rx2_data(18): 48 20 e 0 a 0 1 0 1 0 6 0 2 0 40 0 0 0 \n    L2CAP command reject: ID: 0, length:6, Reason:2,  Data: 0 40 \n",
-			"settings":
-			{
-				"buffer_size": 11107,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/kurte/Desktop/foo.txt",
-			"settings":
-			{
-				"buffer_size": 2453863,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/kurte/Desktop/foo2.txt",
-			"settings":
-			{
-				"buffer_size": 8090,
 				"line_ending": "Windows"
 			}
 		}
@@ -300,6 +583,34 @@
 					"Packages/C++/C++ Single File.sublime-build",
 					"Run"
 				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"New Sketch"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"Verify"
+				],
+				[
+					"Packages/User/Teensy.sublime-build",
+					"Tools Set"
+				]
+			],
+			[
+				"Packages/User/Teensy.sublime-build",
+				""
+			]
+		],
+		[
+			[
 				[
 					"Packages/User/Teensy.sublime-build",
 					""
@@ -560,6 +871,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"debug.",
+			"debug",
+			"debug.",
+			"debug",
 			"break",
 			"debug",
 			"gdb",
@@ -633,7 +948,7 @@
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
 			",",
@@ -645,32 +960,34 @@
 			"USBJoystickInputController"
 		],
 		"reverse": false,
+		"scrollbar_highlights": true,
 		"show_context": true,
 		"use_buffer2": true,
+		"use_gitignore": true,
 		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
 					"file": "LSS_PhoenixUSBJoystick.ino",
+					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 85773,
+						"buffer_size": 85864,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								79354,
-								79354
+								1173,
+								1173
 							]
 						],
 						"settings":
@@ -680,38 +997,40 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 43417.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"semi_transient": false,
+					"file": "Hex_Cfg.h",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 1590,
+						"buffer_size": 14307,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1061,
-								1077
+								3239,
+								3244
 							]
 						],
 						"settings":
 						{
-							"auto_name": "HID Bluetooth Library Started",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 564.0,
+						"translation.y": 2587.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
@@ -720,293 +1039,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 74659,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								67247,
-								67256
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 38753.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/D/GitHub/USBHost_t36/bluetooth.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 64744,
-						"regions":
-						{
-							"bookmarks":
-							{
-								"flags": 144,
-								"icon": "bookmark",
-								"regions":
-								[
-									[
-										53791,
-										53791
-									],
-									[
-										57051,
-										57051
-									],
-									[
-										60670,
-										60670
-									]
-								],
-								"scope": "bookmarks"
-							}
-						},
-						"selection":
-						[
-							[
-								52396,
-								52397
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 29184.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 13740,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										215,
-										227
-									],
-									[
-										614,
-										626
-									],
-									[
-										970,
-										982
-									],
-									[
-										1167,
-										1179
-									],
-									[
-										1869,
-										1881
-									],
-									[
-										2200,
-										2212
-									],
-									[
-										2502,
-										2514
-									],
-									[
-										2876,
-										2888
-									],
-									[
-										3294,
-										3306
-									],
-									[
-										3716,
-										3728
-									],
-									[
-										4106,
-										4118
-									],
-									[
-										4543,
-										4555
-									],
-									[
-										4924,
-										4936
-									],
-									[
-										5235,
-										5247
-									],
-									[
-										5564,
-										5576
-									],
-									[
-										6075,
-										6087
-									],
-									[
-										6586,
-										6598
-									],
-									[
-										7074,
-										7086
-									],
-									[
-										7405,
-										7417
-									],
-									[
-										7707,
-										7719
-									],
-									[
-										8081,
-										8093
-									],
-									[
-										8499,
-										8511
-									],
-									[
-										8921,
-										8933
-									],
-									[
-										9311,
-										9323
-									],
-									[
-										9748,
-										9760
-									],
-									[
-										10129,
-										10141
-									],
-									[
-										10440,
-										10452
-									],
-									[
-										10769,
-										10781
-									],
-									[
-										11280,
-										11292
-									],
-									[
-										11791,
-										11803
-									],
-									[
-										12483,
-										12500
-									],
-									[
-										12784,
-										12801
-									],
-									[
-										13276,
-										13293
-									],
-									[
-										13598,
-										13615
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								12343,
-								12349
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 2,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 4642.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/D/GitHub/USBHost_t36/joystick.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 41737,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1319,
-								1319
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "LSS_Phoenix_Input_USB_Joystick.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 28796,
+						"buffer_size": 79815,
 						"regions":
 						{
 						},
@@ -1020,100 +1053,108 @@
 						"settings":
 						{
 							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 5,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 38753.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/D/GitHub/USBHost_t36/bluetooth.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 62357,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1474,
+								1474
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/D/GitHub/USBHost_t36/joystick.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41739,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
+							"tab_size": 8,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "LSS_Phoenix_Input_USB_Joystick.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28796,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10073,
+								10073
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4279.0,
+						"translation.y": 6391.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11107,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9245,
-								9245
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 10014.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "/C/Users/kurte/Desktop/foo.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2453863,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2453863,
-								2453863
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1571953.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/C/Users/kurte/Desktop/foo2.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8090,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7292,
-								7292
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1659.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
+					"stack_index": 3,
+					"stack_multiselect": false,
 					"type": "text"
 				}
 			]
@@ -1178,7 +1219,7 @@
 	{
 		"height": 363.0
 	},
-	"pinned_build_system": "",
+	"pinned_build_system": "Packages/User/Teensy.sublime-build",
 	"project": "LSS_Phoenix_Input_USB_Joystick.sublime-project",
 	"replace":
 	{
@@ -1200,12 +1241,16 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"D:\\GitHub\\TMM-HB01B0-Camera\\TMM-HM01B0\\examples\\hm01b0_KitchenSink\\hmb01b0_KitchenSink.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
