@@ -96,7 +96,7 @@
 // Define Analog pin and minimum voltage that we will allow the servos to run
 #if defined(KINETISK) ||  defined(__IMXRT1062__)
 // Our Teensy board
-#define cVoltagePin  0
+#define cVoltagePin  38
 #define CVADR1      402  // VD Resistor 1 - reduced as only need ratio... 40.2K and 10K
 #define CVADR2      100    // VD Resistor 2
 #define CVREF       330    // 3.3v

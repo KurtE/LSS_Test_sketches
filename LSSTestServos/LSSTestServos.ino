@@ -173,6 +173,7 @@ void loop() {
   Serial.println("t - Toggle track Servos");
   Serial.println("h - hold [<sn>]");
   Serial.println("f - free [<sn>]");
+  Serial.println("m - move all servos");
   Serial.println("r - Reboot [<sn>]");
 
   Serial.print(":");
@@ -230,6 +231,10 @@ void loop() {
         else
           Serial.println("Tracking Off");
         TrackPrintMinsMaxs();
+        break;
+      case 'm':
+      case 'M':
+        MoveAllServos();
         break;
       case 'w':
       case 'W':
@@ -326,6 +331,53 @@ void AllServosCenter(void) {
   AllServosOn();
   LSS::genericWrite(LSS_BroadcastID, LSS_ActionMove, 0,
                     LSS_ActionParameterTime, 500);  // move in half second
+}
+
+//=======================================================================================
+void MoveAllServos(void) {
+  // first move all to center and on
+  AllServosCenter();
+
+  static int MIN_SERVO_POS = -200;
+  static int MAX_SERVO_POS = 200; 
+  int servo_angle = 0;
+  int servo_increment = 5;
+
+  int positions[NUM_SERVOS];
+  int voltages[NUM_SERVOS];
+  int temps[NUM_SERVOS];
+  int index_print = 0;
+  Serial.println("Move All servos: Enter any key to exit");
+  while (Serial.read() != -1);
+
+  while (!Serial.available()) {
+    elapsedMicros em = 0;
+    servo_angle += servo_increment;
+    if (servo_angle >= MAX_SERVO_POS) servo_increment = -5;
+    if (servo_angle <= MIN_SERVO_POS) servo_increment = 5;
+    for (int j = 0; j < NUM_SERVOS; j++) {
+      myLSS.setServoID(pgm_axdIDs[j]);    // So first is which servo
+      myLSS.moveT(servo_angle, 100);
+    }
+    uint32_t time_send_positions = em;
+    for (int j = 0; j < NUM_SERVOS; j++) {
+      myLSS.setServoID(pgm_axdIDs[j]);    // So first is which servo
+      positions[j] = myLSS.getPosition();
+      voltages[j] = myLSS.getVoltage();
+      temps[j] = myLSS.getTemperature();
+    }
+    uint32_t time_loop = em;
+    // Now lets look how long it took plus print out some of it...
+    Serial.printf("%u %u (%u) P:%d V:%u T:%u ", time_send_positions, time_loop, 1000000/time_loop,
+        servo_angle, voltages[index_print], temps[index_print]);
+    if (++index_print == NUM_SERVOS) index_print = 0;
+
+    for (int j = 0; j < NUM_SERVOS; j++) {
+      if (positions[j] != servo_angle) Serial.printf(" %u:%d", j, positions[j]);
+    }
+    Serial.println();
+    while (em < 100) ;
+  }
 }
 
 
