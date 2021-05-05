@@ -194,18 +194,16 @@
 			{
 				"buffer_size": 10711,
 				"line_ending": "Windows"
-			}
+			},
+			"undo_stack":
+			[
+			]
 		},
 		{
-			"file": "LSS_Phoenix.sublime-project",
-			"settings":
-			{
-				"buffer_size": 99,
-				"line_ending": "Unix"
-			}
-		},
-		{
+			"contents": "\n// Warning setup to build for standard hexapod, octopod, or for quad.\n//  #define QUADMODE\n//  #define HEXMODE\n//  #define OCTOMODE\n//  #define DISPLAY_GAIT_NAMES\n//=============================================================================\n//Project Lynxmotion Phoenix\n//Description: Phoenix software\n//Software version: V2.0\n//Date: 29-10-2009\n//Programmer: Jeroen Janssen [aka Xan]\n//         Kurt Eckhardt(KurtE) converted to C and Arduino\n//   Kåre Halvorsen aka Zenta - Makes everything work correctly!     \n//\n// This version of the Phoenix code was ported over to the Arduino Environement\n//\n//=============================================================================\n// Warning:: This configuration does not check voltages, so you should be careful to\n// not allow the lipo to discharge too far. \n//\n//KNOWN BUGS:\n//    - Lots ;)\n//\n//=============================================================================\n// Header Files\n//=============================================================================\n\n#define DEFINE_HEX_GLOBALS\n#include <Arduino.h>\n#include <EEPROM.h>\n#include <avr/pgmspace.h>\n#define HEXMODE   // default to hex mode\n#include \"Hex_Cfg.h\"\n\n#include <LSS.h>\n#include \"_Phoenix.h\"\n\n#ifdef QUADMODE\n#define ADD_GAITS\n#define PYPOSE_GAIT_SPEED 1 //98\n//  Speed, Steps, Lifted, Front Down, Lifted Factor, Half Height, On Ground, \n//     Quad extra: COGAngleStart, COGAngleStep, CogRadius, COGCCW\n//                      { RR, RF, LR, LF}\nPHOENIXGAIT APG_EXTRA[] = { \n  {PYPOSE_GAIT_SPEED, 8, 2, 1, 2, 6, 1, 0, 0,0, true, {7, 1, 3, 5}},   // ripple\n  {PYPOSE_GAIT_SPEED, 12, 2, 1, 2, 10, 1, 0, 0,0, true, {7, 1, 4, 10}},   // ripple\n  {PYPOSE_GAIT_SPEED, 4, 2, 1, 2, 2, 1, 0, 0, 0, true,{3, 1, 1, 3}},  // Amble\n  {PYPOSE_GAIT_SPEED, 6, 3, 2, 2, 3, 2, 0, 0,0, true, {1, 4, 4, 1}} }; // Smooth Amble \n#endif\n\n#include \"_Phoenix_Input_Commander.h\"\n#include \"_Phoenix_Driver_lss.h\"\n#include \"_Phoenix_Code.h\"\n",
 			"file": "LSS_Phoenix.ino",
+			"file_size": 1998,
+			"file_write_time": 132631385682496540,
 			"settings":
 			{
 				"buffer_size": 1943,
@@ -214,7 +212,10 @@
 			}
 		},
 		{
+			"contents": "\n//====================================================================================================\n// Kurts Test program to try out different ways to manipulate the AX12 servos on the PhantomX\n// This is a test, only a test...\n//\n// This version for Robotis OpenCM9.04\n//====================================================================================================\n//============================================================================\n// Global Include files\n//=============================================================================\n#include <LSS.h>\n\n//=============================================================================\n// Options...\n//=============================================================================\n#define LSS_SERIAL Serial1\n#define LSS_BAUD   250000\n#define MAX_SERVO_NUM 32\n//=============================================================================\n// Define differnt robots..\n//=============================================================================\n\n// Protocol version\n\n// Constants\n/* Servo IDs */\n#define     RF_COXA       2\n#define     RF_FEMUR      4\n#define     RF_TIBIA      6\n\n#define     RM_COXA      14\n#define     RM_FEMUR     16\n#define     RM_TIBIA     18\n\n#define     RR_COXA       8\n#define     RR_FEMUR     10\n#define     RR_TIBIA     12\n\n#ifdef SERVO1_SPECIAL\n#define     LF_COXA       19\n#else\n#define     LF_COXA       1\n#endif\n#define     LF_FEMUR      3\n#define     LF_TIBIA      5\n\n#define     LM_COXA      13\n#define     LM_FEMUR     15\n#define     LM_TIBIA     17\n\n#define     LR_COXA       7\n#define     LR_FEMUR      9\n#define     LR_TIBIA     11\n\n#ifdef TURRET\n#define     TURRET_ROT    20\n#define     TURRET_TILT   21\n#endif\n\nstatic const byte pgm_axdIDs[] = {\n  LF_COXA, LF_FEMUR, LF_TIBIA,\n#ifndef QUAD_MODE\n  LM_COXA, LM_FEMUR, LM_TIBIA,\n#endif\n  LR_COXA, LR_FEMUR, LR_TIBIA,\n  RF_COXA, RF_FEMUR, RF_TIBIA,\n#ifndef QUAD_MODE\n  RM_COXA, RM_FEMUR, RM_TIBIA,\n#endif\n  RR_COXA, RR_FEMUR, RR_TIBIA\n#ifdef TURRET\n  , TURRET_ROT, TURRET_TILT\n#endif\n};\n\n#define NUM_SERVOS ((int)(sizeof(pgm_axdIDs)/sizeof(pgm_axdIDs[0])))\nconst char* IKPinsNames[] = {\n  \"LFC\", \"LFF\", \"LFT\",\n#ifndef QUAD_MODE\n  \"LMC\", \"LMF\", \"LMT\",\n#endif\n  \"LRC\", \"LRF\", \"LRT\",\n  \"RFC\", \"RFF\", \"RFT\",\n#ifndef QUAD_MODE\n  \"RMC\", \"RMF\", \"RMT\",\n#endif\n  \"RRC\", \"RRF\", \"RRT\",\n#ifdef TURRET\n  \"T-ROT\", \"T-TILT\"\n#endif\n};\n\n\n\n\n//=============================================================================\n// Globals\n//=============================================================================\n// Global objects\n#define LSS_SERIAL_PORT     Serial1\n#define LSS_BAUDRATE    500000\n#define LSS_ID          0\n\nLSS myLSS = LSS(LSS_ID);\n\n\nuint32_t           g_wVoltage;\nuint8_t        g_servo_index_voltage = 0;\nchar           g_aszCmdLine[80];\nuint8_t        g_iszCmdLine;\nboolean        g_fTrackServos = false;\n\nuint8_t g_ids[MAX_SERVO_NUM];\nuint8_t g_count_servos_found = 0;\n\n// Values to use for servo position...\nbyte          g_bServoID;\nint32_t          g_wServoGoalPos;\nuint32_t          g_wServoMoveTime;\n\n//====================================================================================================\n// forward reference\n//====================================================================================================\nextern bool IsValidServo(uint8_t servo_id);\nextern void initMemoryUsageTest();\nextern void PrintServoValues(void);\nextern void SetBaudRate();\n\n//====================================================================================================\n// Setup\n//====================================================================================================\nvoid setup() {\n  while (!Serial && (millis() < 3000)) ;  // Give time for Teensy and other USB arduinos to create serial port\n  Serial.begin(38400);  // start off the serial port.\n  initMemoryUsageTest();\n  Serial.println(\"\\nLSS Servo Test program\");\n\n\n  delay(1000);\n  // Lets start of trying to locate all servos.\n  // Initialize the LSS bus\n  LSS::initBus(LSS_SERIAL, LSS_BAUD);\n\n  FindServos();\n\n  PrintServoVoltage();\n\n}\n\n\n//====================================================================================================\n// Loop\n//====================================================================================================\nvoid loop() {\n  // Output a prompt\n  PrintServoVoltage();\n  //  printMemoryUsage();\n\n  // lets toss any charcters that are in the input queue\n  while (Serial.read() != -1)\n    ;\n\n  Serial.println(\"0 - All Servos off\");\n  Serial.println(\"1 - All Servos center\");\n  Serial.println(\"2 - Set Servo position [<Servo>] <Position> [<Time>]\");\n  Serial.println(\"3 - Set Servo Angle\");\n  Serial.println(\"4 - Get Servo Positions\");\n  Serial.println(\"5 - Find All Servos\");\n  //  Serial.println(\"6 - Set Servo return delay time\");\n  //  Serial.println(\"8 - Set ID: <old> <new>\");\n  Serial.println(\"9 - Print Servo Values\");\n  Serial.println(\"b - Baud <new baud>\");\n  Serial.println(\"t - Toggle track Servos\");\n  Serial.println(\"h - hold [<sn>]\");\n  Serial.println(\"f - free [<sn>]\");\n  Serial.println(\"r - Reboot [<sn>]\");\n\n  Serial.print(\":\");\n  Serial.flush();  // make sure the complete set of prompts has been output...\n  // Get a command\n  if (GetCommandLine()) {\n    Serial.println(\"\");\n    Serial.print(\"Cmd: \");\n    Serial.println(g_aszCmdLine);\n    g_iszCmdLine = 1;  // skip over first byte...\n    switch (g_aszCmdLine[0]) {\n      case '0':\n        AllServosOff();\n        break;\n      case '1':\n        AllServosCenter();\n        break;\n      case '2':\n        SetServoPosition();\n        break;\n      case '3':\n        break;\n      case '4':\n        GetServoPositions();\n        break;\n      case '5':\n        FindServos();\n        break;\n      case '9':\n        PrintServoValues();\n        break;\n      case 'b':\n      case 'B':\n        SetBaudRate();\n        break;\n      case 'f':\n      case 'F':\n        HoldOrFreeServos(0);\n        break;\n      case 'h':\n      case 'H':\n        HoldOrFreeServos(1);\n        break;\n      case 'r':\n      case 'R':\n        RebootServos();\n        break;\n      case 't':\n      case 'T':\n        g_fTrackServos = !g_fTrackServos;\n        if (g_fTrackServos) {\n          Serial.println(\"Tracking On\");\n          TrackServos(true);  // call to initialize all of the positions.\n        }\n        else\n          Serial.println(\"Tracking Off\");\n        TrackPrintMinsMaxs();\n        break;\n      case 'w':\n      case 'W':\n        WriteServoValues();\n        break;\n    }\n  }\n}\n\n//====================================================================================================\nvoid PrintServoVoltage() {\n  return; // bypass for now\n  // Lets try reading in the current voltage for the next servo we found...\n  if (g_count_servos_found == 0) return; // no servos found\n  Serial.println(\"PrintServo Voltage called\");\n  g_servo_index_voltage++;    // will wrap around...\n  if (g_servo_index_voltage >= g_count_servos_found) g_servo_index_voltage = 0;\n  myLSS.setServoID(g_ids[g_servo_index_voltage]);\n\n  uint16_t wNewVoltage = myLSS.getVoltage();\n  if (wNewVoltage != g_wVoltage) {\n    g_wVoltage = wNewVoltage;\n    Serial.printf(\"Servo: %u(%u) Voltage: %u\\n\", g_ids[g_servo_index_voltage],\n                  g_servo_index_voltage, g_wVoltage);\n  }\n}\n\n\n//====================================================================================================\n// Helper function to read in a command line\nuint8_t GetCommandLine(void) {\n  int ch;\n  uint8_t ich = 0;\n  g_iszCmdLine = 0;\n\n  for (;;) {\n    // throw away any thing less than CR character...\n    ch = Serial.read();\n    if ((ch >= 10) && (ch <= 15)) {\n      g_aszCmdLine[ich] = 0;\n      return ich;\n    }\n    if (ch != -1)\n      g_aszCmdLine[ich++] = ch;\n\n    if (g_fTrackServos)\n      TrackServos(false);\n  }\n}\n\n//=======================================================================================\nboolean FGetNextCmdNum(int32_t * pw ) {\n  // Skip all leading none number characters...\n  while (((g_aszCmdLine[g_iszCmdLine] < '0') || (g_aszCmdLine[g_iszCmdLine] > '9')) \n      && (g_aszCmdLine[g_iszCmdLine] != '-')) {\n    if (g_aszCmdLine[g_iszCmdLine] == 0)\n      return false;  // end of the line...\n    g_iszCmdLine++;\n  }\n  *pw = 0;\n  int32_t sign = 1;\n  if (g_aszCmdLine[g_iszCmdLine] == '-') {\n    sign = -1;\n    g_iszCmdLine++;\n  }\n  \n  while ((g_aszCmdLine[g_iszCmdLine] >= '0') && (g_aszCmdLine[g_iszCmdLine] <= '9')) {\n    *pw = *pw * 10 + (g_aszCmdLine[g_iszCmdLine] - '0');\n    g_iszCmdLine++;\n  }\n  *pw *= sign;\n  return true;\n}\n\n\n//=======================================================================================\nvoid AllServosOff(void) {\n  // Quick and dirty way to do it by broadcast...\n\n  // See if we can do by broadcast\n  LSS::genericWrite(LSS_BroadcastID, LSS_ActionLimp); // Tell all of the servos to go limp\n}\n\nvoid AllServosOn(void) {\n  // Quick and dirty way to do it by broadcast...\n\n  // See if we can do by broadcast\n  LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to go limp\n}\n\n//=======================================================================================\nvoid AllServosCenter(void) {\n  // Tell all servos to turn on.\n  AllServosOn();\n  LSS::genericWrite(LSS_BroadcastID, LSS_ActionMove, 0,\n                    LSS_ActionParameterTime, 500);  // move in half second\n}\n\n\n//=======================================================================================\nvoid HoldOrFreeServos(byte fHold) {\n  int32_t iServo;\n  if (!FGetNextCmdNum(&iServo)) {\n    if (fHold) AllServosOn();\n    else AllServosOff();\n  }\n  else {\n    if (fHold)\n      LSS::genericWrite(iServo, LSS_ActionHold); // Tell all of the servos to hold\n    else\n      LSS::genericWrite(iServo, LSS_ActionLimp); // Tell all of the servos to go limp\n  }\n}\n\n//=======================================================================================\n//=======================================================================================\nvoid RebootServos() {\n  LSS::genericWrite(LSS_BroadcastID, LSS_ActionReset); // Tell all of the servos to reset\n}\n\n//=======================================================================================\nvoid SetServoPosition(void) {\n  int32_t w1;\n  int32_t w2;\n  g_wServoMoveTime = 0;\n  if (!FGetNextCmdNum(&w1))\n    return;    // no parameters so bail.\n\n  Serial.println(\"Set Servo Position\");\n  if (FGetNextCmdNum(&g_wServoGoalPos)) {  // We have at least 2 parameters\n    myLSS.setServoID(w1);    // So first is which servo\n    if (FGetNextCmdNum(&w2)) {  // We have at least 3 parameters\n      g_wServoMoveTime = w2;\n    }\n  } else {\n    g_wServoGoalPos = w1;\n  }\n\n  Serial.printf(\" ID: %d %POS: %d\", myLSS.getServoID(), g_wServoGoalPos);\n  if (g_wServoMoveTime) {\n    Serial.printf(\" Time: %d\\n\", g_wServoMoveTime);\n    myLSS.moveT(g_wServoGoalPos, g_wServoMoveTime);\n  } else {\n    Serial.print(\"\\r\");\n    myLSS.move(g_wServoGoalPos);\n  }\n}\n\n//=======================================================================================\nbool IsValidServo(uint8_t servo_id) {\n  return true;\n}\n\n\n\n//=======================================================================================\nvoid GetServoPositions(void) {\n\n  unsigned long ulBefore;\n  unsigned long ulDelta;\n  int32_t pos;\n\n\n  if (!g_count_servos_found) {\n    Serial.println(\"Previous Find Servos failed to locate any servos: so retry\");\n    FindServos();\n    return;\n  }\n\n  for (int i = 0; i < g_count_servos_found; i++) {\n    myLSS.setServoID(g_ids[i]);\n    Serial.print(g_ids[i], DEC);\n    Serial.print(\":\");\n    ulBefore = micros();\n    pos = myLSS.getPosition();\n    ulDelta = micros() - ulBefore;\n    Serial.print(pos, DEC);\n    Serial.print(\" \");\n    Serial.println(ulDelta, DEC);\n  }\n}\n\n//=======================================================================================\n\nvoid FindServos(void) {\n\n  g_count_servos_found = 0;\n  int32_t pos;\n  Serial.println(\"\\nSearch for all servos\");\n\n  // Initialize to no servos...\n  for (int i = 0; i < MAX_SERVO_NUM; i++) {\n    myLSS.setServoID(i);\n    pos = myLSS.getPosition();\n    if (myLSS.getLastCommStatus() == LSS_CommStatus_ReadSuccess) {\n      g_ids[g_count_servos_found++] = i;\n      Serial.print(\"    \");\n      Serial.print(i, DEC);\n      Serial.print(\" - \");\n      Serial.println(pos, DEC);\n    }\n  }\n  Serial.println(\"  Done\");\n}\n\n\n//=======================================================================================\nint g_asPositionsPrev[255];\nint g_asMins[255];\nint g_asMaxs[255];\n\nvoid TrackServos(boolean fInit) {\n  int pos;\n  bool fSomethingChanged = false;\n\n  // Lets only use the found servos.\n  for (int i = 0; i < g_count_servos_found; i++) {\n    myLSS.setServoID(g_ids[i]);\n    pos = myLSS.getPosition();\n    if (myLSS.getLastCommStatus() == LSS_CommStatus_ReadSuccess) {\n\n      if (fInit) {\n        g_asMins[i] = pos;\n        g_asMaxs[i] = pos;\n      }\n      if (pos != g_asPositionsPrev[i]) {\n        if (!fInit) {\n          // only print if we moved more than some deltas\n          if (abs(pos - g_asPositionsPrev[i]) > 5) {\n            for (int j = 0; j < NUM_SERVOS; j++) {\n              if (g_ids[i] == pgm_axdIDs[j]) {\n                Serial.print(IKPinsNames[j]);\n                break;\n              }\n            }\n            Serial.print(\"(\");\n            Serial.print(g_ids[i], DEC);\n            Serial.print(\"):\");\n            Serial.print(pos, DEC);\n            /*          Serial.print(\"(\");\n                      Serial.print((((long)(w - 512)) * 375L) / 128L, DEC);\n                      Serial.print(\") \"); */\n            Serial.print(\" \");\n            fSomethingChanged = true;\n          }\n        }\n        g_asPositionsPrev[i] = pos;\n        if (g_asMins[i] > pos)\n          g_asMins[i] = pos;\n\n        if (g_asMaxs[i] < pos)\n          g_asMaxs[i] = pos;\n      }\n    }\n  }\n  if (fSomethingChanged)\n    Serial.println();\n}\n\nvoid TrackPrintMinsMaxs(void) {\n\n  for (int i = 0; i < g_count_servos_found; i++) {\n    Serial.print(g_ids[i], DEC);\n    Serial.print(\":\");\n    Serial.print(g_asMins[i], DEC);\n    Serial.print(\" - \");\n    Serial.println(g_asMaxs[i], DEC);\n  }\n}\n\n\n//=======================================================================================\ntypedef enum {\n  LSQ_S16,\n  LSQ_STR\n} LSSQRT;\n\ntypedef struct {\n  LSSQRT lsqrt;\n  const char *str;\n} LSSQLIST;\n\nconst LSSQLIST query_list[] = {\n  {LSQ_S16, LSS_QueryStatus},\n  {LSQ_S16, LSS_QueryOriginOffset},\n  {LSQ_S16, LSS_QueryAngularRange},\n  {LSQ_S16, LSS_QueryPositionPulse},\n  {LSQ_S16, LSS_QueryPosition},\n  {LSQ_S16, LSS_QuerySpeed},\n  {LSQ_S16, LSS_QuerySpeedRPM},\n  {LSQ_S16, LSS_QuerySpeedPulse},\n  {LSQ_S16, LSS_QueryMaxSpeed},\n  {LSQ_S16, LSS_QueryMaxSpeedRPM},\n  {LSQ_S16, LSS_QueryColorLED},\n  {LSQ_S16, LSS_QueryGyre},\n  {LSQ_S16, LSS_QueryID},\n  {LSQ_S16, LSS_QueryBaud},\n  {LSQ_STR, LSS_QueryFirstPosition},\n  {LSQ_STR, LSS_QueryModelString},\n  {LSQ_STR, LSS_QuerySerialNumber},\n  {LSQ_S16, LSS_QueryFirmwareVersion},\n  {LSQ_S16, LSS_QueryVoltage},\n  {LSQ_S16, LSS_QueryTemperature},\n  {LSQ_S16, LSS_QueryCurrent},\n  {LSQ_S16, LSS_QueryAnalog},\n  {LSQ_S16, LSS_QueryAngularStiffness},\n  {LSQ_S16, LSS_QueryAngularHoldingStiffness},\n  {LSQ_S16, LSS_QueryAngularAcceleration},\n  {LSQ_S16, LSS_QueryAngularDeceleration},\n  {LSQ_S16, LSS_QueryEnableMotionControl},\n  {LSQ_S16, LSS_QueryBlinkingLED}\n};\n\n\nvoid PrintServoValues(void) {\n\n  int32_t wID;\n  if (!FGetNextCmdNum(&wID))\n    return;\n  Serial.printf(\"\\nServo %u values\\n\", wID);\n  for (uint8_t i = 0; i < (sizeof(query_list) / sizeof(query_list[0])); i++) {\n    // Variables\n    int16_t value = 0;\n\n    // Ask servo for status; exit if it failed\n    if (!(LSS::genericWrite(wID, query_list[i].str, LSS_QuerySession)))\n    {\n      Serial.printf(\"  Failed genericWrite %s\\n\", query_list[i]);\n      break;\n    }\n\n    // Read response from servo\n    if (query_list[i].lsqrt == LSQ_S16) {\n      value = (int16_t) LSS::genericRead_Blocking_s16(wID, query_list[i].str);\n      LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();\n      if (comm_status != LSS_CommStatus_ReadSuccess) {\n        Serial.printf(\"  %s - %d failed(%d)\\n\", query_list[i].str, value, (uint32_t)comm_status);\n      } else {\n        Serial.printf(\"  %s - %d\\n\", query_list[i].str, value);\n      }\n\n    } else {\n      const char *valueStr = LSS::genericRead_Blocking_str(wID, query_list[i].str);\n      LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();\n      if (comm_status != LSS_CommStatus_ReadSuccess) {\n        Serial.printf(\"  %s - %s failed(%d)\\n\", query_list[i].str, valueStr, (uint32_t)comm_status);\n      } else {\n        Serial.printf(\"  %s - %s\\n\", query_list[i].str, valueStr);\n      }\n\n    }\n\n\n  }\n\n}\n\n//=======================================================================================\nvoid WriteServoValues() {\n#ifdef LATER\n  int32_t wID;\n  int32_t wReg;\n  int32_t wVal;\n  uint8_t error;\n  int retval;\n  if (!FGetNextCmdNum(&wID))\n    return;    // no parameters so bail.\n\n  if (!IsValidServo(wID)) {\n    Serial.print(\"Write register ID: \");\n    Serial.print(wID, DEC);\n    Serial.println(\" Servo not found\");\n    return;\n  }\n  dynamixel::PortHandler *portHandler = portHandlers[g_servo_protocol[wID].b.port];\n\n\n  if (!FGetNextCmdNum(&wReg))\n    return;    // no parameters so bail.\n\n  while (FGetNextCmdNum(&wVal)) {\n    Serial.print(\"Write register ID: \");\n    Serial.print(wID, DEC);\n    Serial.print(\" Reg: \");\n    Serial.print(wReg, DEC);\n    Serial.print(\" Val: \");\n    Serial.print(wVal, DEC);\n    if (g_servo_protocol[wID].b.protocol == SERVO_PROTOCOL1) {\n      retval = packetHandler1->write1ByteTxRx(portHandler, wID, wReg, wVal, &error);\n    } else {\n      retval = packetHandler2->write1ByteTxRx(portHandler, wID, wReg, wVal, &error);\n    }\n    if (!ReportAnyErrors(\" Write Reg\", wID, retval, error)) {\n      Serial.println(\" Success\");\n    } else {\n      Serial.println();\n    }\n    wReg++;   // get to the next reg\n  }\n#endif\n}\n\n\n\n\n\n//=======================================================================================\nvoid SetBaudRate()\n{\n  int32_t wBaud;\n\n  if (!FGetNextCmdNum(&wBaud))\n    return;    // no parameters so bail.\n  Serial.print(\"Setting Baud to: \");\n  Serial.println(wBaud);\n  LSS::initBus(LSS_SERIAL, wBaud);\n\n  Serial.println(\"Doing new Servo Scan\");\n  delay(2000);\n  FindServos();\n}\n\n//=================================================================================\n// Lets initialize our memory usage code, to get an idea of how much has been\n// used\nregister uint8_t * stack_ptr asm(\"sp\");\nextern char end asm(\"end\");\n\nuint32_t g_end_stack_pointer;\nuint32_t g_start_heap_pointer;\n\nvoid initMemoryUsageTest()\n{\n  // Guess on start of stack. // probably using less than 100 bytes of stack space...\n#if 0\n  g_end_stack_pointer = ((uint32_t)stack_ptr + 100) & 0xfffff000;\n\n  // get the start of the heap ponter\n  g_start_heap_pointer = (uint32_t)&end;\n\n  // Print out some memory information\n  Serial.printf(\"Estimated global data size: %d\\n\", g_start_heap_pointer & 0xffff);\n  //  Serial.printf(\"starting Heap info: start: %x current: %x\\n\", g_start_heap_pointer, (uint32_t)_sbrk(0));\n  Serial.printf(\"Start Stack info: end: %x current: %x\\n\", g_end_stack_pointer, (uint32_t)stack_ptr);\n  Serial.println(\"Try to init memory\");\n  Serial.flush(); // make sure it has chance to write out.\n  uint8_t *sp_minus = stack_ptr - 10;  // leave a little slop\n  for (uint8_t *p = (uint8_t*)_sbrk(0); p < sp_minus; p++) *p = 0xff; // init to ff\n  Serial.println(\"After init memory\");\n#endif\n}\n\n//=================================================================================\nvoid printMemoryUsage()\n{\n  //uint8_t *current_heap_ptr = (uint8_t*)_sbrk(0);\n  //Serial.printf(\"Heap ptr: %x  Usage: %d\\n\", (uint32_t)current_heap_ptr,\n  //              (uint32_t)current_heap_ptr - g_start_heap_pointer);\n#if 0\n  // stack info\n  uint8_t *sp_minus = stack_ptr - 10;  // leave a little slop\n  uint8_t *p = current_heap_ptr;\n\n  // try to find out how far the stack has been used\n  while ((p < sp_minus) && (*p == 0xff)) p++;\n  Serial.printf(\"Stack Max: %x, usage: %d\\n\", p, g_end_stack_pointer - (uint32_t)p);\n  Serial.printf(\"Estimated unused memory: %d\\n\", (uint32_t)(p - current_heap_ptr));\n#endif\n}\n",
 			"file": "/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSSTestServos/LSSTestServos.ino",
+			"file_size": 20886,
+			"file_write_time": 132630626665378470,
 			"settings":
 			{
 				"buffer_size": 20185,
@@ -222,23 +223,47 @@
 			}
 		},
 		{
-			"contents": "Searching 30 files for \"flush\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1012        DBGSerial.print(\" LFZ:\");\n 1013        DBGSerial.println(LegPosZ[cLF],DEC);\n 1014:       DBGSerial.flush();  // see if forcing it to output helps...\n 1015      }\n 1016  #endif\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  587    int cbRead;\n  588    while (XBeeSerial.read() != -1)\n  589:     ;  // Flush out anything still pending. \n  590    XBeeSerial.print(\"AT\");  \n  591    XBeeSerial.println(pszID);  // Lets print out the ID;\n  592:   XBeeSerial.flush();\n  593    cbRead = XBeeSerial.readBytesUntil('\\r', ab, sizeof(ab));\n  594    if (cbRead) {\n  ...\n  608      delay(15);  // see if we have fast command mode enabled.\n  609      XBeeSerial.print(F(\"+++\")); \n  610:     XBeeSerial.flush();\n  611      XBeeSerial.setTimeout(20);  // give a little extra time\n  612      if (XBeeSerial.readBytesUntil('\\r', ab, 10) > 0) {\n  ...\n  683  #ifdef CHECK_AND_CONFIG_XBEE\n  684    while (XBeeSerial.read() != -1)\n  685:     ;  // flush anything out...\n  686    // First lets see if we have a real short command time\n  687    delay(15);  // see if we have fast command mode enabled.\n  688    XBeeSerial.print(F(\"+++\")); \n  689:   XBeeSerial.flush();\n  690    XBeeSerial.setTimeout(20);  // give a little extra time\n  691    if (XBeeSerial.readBytesUntil('\\r', ab, 10) > 0) {\n  ...\n  696    delay(1100);\n  697    while (XBeeSerial.read() != -1)\n  698:     ;  // flush anything out...\n  699    XBeeSerial.print(F(\"+++\"));\n  700    XBeeSerial.setTimeout(1100);  // little over a second\n  ...\n  711    XBeeSerial.begin(9600);\n  712    while (XBeeSerial.read() != -1)\n  713:     ;  // flush anything out...\n  714  \n  715    delay(1100);\n  ...\n  738      XBeeSerial.println(F(\"ATWR\"));\t// Write out the changes\n  739      XBeeSerial.println(F(\"ATCN\"));\t// and exit command mode\n  740:     XBeeSerial.flush();              // make sure all has been output\n  741      // lets do a quick and dirty test\n  742      delay(250);  // Wait a bit for responses..\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  177  \n  178    Serial.print(\":\");\n  179:   Serial.flush();  // make sure the complete set of prompts has been output...\n  180    // Get a command\n  181    if (GetCommandLine()) {\n  ...\n  676    Serial.printf(\"Start Stack info: end: %x current: %x\\n\", g_end_stack_pointer, (uint32_t)stack_ptr);\n  677    Serial.println(\"Try to init memory\");\n  678:   Serial.flush(); // make sure it has chance to write out.\n  679    uint8_t *sp_minus = stack_ptr - 10;  // leave a little slop\n  680    for (uint8_t *p = (uint8_t*)_sbrk(0); p < sp_minus; p++) *p = 0xff; // init to ff\n\n11 matches across 3 files\n\n\nSearching 27 files for \"unused\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1909  short CheckServoAngleBounds(short sID,  short sVal, const short *sMin /*PROGMEM*/, const short *sMax /*PROGMEM*/) {\n 1910  #else\n 1911: short CheckServoAngleBounds(short sID __attribute__((unused)),  short sVal, /*PROGMEM*/ const short *sMin , /*PROGMEM*/ const short *sMax ) {\n 1912  #endif\n 1913      // Pull into simple function as so I can report errors on debug \n ....\n 2105      g_wLegsXZLength = 0xffff;\n 2106  #else\n 2107:    iDeltaAngle++;   // remove unused warning...     \n 2108  #endif\n 2109  }\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  256  // that we do while it is active...\n  257  //==============================================================================\n  258: void CommanderInputController::AllowControllerInterrupts(boolean fAllow __attribute__((unused)))\n  259  {\n  260    // We don't need to do anything...\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  697    while ((p < sp_minus) && (*p == 0xff)) p++;\n  698    Serial.printf(\"Stack Max: %x, usage: %d\\n\", p, g_end_stack_pointer - (uint32_t)p);\n  699:   Serial.printf(\"Estimated unused memory: %d\\n\", (uint32_t)(p - current_heap_ptr));\n  700  #endif\n  701  }\n\n4 matches across 3 files\n\n\nSearching 27 files for \"unused\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1909  short CheckServoAngleBounds(short sID,  short sVal, const short *sMin /*PROGMEM*/, const short *sMax /*PROGMEM*/) {\n 1910  #else\n 1911: short CheckServoAngleBounds(short sID __attribute__((unused)),  short sVal, /*PROGMEM*/ const short *sMin , /*PROGMEM*/ const short *sMax ) {\n 1912  #endif\n 1913      // Pull into simple function as so I can report errors on debug \n ....\n 2105      g_wLegsXZLength = 0xffff;\n 2106  #else\n 2107:    iDeltaAngle++;   // remove unused warning...     \n 2108  #endif\n 2109  }\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  256  // that we do while it is active...\n  257  //==============================================================================\n  258: void CommanderInputController::AllowControllerInterrupts(boolean fAllow __attribute__((unused)))\n  259  {\n  260    // We don't need to do anything...\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  697    while ((p < sp_minus) && (*p == 0xff)) p++;\n  698    Serial.printf(\"Stack Max: %x, usage: %d\\n\", p, g_end_stack_pointer - (uint32_t)p);\n  699:   Serial.printf(\"Estimated unused memory: %d\\n\", (uint32_t)(p - current_heap_ptr));\n  700  #endif\n  701  }\n\n4 matches across 3 files\n",
+			"contents": "Searching 30 files for \"flush\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1012        DBGSerial.print(\" LFZ:\");\n 1013        DBGSerial.println(LegPosZ[cLF],DEC);\n 1014:       DBGSerial.flush();  // see if forcing it to output helps...\n 1015      }\n 1016  #endif\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  587    int cbRead;\n  588    while (XBeeSerial.read() != -1)\n  589:     ;  // Flush out anything still pending. \n  590    XBeeSerial.print(\"AT\");  \n  591    XBeeSerial.println(pszID);  // Lets print out the ID;\n  592:   XBeeSerial.flush();\n  593    cbRead = XBeeSerial.readBytesUntil('\\r', ab, sizeof(ab));\n  594    if (cbRead) {\n  ...\n  608      delay(15);  // see if we have fast command mode enabled.\n  609      XBeeSerial.print(F(\"+++\")); \n  610:     XBeeSerial.flush();\n  611      XBeeSerial.setTimeout(20);  // give a little extra time\n  612      if (XBeeSerial.readBytesUntil('\\r', ab, 10) > 0) {\n  ...\n  683  #ifdef CHECK_AND_CONFIG_XBEE\n  684    while (XBeeSerial.read() != -1)\n  685:     ;  // flush anything out...\n  686    // First lets see if we have a real short command time\n  687    delay(15);  // see if we have fast command mode enabled.\n  688    XBeeSerial.print(F(\"+++\")); \n  689:   XBeeSerial.flush();\n  690    XBeeSerial.setTimeout(20);  // give a little extra time\n  691    if (XBeeSerial.readBytesUntil('\\r', ab, 10) > 0) {\n  ...\n  696    delay(1100);\n  697    while (XBeeSerial.read() != -1)\n  698:     ;  // flush anything out...\n  699    XBeeSerial.print(F(\"+++\"));\n  700    XBeeSerial.setTimeout(1100);  // little over a second\n  ...\n  711    XBeeSerial.begin(9600);\n  712    while (XBeeSerial.read() != -1)\n  713:     ;  // flush anything out...\n  714  \n  715    delay(1100);\n  ...\n  738      XBeeSerial.println(F(\"ATWR\"));\t// Write out the changes\n  739      XBeeSerial.println(F(\"ATCN\"));\t// and exit command mode\n  740:     XBeeSerial.flush();              // make sure all has been output\n  741      // lets do a quick and dirty test\n  742      delay(250);  // Wait a bit for responses..\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  177  \n  178    Serial.print(\":\");\n  179:   Serial.flush();  // make sure the complete set of prompts has been output...\n  180    // Get a command\n  181    if (GetCommandLine()) {\n  ...\n  676    Serial.printf(\"Start Stack info: end: %x current: %x\\n\", g_end_stack_pointer, (uint32_t)stack_ptr);\n  677    Serial.println(\"Try to init memory\");\n  678:   Serial.flush(); // make sure it has chance to write out.\n  679    uint8_t *sp_minus = stack_ptr - 10;  // leave a little slop\n  680    for (uint8_t *p = (uint8_t*)_sbrk(0); p < sp_minus; p++) *p = 0xff; // init to ff\n\n11 matches across 3 files\n\n\nSearching 27 files for \"unused\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1909  short CheckServoAngleBounds(short sID,  short sVal, const short *sMin /*PROGMEM*/, const short *sMax /*PROGMEM*/) {\n 1910  #else\n 1911: short CheckServoAngleBounds(short sID __attribute__((unused)),  short sVal, /*PROGMEM*/ const short *sMin , /*PROGMEM*/ const short *sMax ) {\n 1912  #endif\n 1913      // Pull into simple function as so I can report errors on debug \n ....\n 2105      g_wLegsXZLength = 0xffff;\n 2106  #else\n 2107:    iDeltaAngle++;   // remove unused warning...     \n 2108  #endif\n 2109  }\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  256  // that we do while it is active...\n  257  //==============================================================================\n  258: void CommanderInputController::AllowControllerInterrupts(boolean fAllow __attribute__((unused)))\n  259  {\n  260    // We don't need to do anything...\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  697    while ((p < sp_minus) && (*p == 0xff)) p++;\n  698    Serial.printf(\"Stack Max: %x, usage: %d\\n\", p, g_end_stack_pointer - (uint32_t)p);\n  699:   Serial.printf(\"Estimated unused memory: %d\\n\", (uint32_t)(p - current_heap_ptr));\n  700  #endif\n  701  }\n\n4 matches across 3 files\n\n\nSearching 27 files for \"unused\"\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Code.h:\n 1909  short CheckServoAngleBounds(short sID,  short sVal, const short *sMin /*PROGMEM*/, const short *sMax /*PROGMEM*/) {\n 1910  #else\n 1911: short CheckServoAngleBounds(short sID __attribute__((unused)),  short sVal, /*PROGMEM*/ const short *sMin , /*PROGMEM*/ const short *sMax ) {\n 1912  #endif\n 1913      // Pull into simple function as so I can report errors on debug \n ....\n 2105      g_wLegsXZLength = 0xffff;\n 2106  #else\n 2107:    iDeltaAngle++;   // remove unused warning...     \n 2108  #endif\n 2109  }\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSS_Phoenix\\_Phoenix_Input_Commander.h:\n  256  // that we do while it is active...\n  257  //==============================================================================\n  258: void CommanderInputController::AllowControllerInterrupts(boolean fAllow __attribute__((unused)))\n  259  {\n  260    // We don't need to do anything...\n\nC:\\Users\\kurte\\Documents\\Arduino\\Github\\LSS_Test_sketches\\LSSTestServos\\LSSTestServos.ino:\n  697    while ((p < sp_minus) && (*p == 0xff)) p++;\n  698    Serial.printf(\"Stack Max: %x, usage: %d\\n\", p, g_end_stack_pointer - (uint32_t)p);\n  699:   Serial.printf(\"Estimated unused memory: %d\\n\", (uint32_t)(p - current_heap_ptr));\n  700  #endif\n  701  }\n\n4 matches across 3 files\n\n\nSearching 27 files for \"DMASettings\"\n\n0 matches",
 			"settings":
 			{
-				"buffer_size": 5617,
+				"buffer_size": 5666,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
 			}
 		},
 		{
+			"contents": "//====================================================================\n//Project Lynxmotion Phoenix\n//Description: \n//    This is the hardware configuration file for the \n//    Will first define to use their commander unit.\n//\n//\n//\n//====================================================================\n#ifndef HEX_CFG_H\n#define HEX_CFG_H\n//==================================================================================================================================\n// Define which input classes we will use. If we wish to use more than one we need to define USEMULTI - This will define a forwarder\n//    type implementation, that the Inputcontroller will need to call.  There will be some negotion for which one is in contol.\n//\n//  If this is not defined, The included Controller should simply implement the InputController Class...\n//==================================================================================================================================\n#define USECOMMANDER\n#define LSS_SERIAL_PORT     Serial1\n#define LSS_BAUD            250000\n// Global defines to control which configuration we are using.  Note: Only define one of these...\n// \n// Which type of control(s) do you want to compile in\n#if defined(KINETISK) || defined(__IMXRT1062__)\n#define DBGSerial         Serial\n#else\n#if defined(UBRR2H)\n#define DBGSerial         Serial\n#endif\n#endif \n\n// Define other optional compnents to be included or not...\n//#define cFemurHornOffset1 -35\n//#define cTibiaHornOffset1 463\n#define cRRTibiaInv 0 \n#define cRMTibiaInv 0 \n#define cRFTibiaInv 0 \n#define cLRTibiaInv 1 \n#define cLMTibiaInv 1 \n#define cLFTibiaInv 1 \n\n\n//===================================================================\n// Debug Options\n#ifdef DBGSerial\n#define OPT_TERMINAL_MONITOR  \n#define OPT_TERMINAL_MONITOR_IC    // Allow the input controller to define stuff as well\n#define OPT_FIND_SERVO_OFFSETS    // Only useful if terminal monitor is enabled\n#endif\n\n//#define DEBUG_IOPINS\n#ifdef DEBUG_IOPINS\n#define DebugToggle(pin)  {digitalWrite(pin, !digitalRead(pin));}\n#define DebugWrite(pin, state) {digitalWrite(pin, state);}\n#else\n#define DebugToggle(pin)  {;}\n#define DebugWrite(pin, state) {;}\n#endif\n\n\n// Also define that we are using the AX12 driver\n#define USE_AX12_DRIVER\n#define OPT_BACKGROUND_PROCESS    // The AX12 has a background process\n#define OPT_CHECK_SERVO_RESET     // Try to find single servo that reset it's ID...\n#define OPT_GPPLAYER\n\n#define OPT_SINGLELEG      \n\n//==================================================================================================================================\n//==================================================================================================================================\n//==================================================================================================================================\n//  PhantomX\n//==================================================================================================================================\n//[SERIAL CONNECTIONS]\n\n//====================================================================\n// XBEE on non mega???\n#if defined(KINETISK) || defined(__IMXRT1062__)\n#define XBeeSerial Serial2\n#else\n#if defined(UBRR2H)\n#define XBeeSerial Serial2\n#endif\n#define XBeeSerial Serial\n#endif\n#define XBEE_BAUD        38400\n//--------------------------------------------------------------------\n//[Arbotix Pin Numbers]\n#if defined(KINETISK) || defined(__IMXRT1062__)\n#define SOUND_PIN    36\n#else\n#define SOUND_PIN    1 //0xff        // Tell system we have no IO pin...\n#define USER 0                        // defaults to 13 but Arbotix on 0...\n#endif\n\n// Define Analog pin and minimum voltage that we will allow the servos to run\n#if defined(KINETISK) ||  defined(__IMXRT1062__)\n// Our Teensy board\n#define cVoltagePin  38\n#define CVADR1      402  // VD Resistor 1 - reduced as only need ratio... 40.2K and 10K\n#define CVADR2      100    // VD Resistor 2\n#define CVREF       330    // 3.3v\n#endif\n//#define cVoltagePin  7      // Use our Analog pin jumper here...\n//#define CVADR1      1000  // VD Resistor 1 - reduced as only need ratio... 20K and 4.66K\n//#define CVADR2      233   // VD Resistor 2\n//#define cTurnOffVol  1000     // 10v\n//#define cTurnOnVol   1100     // 11V - optional part to say if voltage goes back up, turn it back on...\n\n//====================================================================\n#define  DEFAULT_GAIT_SPEED 35  // Default gait speed  - Will depend on what Servos you are using...\n#define  DEFAULT_SLOW_GAIT  50  // Had a couple different speeds...\n\n//====================================================================\n// Defines for Optional XBee Init and configuration code.\n//====================================================================\n#define CHECK_AND_CONFIG_XBEE\n#define DEFAULT_MY 0x101  // Swap My/DL on 2nd unit\n#define DEFAULT_DL 0x102\n#define DEFAULT_ID 0x3332\n\n//--------------------------------------------------------------------\n// Define which pins(sevo IDS go with which joint\n\n#define cRRCoxaPin      8   //Rear Right leg Hip Horizontal\n#define cRRFemurPin     10   //Rear Right leg Hip Vertical\n#define cRRTibiaPin     12   //Rear Right leg Knee\n\n#define cRMCoxaPin      14  //Middle Right leg Hip Horizontal\n#define cRMFemurPin     16  //Middle Right leg Hip Vertical\n#define cRMTibiaPin     18  //Middle Right leg Knee\n\n#define cRFCoxaPin      2  //Front Right leg Hip Horizontal\n#define cRFFemurPin     4  //Front Right leg Hip Vertical\n#define cRFTibiaPin     6   //Front Right leg Knee\n\n#define cLRCoxaPin      7   //Rear Left leg Hip Horizontal\n#define cLRFemurPin     9   //Rear Left leg Hip Vertical\n#define cLRTibiaPin     11   //Rear Left leg Knee\n\n#define cLMCoxaPin      13   //Middle Left leg Hip Horizontal\n#define cLMFemurPin     15   //Middle Left leg Hip Vertical\n#define cLMTibiaPin     17  //Middle Left leg Knee\n\n#define cLFCoxaPin      1   //Front Left leg Hip Horizontal\n#define cLFFemurPin     3   //Front Left leg Hip Vertical\n#define cLFTibiaPin     5   //Front Left leg Knee\n\n//#define cTurretRotPin  20   // Turret Rotate Pin\n//#define cTurretTiltPin 21  // Turret Tilt pin\n\n//--------------------------------------------------------------------\n//[MIN/MAX ANGLES] - Start off assume same as Phoenix...\n#define cRRCoxaMin1    -750\n#define cRRCoxaMax1    750\n#define cRRFemurMin1    -1000\n#define cRRFemurMax1    1000\n#define cRRTibiaMin1    -1020\n#define cRRTibiaMax1    670\n\n#define cRMCoxaMin1    -750    //Mechanical limits of the Right Middle Leg, decimals = 1\n#define cRMCoxaMax1     750\n#define cRMFemurMin1     -1000\n#define cRMFemurMax1     1000\n#define cRMTibiaMin1    -1020\n#define cRMTibiaMax1     670\n\n#define cRFCoxaMin1    -750    //Mechanical limits of the Right Front Leg, decimals = 1\n#define cRFCoxaMax1     750\n#define cRFFemurMin1    -1000\n#define cRFFemurMax1    1000\n#define cRFTibiaMin1    -1020\n#define cRFTibiaMax1    670\n\n#define cLRCoxaMin1    -750    //Mechanical limits of the Left Rear Leg, decimals = 1\n#define cLRCoxaMax1     750\n#define cLRFemurMin1     -1000\n#define cLRFemurMax1     1000\n#define cLRTibiaMin1    -1020\n#define cLRTibiaMax1     670\n\n#define cLMCoxaMin1    -1000    //Mechanical limits of the Left Middle Leg, decimals = 1\n#define cLMCoxaMax1     1000\n#define cLMFemurMin1     -1000\n#define cLMFemurMax1     1000\n#define cLMTibiaMin1    -1020\n#define cLMTibiaMax1     670\n\n#define cLFCoxaMin1     -750    //Mechanical limits of the Left Front Leg, decimals = 1\n#define cLFCoxaMax1     750\n#define cLFFemurMin1     -1000\n#define cLFFemurMax1     1000\n#define cLFTibiaMin1    -1020\n#define cLFTibiaMax1     670\n\n#define cTurretRotMin1  -1500\n#define cTurretRotMax1  1500\n#define cTurretTiltMin1  -125\n#define cTurretTiltMax1  1100\n\n//--------------------------------------------------------------------\n//[Joint offsets]\n// This allows us to calibrate servos to some fixed position, and then adjust them by moving theim\n// one or more servo horn clicks.  This requires us to adjust the value for those servos by 15 degrees\n// per click.  This is used with the T-Hex 4DOF legs\n//First calibrate the servos in the 0 deg position using the SSC-32 reg offsets, then:\n//--------------------------------------------------------------------\n//[LEG DIMENSIONS]\n//Universal dimensions for each leg in mm\n#define cXXCoxaLength     52    // PhantomX leg dimensions.\n#define cXXFemurLength    80    // MEASURE THIS!!! Guessed now :-)\n#define cXXTibiaLength    100  // MEASURE THIS!!! Guessed now :-)\n\n#define cRRCoxaLength     cXXCoxaLength\t    //Right Rear leg\n#define cRRFemurLength    cXXFemurLength\n#define cRRTibiaLength    cXXTibiaLength\n\n\n#define cRMCoxaLength     cXXCoxaLength\t    //Right middle leg\n#define cRMFemurLength    cXXFemurLength\n#define cRMTibiaLength    cXXTibiaLength\n\n\n#define cRFCoxaLength     cXXCoxaLength\t    //Rigth front leg\n#define cRFFemurLength    cXXFemurLength\n#define cRFTibiaLength    cXXTibiaLength\n\n\n#define cLRCoxaLength     cXXCoxaLength\t    //Left Rear leg\n#define cLRFemurLength    cXXFemurLength\n#define cLRTibiaLength    cXXTibiaLength\n\n\n#define cLMCoxaLength     cXXCoxaLength\t    //Left middle leg\n#define cLMFemurLength    cXXFemurLength\n#define cLMTibiaLength    cXXTibiaLength\n\n\n#define cLFCoxaLength     cXXCoxaLength\t    //Left front leg\n#define cLFFemurLength    cXXFemurLength\n#define cLFTibiaLength    cXXTibiaLength\n\n\n\n//--------------------------------------------------------------------\n//[BODY DIMENSIONS]\n#define cRRCoxaAngle1   -450   //Default Coxa setup angle, decimals = 1\n#define cRMCoxaAngle1    0      //Default Coxa setup angle, decimals = 1\n#define cRFCoxaAngle1    450      //Default Coxa setup angle, decimals = 1\n#define cLRCoxaAngle1    -450   //Default Coxa setup angle, decimals = 1\n#define cLMCoxaAngle1    0      //Default Coxa setup angle, decimals = 1\n#define cLFCoxaAngle1    450      //Default Coxa setup angle, decimals = 1\n\n#define X_COXA      60  // MM between front and back legs /2\n#define Y_COXA      60  // MM between front/back legs /2\n#define M_COXA      100  // MM between two middle legs /2\n\n#define cRROffsetX      -60     //Distance X from center of the body to the Right Rear coxa\n#define cRROffsetZ      120     //Distance Z from center of the body to the Right Rear coxa\n\n#define cRMOffsetX      -100    //Distance X from center of the body to the Right Middle coxa\n#define cRMOffsetZ      0       //Distance Z from center of the body to the Right Middle coxa\n\n#define cRFOffsetX      -60     //Distance X from center of the body to the Right Front coxa\n#define cRFOffsetZ      -120    //Distance Z from center of the body to the Right Front coxa\n\n#define cLROffsetX      60      //Distance X from center of the body to the Left Rear coxa\n#define cLROffsetZ      120     //Distance Z from center of the body to the Left Rear coxa\n\n#define cLMOffsetX      100     //Distance X from center of the body to the Left Middle coxa\n#define cLMOffsetZ      0       //Distance Z from center of the body to the Left Middle coxa\n\n#define cLFOffsetX      60      //Distance X from center of the body to the Left Front coxa\n#define cLFOffsetZ      -120    //Distance Z from center of the body to the Left Front coxa\n\n//--------------------------------------------------------------------\n//[START POSITIONS FEET]\n#define cHexInitXZ\t 147\n#define CHexInitXZCos60  104        // COS(45) = .707\n#define CHexInitXZSin60  104    // sin(45) = .707\n#define CHexInitY\t 25 //30\n\n// Lets try some multi leg positions depending on height settings.\n#define CNT_HEX_INITS 2\n#define MAX_BODY_Y  150\n#ifdef DEFINE_HEX_GLOBALS\nconst byte g_abHexIntXZ[] PROGMEM = {cHexInitXZ, 144};\nconst byte g_abHexMaxBodyY[] PROGMEM = { 20, MAX_BODY_Y};\n#else\nextern const byte g_abHexIntXZ[] PROGMEM;\nextern const byte g_abHexMaxBodyY[] PROGMEM;\n#endif\n\n#define cRRInitPosX     CHexInitXZCos60      //Start positions of the Right Rear leg\n#define cRRInitPosY     CHexInitY\n#define cRRInitPosZ     CHexInitXZSin60\n\n#define cRMInitPosX     cHexInitXZ      //Start positions of the Right Middle leg\n#define cRMInitPosY     CHexInitY\n#define cRMInitPosZ     0\n\n#define cRFInitPosX     CHexInitXZCos60      //Start positions of the Right Front leg\n#define cRFInitPosY     CHexInitY\n#define cRFInitPosZ     -CHexInitXZSin60\n\n#define cLRInitPosX     CHexInitXZCos60      //Start positions of the Left Rear leg\n#define cLRInitPosY     CHexInitY\n#define cLRInitPosZ     CHexInitXZSin60\n\n#define cLMInitPosX     cHexInitXZ      //Start positions of the Left Middle leg\n#define cLMInitPosY     CHexInitY\n#define cLMInitPosZ     0\n\n#define cLFInitPosX     CHexInitXZCos60      //Start positions of the Left Front leg\n#define cLFInitPosY     CHexInitY\n#define cLFInitPosZ     -CHexInitXZSin60\n\n// Turret initial position\n#define cTurretRotInit  0\n#define cTurretTiltInit 0\n\n\n//--------------------------------------------------------------------\n//[Tars factors used in formula to calc Tarsus angle relative to the ground]\n#define cTarsst\t720\t//4DOF ONLY\n#define cTarsMulti\t2\t//4DOF ONLY\n#define cTarsFactorA\t70\t//4DOF ONLY\n#define cTarsFactorB\t60\t//4DOF ONLY\n#define cTarsFactorC\t50\t//4DOF ONLY\n\n#endif // HEX_CFG_H\n",
 			"file": "Hex_Cfg.h",
+			"file_size": 13540,
+			"file_write_time": 132645488500701772,
 			"settings":
 			{
 				"buffer_size": 13209,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
-			}
+			},
+			"undo_stack":
+			[
+				[
+					3,
+					1,
+					"left_delete",
+					null,
+					"AQAAAAIPAAAAAAAAAg8AAAAAAAABAAAAMA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAADDwAAAAAAAAMPAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					4,
+					1,
+					"insert",
+					{
+						"characters": "38"
+					},
+					"AgAAAAIPAAAAAAAAAw8AAAAAAAAAAAAAAw8AAAAAAAAEDwAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAACDwAAAAAAAAIPAAAAAAAAAAAAAAAA8L8"
+				]
+			]
 		}
 	],
 	"build_system": "Packages/User/Teensy.sublime-build",
@@ -387,7 +412,6 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSS_Phoenix",
 		"/D/GitHub/LSS_Library_Arduino",
 		"/D/GitHub/LSS_Library_Arduino/src"
 	],
@@ -539,6 +563,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"DMASettings",
 			"unused",
 			"flush",
 			"genericwrite",
@@ -557,8 +582,10 @@
 		[
 		],
 		"reverse": false,
+		"scrollbar_highlights": true,
 		"show_context": true,
 		"use_buffer2": true,
+		"use_gitignore": true,
 		"whole_word": false,
 		"wrap": true
 	},
@@ -580,8 +607,8 @@
 						"selection":
 						[
 							[
-								449,
-								449
+								387,
+								387
 							]
 						],
 						"settings":
@@ -595,11 +622,13 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
 					"file": "/D/GitHub/LSS_Library_Arduino/src/LSS.h",
+					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
@@ -610,8 +639,8 @@
 						"selection":
 						[
 							[
-								7686,
-								7686
+								7634,
+								7634
 							]
 						],
 						"settings":
@@ -624,41 +653,12 @@
 						"translation.y": 5557.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "LSS_Phoenix.sublime-project",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 99,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								69,
-								88
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JSON/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "LSS_Phoenix.ino",
 					"semi_transient": false,
 					"settings":
@@ -685,10 +685,11 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 3,
 					"file": "/C/Users/kurte/Documents/Arduino/Github/LSS_Test_sketches/LSSTestServos/LSSTestServos.ino",
 					"semi_transient": false,
 					"settings":
@@ -715,14 +716,15 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 4,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5617,
+						"buffer_size": 5666,
 						"regions":
 						{
 							"match":
@@ -813,15 +815,15 @@
 						"selection":
 						[
 							[
-								4219,
-								4219
+								5619,
+								5619
 							]
 						],
 						"settings":
 						{
 							"detect_indentation": false,
 							"line_numbers": false,
-							"output_tag": 3,
+							"output_tag": 4,
 							"result_base_dir": "",
 							"result_file_regex": "^([^ \t].*):$",
 							"result_line_regex": "^ +([0-9]+):",
@@ -829,14 +831,15 @@
 							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2200.0,
+						"translation.y": 2992.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "Hex_Cfg.h",
 					"semi_transient": false,
 					"settings":
@@ -848,8 +851,8 @@
 						"selection":
 						[
 							[
-								227,
-								227
+								2767,
+								2767
 							]
 						],
 						"settings":
@@ -857,10 +860,11 @@
 							"syntax": "Packages/Deviot (Arduino IDE)/deviot.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1232.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 3,
+					"stack_multiselect": false,
 					"type": "text"
 				}
 			]
@@ -978,7 +982,7 @@
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 355.0,
 	"status_bar_visible": true,
 	"template_settings":

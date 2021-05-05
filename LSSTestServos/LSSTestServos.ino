@@ -373,9 +373,22 @@ void MoveAllServos(void) {
     if (++index_print == NUM_SERVOS) index_print = 0;
 
     for (int j = 0; j < NUM_SERVOS; j++) {
-      if (positions[j] != servo_angle) Serial.printf(" %u:%d", j, positions[j]);
+      Serial.printf(" %u:%d", j, positions[j]);
     }
-    Serial.println();
+    // BUGBUG:: quick test to see how long it would take with 3 query in one...
+    em = 0;
+    for (int j = 0; j < NUM_SERVOS; j++) {
+      myLSS.setServoID(pgm_axdIDs[j]);    // So first is which servo
+      Serial1.printf("#%uQD\r#%uQV\r#%uQT\r", pgm_axdIDs[j], pgm_axdIDs[j], pgm_axdIDs[j]);
+      uint8_t cnt_left = 3;
+      elapsedMicros em_timeout;
+      while (cnt_left && em_timeout < 5000) {
+        if (Serial1.read() == '\r') cnt_left--;
+      }
+    }
+
+    Serial.printf("TQS:%u\n", (uint32_t)em);
+
     while (em < 100) ;
   }
 }
@@ -607,6 +620,7 @@ void PrintServoValues(void) {
     int16_t value = 0;
 
     // Ask servo for status; exit if it failed
+    elapsedMicros em = 0;
     if (!(LSS::genericWrite(wID, query_list[i].str, LSS_QuerySession)))
     {
       Serial.printf("  Failed genericWrite %s\n", query_list[i]);
@@ -616,20 +630,22 @@ void PrintServoValues(void) {
     // Read response from servo
     if (query_list[i].lsqrt == LSQ_S16) {
       value = (int16_t) LSS::genericRead_Blocking_s16(wID, query_list[i].str);
+      uint32_t delta_time = em;
       LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();
       if (comm_status != LSS_CommStatus_ReadSuccess) {
-        Serial.printf("  %s - %d failed(%d)\n", query_list[i].str, value, (uint32_t)comm_status);
+        Serial.printf("  %s - %d failed(%d) t:%u\n", query_list[i].str, value, (uint32_t)comm_status, delta_time);
       } else {
-        Serial.printf("  %s - %d\n", query_list[i].str, value);
+        Serial.printf("  %s - %d t:%u\n", query_list[i].str, value, delta_time);
       }
 
     } else {
       const char *valueStr = LSS::genericRead_Blocking_str(wID, query_list[i].str);
+      uint32_t delta_time = em;
       LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();
       if (comm_status != LSS_CommStatus_ReadSuccess) {
-        Serial.printf("  %s - %s failed(%d)\n", query_list[i].str, valueStr, (uint32_t)comm_status);
+        Serial.printf("  %s - %s failed(%d) t:%u\n", query_list[i].str, valueStr, (uint32_t)comm_status, delta_time);
       } else {
-        Serial.printf("  %s - %s\n", query_list[i].str, valueStr);
+        Serial.printf("  %s - %s t:%u\n", query_list[i].str, valueStr, delta_time);
       }
 
     }
