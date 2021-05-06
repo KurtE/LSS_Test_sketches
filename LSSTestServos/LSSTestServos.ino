@@ -124,6 +124,7 @@ uint32_t          g_wServoMoveTime;
 extern bool IsValidServo(uint8_t servo_id);
 extern void initMemoryUsageTest();
 extern void PrintServoValues(void);
+extern void PrintServoValues2(void);
 extern void SetBaudRate();
 
 //====================================================================================================
@@ -169,6 +170,7 @@ void loop() {
   //  Serial.println("6 - Set Servo return delay time");
   //  Serial.println("8 - Set ID: <old> <new>");
   Serial.println("9 - Print Servo Values");
+  Serial.println("9 - Print Servo Values fill tx");
   Serial.println("b - Baud <new baud>");
   Serial.println("t - Toggle track Servos");
   Serial.println("h - hold [<sn>]");
@@ -201,6 +203,9 @@ void loop() {
         break;
       case '5':
         FindServos();
+        break;
+      case '8':
+        PrintServoValues2();
         break;
       case '9':
         PrintServoValues();
@@ -575,84 +580,147 @@ typedef enum {
 typedef struct {
   LSSQRT lsqrt;
   const char *str;
+  int16_t param; 
 } LSSQLIST;
 
 const LSSQLIST query_list[] = {
-  {LSQ_S16, LSS_QueryStatus},
-  {LSQ_S16, LSS_QueryOriginOffset},
-  {LSQ_S16, LSS_QueryAngularRange},
-  {LSQ_S16, LSS_QueryPositionPulse},
-  {LSQ_S16, LSS_QueryPosition},
-  {LSQ_S16, LSS_QuerySpeed},
-  {LSQ_S16, LSS_QuerySpeedRPM},
-  {LSQ_S16, LSS_QuerySpeedPulse},
-  {LSQ_S16, LSS_QueryMaxSpeed},
-  {LSQ_S16, LSS_QueryMaxSpeedRPM},
-  {LSQ_S16, LSS_QueryColorLED},
-  {LSQ_S16, LSS_QueryGyre},
-  {LSQ_S16, LSS_QueryID},
-  {LSQ_S16, LSS_QueryBaud},
-  {LSQ_STR, LSS_QueryFirstPosition},
-  {LSQ_STR, LSS_QueryModelString},
-  {LSQ_STR, LSS_QuerySerialNumber},
-  {LSQ_S16, LSS_QueryFirmwareVersion},
-  {LSQ_S16, LSS_QueryVoltage},
-  {LSQ_S16, LSS_QueryTemperature},
-  {LSQ_S16, LSS_QueryCurrent},
-  {LSQ_S16, LSS_QueryAnalog},
-  {LSQ_S16, LSS_QueryAngularStiffness},
-  {LSQ_S16, LSS_QueryAngularHoldingStiffness},
-  {LSQ_S16, LSS_QueryAngularAcceleration},
-  {LSQ_S16, LSS_QueryAngularDeceleration},
-  {LSQ_S16, LSS_QueryEnableMotionControl},
-  {LSQ_S16, LSS_QueryBlinkingLED}
+  {LSQ_S16, LSS_QueryStatus, -1},
+  {LSQ_S16, LSS_QueryOriginOffset, -1},
+  {LSQ_S16, LSS_QueryAngularRange, -1},
+  {LSQ_S16, LSS_QueryPositionPulse, -1},
+  {LSQ_S16, LSS_QueryPosition, -1},
+  {LSQ_S16, LSS_QuerySpeed, -1},
+  {LSQ_S16, LSS_QuerySpeedRPM, -1},
+  {LSQ_S16, LSS_QuerySpeedPulse, -1},
+  {LSQ_S16, LSS_QueryMaxSpeed, -1},
+  {LSQ_S16, LSS_QueryMaxSpeedRPM, -1},
+  {LSQ_S16, LSS_QueryColorLED, -1},
+  {LSQ_S16, LSS_QueryGyre, -1},
+  {LSQ_S16, LSS_QueryID, -1},
+  {LSQ_S16, LSS_QueryBaud, -1},
+  {LSQ_STR, LSS_QueryFirstPosition, -1},
+  {LSQ_STR, LSS_QueryModelString, -1},
+//  {LSQ_STR, LSS_QuerySerialNumber, -1},
+  {LSQ_S16, LSS_QueryFirmwareVersion, -1},
+  {LSQ_S16, LSS_QueryVoltage, -1},
+  {LSQ_S16, LSS_QueryTemperature, -1},
+  {LSQ_S16, LSS_QueryCurrent, -1},
+//  {LSQ_S16, LSS_QueryAnalog, 0},
+  {LSQ_S16, LSS_QueryAngularStiffness, -1},
+  {LSQ_S16, LSS_QueryAngularHoldingStiffness, -1},
+  {LSQ_S16, LSS_QueryAngularAcceleration, -1},
+  {LSQ_S16, LSS_QueryAngularDeceleration, -1},
+  {LSQ_S16, LSS_QueryEnableMotionControl, -1},
+  {LSQ_STR, LSS_QueryFirmwareVersion, 1},
+  {LSQ_STR, LSS_QueryFirmwareVersion, 2},
+  {LSQ_STR, LSS_QueryFirmwareVersion, 3}
+//  {LSQ_S16, LSS_QueryBlinkingLED}
 };
 
 
-void PrintServoValues(void) {
-
+void PrintServoValues2(void) {
+#if 1
   int32_t wID;
   if (!FGetNextCmdNum(&wID))
     return;
   Serial.printf("\nServo %u values\n", wID);
-  for (uint8_t i = 0; i < (sizeof(query_list) / sizeof(query_list[0])); i++) {
-    // Variables
-    int16_t value = 0;
-
-    // Ask servo for status; exit if it failed
-    elapsedMicros em = 0;
-    if (!(LSS::genericWrite(wID, query_list[i].str, LSS_QuerySession)))
-    {
-      Serial.printf("  Failed genericWrite %s\n", query_list[i]);
-      break;
-    }
-
-    // Read response from servo
-    if (query_list[i].lsqrt == LSQ_S16) {
-      value = (int16_t) LSS::genericRead_Blocking_s16(wID, query_list[i].str);
-      uint32_t delta_time = em;
-      LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();
-      if (comm_status != LSS_CommStatus_ReadSuccess) {
-        Serial.printf("  %s - %d failed(%d) t:%u\n", query_list[i].str, value, (uint32_t)comm_status, delta_time);
-      } else {
-        Serial.printf("  %s - %d t:%u\n", query_list[i].str, value, delta_time);
+  Serial1.setTimeout(10);  // 10ms timeout
+  elapsedMicros emWholeList = 0;
+  elapsedMillis emTimeout = 0;
+  uint8_t index_command_tx = 0;
+  uint8_t index_command_rx = 0;
+  uint8_t stringBuffer[80];
+  while (index_command_rx < (sizeof(query_list) / sizeof(query_list[0])) && emTimeout < 10) {
+    if (index_command_tx < (sizeof(query_list) / sizeof(query_list[0]))) {
+      if (Serial.availableForWrite() > 8) {
+        bool success;
+        if (query_list[index_command_tx].param == -1) success = LSS::genericWrite(wID, query_list[index_command_tx].str);
+        else  success = LSS::genericWrite(wID, query_list[index_command_tx].str, query_list[index_command_tx].param );
+        
+        if (!success)
+        {
+          Serial.printf("  Failed genericWrite %s\n", query_list[index_command_tx]);
+          break;
+        }
+        index_command_tx++;
       }
-
-    } else {
-      const char *valueStr = LSS::genericRead_Blocking_str(wID, query_list[i].str);
-      uint32_t delta_time = em;
-      LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();
-      if (comm_status != LSS_CommStatus_ReadSuccess) {
-        Serial.printf("  %s - %s failed(%d) t:%u\n", query_list[i].str, valueStr, (uint32_t)comm_status, delta_time);
-      } else {
-        Serial.printf("  %s - %s t:%u\n", query_list[i].str, valueStr, delta_time);
-      }
-
     }
+    if (Serial1.available()) {
+      if (Serial1.find("*")) {
+        Serial1.parseInt();
+        Serial1.readBytesUntil('\r', stringBuffer, sizeof(stringBuffer));
+        if (memcmp(stringBuffer, query_list[index_command_rx].str, strlen( query_list[index_command_rx].str)) == 0) {
+          Serial.printf("%s(%d) - %s\n", query_list[index_command_rx].str, query_list[index_command_rx].param, stringBuffer + strlen( query_list[index_command_rx].str));
+        } else {
+          Serial.printf("Return? %s != %s\n", query_list[index_command_rx].str, stringBuffer + strlen( query_list[index_command_rx].str));
+        }
+        index_command_rx++;
+      }
+      emTimeout = 0;
+    }
+  }
+  Serial.printf("Total Time: %u\n", (uint32_t)emWholeList);
+#endif
+}
 
+void PrintServoValues(void) {
 
+  int32_t wID;
+  int servo_index = 256;
+  if (!FGetNextCmdNum(&wID))
+    return;
+  elapsedMicros emWholeList = 0;
+  if (wID == -1 ) {
+    servo_index = 0;
   }
 
+  do {
+    if (servo_index < 256) wID = g_ids[servo_index++];
+    Serial.printf("\nServo %u values\n", wID);
+    for (uint8_t i = 0; i < (sizeof(query_list) / sizeof(query_list[0])); i++) {
+      // Variables
+      int16_t value = 0;
+
+      // Ask servo for status; exit if it failed
+      elapsedMicros em = 0;
+      bool success;
+      if (query_list[i].param == -1) success = LSS::genericWrite(wID, query_list[i].str);
+      else  success = LSS::genericWrite(wID, query_list[i].str, query_list[i].param );
+      
+      if (!success)
+      {
+        Serial.printf("  Failed genericWrite %s\n", query_list[i].str);
+        break;
+      }
+
+      // Read response from servo
+      if (query_list[i].lsqrt == LSQ_S16) {
+        value = (int16_t) LSS::genericRead_Blocking_s16(wID, query_list[i].str);
+        uint32_t delta_time = em;
+        LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();
+        if (comm_status != LSS_CommStatus_ReadSuccess) {
+          Serial.printf("  %s(%d) - %d failed(%d) t:%u\n", query_list[i].str, query_list[i].param, value, (uint32_t)comm_status, delta_time);
+        } else {
+          Serial.printf("  %s(%d) - %d t:%u\n", query_list[i].str, query_list[i].param, value, delta_time);
+        }
+
+      } else {
+        const char *valueStr = LSS::genericRead_Blocking_str(wID, query_list[i].str);
+        uint32_t delta_time = em;
+        LSS_LastCommStatus comm_status = myLSS.getLastCommStatus();
+        if (comm_status != LSS_CommStatus_ReadSuccess) {
+          Serial.printf("  %s(%d) - %s failed(%d) t:%u\n", query_list[i].str, query_list[i].param, valueStr, (uint32_t)comm_status, delta_time);
+        } else {
+          Serial.printf("  %s(%d) - %s t:%u\n", query_list[i].str, query_list[i].param, valueStr, delta_time);
+        }
+
+      }
+
+
+    }
+
+    Serial.printf("Total Time: %u\n", (uint32_t)emWholeList);
+  } while (servo_index < g_count_servos_found);
 }
 
 //=======================================================================================
