@@ -16,6 +16,7 @@
 #define LSS_SERIAL Serial1
 #define LSS_BAUD   250000
 #define MAX_SERVO_NUM 32
+#define LSS_ID    0
 //=============================================================================
 // Define differnt robots..
 //=============================================================================
@@ -97,9 +98,6 @@ const char* IKPinsNames[] = {
 // Globals
 //=============================================================================
 // Global objects
-#define LSS_SERIAL_PORT     Serial1
-#define LSS_BAUDRATE    500000
-#define LSS_ID          0
 
 LSS myLSS = LSS(LSS_ID);
 
@@ -168,7 +166,7 @@ void loop() {
   Serial.println("4 - Get Servo Positions");
   Serial.println("5 - Find All Servos");
   //  Serial.println("6 - Set Servo return delay time");
-  //  Serial.println("8 - Set ID: <old> <new>");
+  Serial.println("7 - Set ID: <old> <new>");
   Serial.println("9 - Print Servo Values");
   Serial.println("9 - Print Servo Values fill tx");
   Serial.println("b - Baud <new baud>");
@@ -203,6 +201,9 @@ void loop() {
         break;
       case '5':
         FindServos();
+        break;
+      case '7':  
+        SetServoID();
         break;
       case '8':
         PrintServoValues2();
@@ -384,11 +385,11 @@ void MoveAllServos(void) {
     em = 0;
     for (int j = 0; j < NUM_SERVOS; j++) {
       myLSS.setServoID(pgm_axdIDs[j]);    // So first is which servo
-      Serial1.printf("#%uQD\r#%uQV\r#%uQT\r", pgm_axdIDs[j], pgm_axdIDs[j], pgm_axdIDs[j]);
+      LSS_SERIAL.printf("#%uQD\r#%uQV\r#%uQT\r", pgm_axdIDs[j], pgm_axdIDs[j], pgm_axdIDs[j]);
       uint8_t cnt_left = 3;
       elapsedMicros em_timeout;
       while (cnt_left && em_timeout < 5000) {
-        if (Serial1.read() == '\r') cnt_left--;
+        if (LSS_SERIAL.read() == '\r') cnt_left--;
       }
     }
 
@@ -451,6 +452,40 @@ void SetServoPosition(void) {
 //=======================================================================================
 bool IsValidServo(uint8_t servo_id) {
   return true;
+}
+
+void SetServoID(void) {
+  int32_t wIDFrom;
+  int32_t wIDTo;
+
+  if (!FGetNextCmdNum(&wIDFrom))
+    return;    // no parameters so bail.
+
+  if (!FGetNextCmdNum(&wIDTo))
+    return;    // no parameters so bail.
+
+
+  Serial.print("Set Servo ID From: ");
+  Serial.print(wIDFrom, DEC);
+  Serial.print(" To: ");
+  Serial.println(wIDTo, DEC);
+
+  if (!IsValidServo(wIDFrom)) {
+    Serial.print("Servo: ");
+    Serial.print(wIDFrom, DEC);
+    Serial.println("Was not found");
+    return;
+  }
+
+  // Now lets try to update the servo ID
+  LSS_SERIAL.printf("#%uCID%u\r", wIDFrom, wIDTo);
+  LSS_SERIAL.flush(); 
+  delay(250);
+  LSS_SERIAL.printf("#254RESET\r");
+  LSS_SERIAL.flush(); 
+//  myLSS.setServoID(254);    // So first is which servo
+//  myLSS.reset();
+  delay(1000);  // wait for servos to reset. 
 }
 
 
@@ -624,7 +659,7 @@ void PrintServoValues2(void) {
   if (!FGetNextCmdNum(&wID))
     return;
   Serial.printf("\nServo %u values\n", wID);
-  Serial1.setTimeout(10);  // 10ms timeout
+  LSS_SERIAL.setTimeout(10);  // 10ms timeout
   elapsedMicros emWholeList = 0;
   elapsedMillis emTimeout = 0;
   uint8_t index_command_tx = 0;
@@ -645,10 +680,10 @@ void PrintServoValues2(void) {
         index_command_tx++;
       }
     }
-    if (Serial1.available()) {
-      if (Serial1.find("*")) {
-        Serial1.parseInt();
-        Serial1.readBytesUntil('\r', stringBuffer, sizeof(stringBuffer));
+    if (LSS_SERIAL.available()) {
+      if (LSS_SERIAL.find("*")) {
+        LSS_SERIAL.parseInt();
+        LSS_SERIAL.readBytesUntil('\r', stringBuffer, sizeof(stringBuffer));
         if (memcmp(stringBuffer, query_list[index_command_rx].str, strlen( query_list[index_command_rx].str)) == 0) {
           Serial.printf("%s(%d) - %s\n", query_list[index_command_rx].str, query_list[index_command_rx].param, stringBuffer + strlen( query_list[index_command_rx].str));
         } else {
