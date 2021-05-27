@@ -173,6 +173,7 @@ void loop() {
   Serial.println("t - Toggle track Servos");
   Serial.println("h - hold [<sn>]");
   Serial.println("f - free [<sn>]");
+  Serial.println("g - Gait Sim RF");
   Serial.println("m - move all servos");
   Serial.println("q - test/time Q command");
   Serial.println("r - Reboot [<sn>]");
@@ -219,6 +220,10 @@ void loop() {
       case 'f':
       case 'F':
         HoldOrFreeServos(0);
+        break;
+      case 'g':
+	  case 'G':
+        generateGait();
         break;
       case 'h':
       case 'H':
@@ -899,4 +904,105 @@ void printMemoryUsage()
   Serial.printf("Stack Max: %x, usage: %d\n", p, g_end_stack_pointer - (uint32_t)p);
   Serial.printf("Estimated unused memory: %d\n", (uint32_t)(p - current_heap_ptr));
 #endif
+}
+
+//=================================================================================
+void generateGait()
+{
+for(int i=0; i < 5; i++) {
+	//Start position 1 - start position
+	// -4.8, 1.1, 11 degrees
+	myLSS.setServoID(RF_COXA);
+	myLSS.move(-48);
+	myLSS.setServoID(RF_FEMUR);
+	myLSS.move(11);
+	myLSS.setServoID(RF_TIBIA);
+	myLSS.move(110);
+  myLSS.setServoID(RF_COXA);
+
+  Serial.println("Position 1: ");
+  checkStatus();
+  GetServoPositions();
+
+	//position2
+	//-2.6, 0.3, 5.1
+	myLSS.setServoID(RF_COXA);
+	myLSS.move(-26);
+	myLSS.setServoID(RF_FEMUR);
+	myLSS.move(3);
+	myLSS.setServoID(RF_TIBIA);
+	myLSS.move(51);
+
+  Serial.println("Position 2: ");
+  checkStatus();
+  GetServoPositions();
+
+	//position3
+	// 0, 0, 0
+	myLSS.setServoID(RF_COXA);
+	myLSS.move(0);
+	myLSS.setServoID(RF_FEMUR);
+	myLSS.move(0);
+	myLSS.setServoID(RF_TIBIA);
+	myLSS.move(0);
+
+  Serial.println("Position 3: ");
+  checkStatus();
+  GetServoPositions();
+
+	//position4
+	// 3.1, 0.3, -4.4
+	myLSS.setServoID(RF_COXA);
+	myLSS.move(31);
+	myLSS.setServoID(RF_FEMUR);
+	myLSS.move(3);
+	myLSS.setServoID(RF_TIBIA);
+	myLSS.move(-44);
+
+Serial.println("Position 4: ");
+checkStatus();
+GetServoPositions();
+
+	//position5 - end position
+	// 6.7, 1, -8.2
+	myLSS.setServoID(RF_COXA);
+	myLSS.move(67);
+	myLSS.setServoID(RF_FEMUR);
+	myLSS.move(10);
+	myLSS.setServoID(RF_TIBIA);
+	myLSS.move(-82);
+
+  Serial.println("Position 5: ");
+  checkStatus();
+  GetServoPositions();
+}
+	//leg up start position
+	//6.7, -31.2, -34.3
+	myLSS.setServoID(RF_COXA);
+	myLSS.move(67);
+	myLSS.setServoID(RF_FEMUR);
+	myLSS.move(-312);
+	myLSS.setServoID(RF_TIBIA);
+	myLSS.move(343);
+
+  Serial.println("Position Start Leg Up: ");
+  checkStatus();
+  GetServoPositions();
+
+}
+
+void checkStatus()
+{
+  int8_t status1 = -1, status2 = -1, status3 = -1;
+  uint32_t statusTime = 0;
+  while(status1 != 6 || status2 != 6 || status3 != 6) {
+    status1 = myLSS.getStatus();
+    myLSS.setServoID(RF_COXA);
+    status2 = myLSS.getStatus();
+    myLSS.setServoID(RF_COXA);
+    status3 = myLSS.getStatus();
+    delay(1);
+    statusTime += 1;
+  }
+  Serial.printf("Status: %d: %d, %d, %d\n", statusTime, status1, status2, status3);
 }
