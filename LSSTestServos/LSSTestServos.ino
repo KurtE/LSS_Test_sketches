@@ -144,6 +144,8 @@ void setup() {
 
   PrintServoVoltage();
 
+  tmpSpeed(300);
+
 }
 
 
@@ -906,88 +908,119 @@ void printMemoryUsage()
 #endif
 }
 
+//================================================================================
+// RF leg array pins
+uint16_t rf_ids [] = { RF_COXA, RF_FEMUR, RF_TIBIA }; 
+int16_t rf_rip6_gait [5][3] =
+	{ 
+		{-48, 11, 110}, 	//Start position 1 - start position
+                      // -4.8, 1.1, 11 degrees
+		{-26,  3,  51},		//position2
+                      //-2.6, 0.3, 5.1
+		{  0,  0,   0},		//position3
+                      // 0, 0, 0
+		{ 31,  3,  -44},		//position4
+                      // 3.1, 0.3, -4.4
+		{ 67, 10, -82}		//position5 - end position
+                      // 6.7, 1, -8.2
+	};
+
+uint16_t delay1 = 50;
+uint16_t servo_move_time = 250;
 //=================================================================================
 void generateGait()
 {
+  for(uint8_t count = 0; count < 5; count++) {
+  	for(uint8_t position = 0; position < 5; position++) {
+  		 for(uint8_t ids = 0; ids < 3; ids++){
+  			myLSS.setServoID(rf_ids[ids]);
+  			myLSS.moveT(rf_rip6_gait[position][ids], servo_move_time);
+  		 }
+       checkStatus();
+       delay(delay1);
+  	}
+  }
+/*
 for(int i=0; i < 5; i++) {
 	//Start position 1 - start position
 	// -4.8, 1.1, 11 degrees
   myLSS.setServoID(RF_COXA);
-  myLSS.moveT(-48, 250);
+  myLSS.moveT(-48, servo_move_time);
   myLSS.setServoID(RF_FEMUR);
-  myLSS.moveT(11, 250);
+  myLSS.moveT(11, servo_move_time);
   myLSS.setServoID(RF_TIBIA);
-  myLSS.moveT(110, 250);
-  Serial.println("Position 1: ");
-  //checkStatus();
+  myLSS.moveT(110, servo_move_time);
+  //Serial.println("Position 1: ");
+  checkStatus();
   //GetServoPositions();
-  delay(250);
+  delay(delay1);
   
 	//position2
 	//-2.6, 0.3, 5.1
 	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(-26,250);
+	myLSS.moveT(-26,servo_move_time);
 	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(3, 250);
+	myLSS.moveT(3, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(51, 250);
-  Serial.println("Position 2: ");
-  //checkStatus();
+	myLSS.moveT(51, servo_move_time);
+  //Serial.println("Position 2: ");
+  checkStatus();
   //GetServoPositions();
-  delay(250);
+  delay(delay1);
   
 	//position3
 	// 0, 0, 0
 	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(0, 250);
+	myLSS.moveT(0, servo_move_time);
 	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(0, 250);
+	myLSS.moveT(0, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(0, 250);
-  Serial.println("Position 3: ");
-  //checkStatus();
+	myLSS.moveT(0, servo_move_time);
+  //Serial.println("Position 3: ");
+  checkStatus();
   //GetServoPositions();
-  delay(250);
+  delay(delay1);
   
 	//position4
 	// 3.1, 0.3, -4.4
 	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(31, 250);
+	myLSS.moveT(31, servo_move_time);
 	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(3, 250);
+	myLSS.moveT(3, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(-44, 250);
-  Serial.println("Position 4: ");
-  //checkStatus();
+	myLSS.moveT(-44, servo_move_time);
+  //Serial.println("Position 4: ");
+  checkStatus();
   //GetServoPositions();
-  delay(250);
+  delay(delay1);
   
 	//position5 - end position
 	// 6.7, 1, -8.2
 	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(67, 250);
+	myLSS.moveT(67, servo_move_time);
 	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(10, 250);
+	myLSS.moveT(10, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(-82, 250);
-  Serial.println("Position 5: ");
-  //checkStatus();
+	myLSS.moveT(-82, servo_move_time);
+  //Serial.println("Position 5: ");
+  checkStatus();
   //GetServoPositions();
-  delay(250);
+  delay(delay1);
 }
+*/
+
 	//leg up start position
 	//6.7, -31.2, -34.3
 	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(67, 250);
+	myLSS.moveT(67, servo_move_time);
 	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(-312, 250);
+	myLSS.moveT(-312, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(343, 250);
-  Serial.println("Position Start Leg Up: ");
+	myLSS.moveT(343, servo_move_time);
+  //Serial.println("Position Start Leg Up: ");
   checkStatus();
+  delay(delay1);
   GetServoPositions();
-  delay(250);
-  
 }
 
 void checkStatus()
@@ -1004,5 +1037,16 @@ void checkStatus()
     delay(1);
     statusTime += 1;
   }
-  Serial.printf("Status: %d: %d, %d, %d\n", statusTime, status1, status2, status3);
+  //Serial.printf("Status: %d: %d, %d, %d\n", statusTime, status1, status2, status3);
+}
+
+void tmpSpeed(uint16_t temp)
+{
+  myLSS.setServoID(RF_COXA);
+  myLSS.setMaxSpeed(temp, LSS_SetSession);
+  myLSS.setServoID(RF_FEMUR);
+  myLSS.setMaxSpeed(temp, LSS_SetSession);
+  myLSS.setServoID(RF_TIBIA);
+  myLSS.setMaxSpeed(temp, LSS_SetSession);
+
 }
