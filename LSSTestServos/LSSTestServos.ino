@@ -174,6 +174,7 @@ void loop() {
   Serial.println("h - hold [<sn>]");
   Serial.println("f - free [<sn>]");
   Serial.println("m - move all servos");
+  Serial.println("q - test/time Q command");
   Serial.println("r - Reboot [<sn>]");
 
   Serial.print(":");
@@ -222,6 +223,10 @@ void loop() {
       case 'h':
       case 'H':
         HoldOrFreeServos(1);
+        break;
+      case 'q':
+      case 'Q':
+        QueryAllServos();
         break;
       case 'r':
       case 'R':
@@ -516,6 +521,31 @@ void GetServoPositions(void) {
     Serial.println(ulDelta, DEC);
   }
 }
+
+void QueryAllServos() {
+  LSS_Status servo_status[MAX_SERVO_NUM];
+  uint32_t query_time[MAX_SERVO_NUM];
+
+  if (!g_count_servos_found) {
+    Serial.println("Previous Find Servos failed to locate any servos: so retry");
+    FindServos();
+    return;
+  }
+
+  Serial.print("\nDo Query(Q) command on all servos ");
+  elapsedMicros emTotal = 0;
+  for (int i = 0; i < g_count_servos_found; i++) {
+    elapsedMicros em = 0;
+    myLSS.setServoID(g_ids[i]);
+    servo_status[i] = myLSS.getStatus();
+    query_time[i] = em;
+  }
+  Serial.printf("total time: %u\n", (uint32_t)emTotal);
+  for (int i = 0; i < g_count_servos_found; i++) {
+    Serial.printf("  %u: %u T:%u\n", g_ids[i], servo_status[i], query_time[i]);
+  }
+}
+
 
 //=======================================================================================
 
