@@ -91,7 +91,24 @@ const char* IKPinsNames[] = {
 #endif
 };
 
+//====================================
+//set MJS RF config Gait Test Values
+//====================================
+#define RF_COXA_MaxSpeed  600
+#define RF_COXA_Gyre      LSS_GyreCounterClockwise
+#define RF_COXA_Offset      0
 
+#define RF_FEMUR_MaxSpeed  600
+#define RF_FEMUR_Gyre      LSS_GyreCounterClockwise
+#define RF_FEMUR_Offset    700
+
+#define RF_TIBIA_MaxSpeed  600
+#define RF_TIBIA_Gyre      LSS_GyreCounterClockwise
+#define RF_TIBIA_Offset    190
+
+//Time delays for Gait MoveT commands
+uint16_t delay1 = 250;
+uint16_t servo_move_time = 250;
 
 
 //=============================================================================
@@ -143,9 +160,6 @@ void setup() {
   FindServos();
 
   PrintServoVoltage();
-
-  tmpSpeed(300);
-
 }
 
 
@@ -175,6 +189,7 @@ void loop() {
   Serial.println("t - Toggle track Servos");
   Serial.println("h - hold [<sn>]");
   Serial.println("f - free [<sn>]");
+  Serial.println("c - Gait Config for Gait Sim");
   Serial.println("g - Gait Sim RF");
   Serial.println("m - move all servos");
   Serial.println("q - test/time Q command");
@@ -224,8 +239,12 @@ void loop() {
         HoldOrFreeServos(0);
         break;
       case 'g':
-	  case 'G':
+      case 'G':
         generateGait();
+        break;
+      case 'c':
+      case 'C':
+        setGaitConfig();
         break;
       case 'h':
       case 'H':
@@ -925,12 +944,10 @@ int16_t rf_rip6_gait [5][3] =
                       // 6.7, 1, -8.2
 	};
 
-uint16_t delay1 = 50;
-uint16_t servo_move_time = 250;
 //=================================================================================
 void generateGait()
 {
-  for(uint8_t count = 0; count < 5; count++) {
+  for(uint8_t count = 0; count <1; count++) {
   	for(uint8_t position = 0; position < 5; position++) {
   		 for(uint8_t ids = 0; ids < 3; ids++){
   			myLSS.setServoID(rf_ids[ids]);
@@ -1034,19 +1051,27 @@ void checkStatus()
     if(status2 != 6) status2 = myLSS.getStatus();
     myLSS.setServoID(RF_TIBIA);
     if(status3 != 6) status3 = myLSS.getStatus();
-    delay(1);
-    statusTime += 1;
+    delay(2);
+    statusTime += 2;
   }
   //Serial.printf("Status: %d: %d, %d, %d\n", statusTime, status1, status2, status3);
 }
 
-void tmpSpeed(uint16_t temp)
+void setGaitConfig()
 {
   myLSS.setServoID(RF_COXA);
-  myLSS.setMaxSpeed(temp, LSS_SetSession);
+  myLSS.setMaxSpeed(RF_COXA_MaxSpeed, LSS_SetSession);
+  myLSS.setGyre(RF_COXA_Gyre, LSS_SetSession);
+  myLSS.setOriginOffset(RF_COXA_Offset, LSS_SetSession);
+  
   myLSS.setServoID(RF_FEMUR);
-  myLSS.setMaxSpeed(temp, LSS_SetSession);
+  myLSS.setMaxSpeed(RF_FEMUR_MaxSpeed, LSS_SetSession);
+  myLSS.setGyre(RF_FEMUR_Gyre, LSS_SetSession);
+  myLSS.setOriginOffset(RF_FEMUR_Offset, LSS_SetSession);
+  
   myLSS.setServoID(RF_TIBIA);
-  myLSS.setMaxSpeed(temp, LSS_SetSession);
+  myLSS.setMaxSpeed(RF_TIBIA_MaxSpeed, LSS_SetSession);
+  myLSS.setGyre(RF_TIBIA_Gyre,LSS_SetSession);
+  myLSS.setOriginOffset(RF_TIBIA_Offset, LSS_SetSession);
 
 }
