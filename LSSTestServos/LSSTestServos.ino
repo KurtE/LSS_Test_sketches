@@ -107,7 +107,7 @@ const char* IKPinsNames[] = {
 #define RF_TIBIA_Offset    190
 
 //Time delays for Gait MoveT commands
-uint16_t delay1 = 250;
+uint16_t delay1 = 450;
 uint16_t servo_move_time = 250;
 
 
@@ -191,6 +191,7 @@ void loop() {
   Serial.println("f - free [<sn>]");
   Serial.println("c - Gait Config for Gait Sim");
   Serial.println("g - Gait Sim RF");
+  Serial.println("i - Cycle Low/Med/High Stance");
   Serial.println("m - move all servos");
   Serial.println("q - test/time Q command");
   Serial.println("r - Reboot [<sn>]");
@@ -245,6 +246,10 @@ void loop() {
       case 'c':
       case 'C':
         setGaitConfig();
+        break;
+      case 'i':
+      case 'I':
+        cycleStance();
         break;
       case 'h':
       case 'H':
@@ -944,6 +949,16 @@ int16_t rf_rip6_gait [5][3] =
                       // 6.7, 1, -8.2
 	};
 
+
+int16_t rf_stance [5][3] =
+  { 
+    {0, -700, 500},       //Low
+                          // 0, -900, 510 degrees
+    {0,  0,  0},          //Med
+    {  0, 450, -450},   //High
+    {0,  0,  0},          //Med
+    {0, -700, 500}       //Low
+  };
 //=================================================================================
 void generateGait()
 {
@@ -952,79 +967,12 @@ void generateGait()
   		 for(uint8_t ids = 0; ids < 3; ids++){
   			myLSS.setServoID(rf_ids[ids]);
   			myLSS.moveT(rf_rip6_gait[position][ids], servo_move_time);
-  		 }
-       checkStatus();
+       }
        delay(delay1);
+       checkStatus();
+
   	}
   }
-/*
-for(int i=0; i < 5; i++) {
-	//Start position 1 - start position
-	// -4.8, 1.1, 11 degrees
-  myLSS.setServoID(RF_COXA);
-  myLSS.moveT(-48, servo_move_time);
-  myLSS.setServoID(RF_FEMUR);
-  myLSS.moveT(11, servo_move_time);
-  myLSS.setServoID(RF_TIBIA);
-  myLSS.moveT(110, servo_move_time);
-  //Serial.println("Position 1: ");
-  checkStatus();
-  //GetServoPositions();
-  delay(delay1);
-  
-	//position2
-	//-2.6, 0.3, 5.1
-	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(-26,servo_move_time);
-	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(3, servo_move_time);
-	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(51, servo_move_time);
-  //Serial.println("Position 2: ");
-  checkStatus();
-  //GetServoPositions();
-  delay(delay1);
-  
-	//position3
-	// 0, 0, 0
-	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(0, servo_move_time);
-	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(0, servo_move_time);
-	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(0, servo_move_time);
-  //Serial.println("Position 3: ");
-  checkStatus();
-  //GetServoPositions();
-  delay(delay1);
-  
-	//position4
-	// 3.1, 0.3, -4.4
-	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(31, servo_move_time);
-	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(3, servo_move_time);
-	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(-44, servo_move_time);
-  //Serial.println("Position 4: ");
-  checkStatus();
-  //GetServoPositions();
-  delay(delay1);
-  
-	//position5 - end position
-	// 6.7, 1, -8.2
-	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(67, servo_move_time);
-	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(10, servo_move_time);
-	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(-82, servo_move_time);
-  //Serial.println("Position 5: ");
-  checkStatus();
-  //GetServoPositions();
-  delay(delay1);
-}
-*/
 
 	//leg up start position
 	//6.7, -31.2, -34.3
@@ -1034,9 +982,9 @@ for(int i=0; i < 5; i++) {
 	myLSS.moveT(-312, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
 	myLSS.moveT(343, servo_move_time);
+  delay(delay1);
   //Serial.println("Position Start Leg Up: ");
   checkStatus();
-  delay(delay1);
   GetServoPositions();
 }
 
@@ -1074,4 +1022,21 @@ void setGaitConfig()
   myLSS.setGyre(RF_TIBIA_Gyre,LSS_SetSession);
   myLSS.setOriginOffset(RF_TIBIA_Offset, LSS_SetSession);
 
+}
+
+void cycleStance() 
+{
+  for(uint8_t count = 0; count <1; count++) {
+    for(uint8_t position = 0; position < 5; position++) {
+       for(uint8_t ids = 0; ids < 3; ids++){
+        myLSS.setServoID(rf_ids[ids]);
+        myLSS.moveT(rf_stance[position][ids], servo_move_time);
+       }
+       delay(delay1);
+       checkStatus();
+
+       delay(3*delay1);
+    }
+  }
+  
 }
