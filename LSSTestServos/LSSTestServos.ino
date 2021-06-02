@@ -100,11 +100,11 @@ const char* IKPinsNames[] = {
 
 #define RF_FEMUR_MaxSpeed  600
 #define RF_FEMUR_Gyre      LSS_GyreCounterClockwise
-#define RF_FEMUR_Offset    700
+#define RF_FEMUR_Offset    -104
 
 #define RF_TIBIA_MaxSpeed  600
 #define RF_TIBIA_Gyre      LSS_GyreCounterClockwise
-#define RF_TIBIA_Offset    190
+#define RF_TIBIA_Offset    -137
 
 //Time delays for Gait MoveT commands
 uint16_t delay1 = 450;
@@ -952,12 +952,12 @@ int16_t rf_rip6_gait [5][3] =
 
 int16_t rf_stance [5][3] =
   { 
-    {0, -700, 500},       //Low
+    {0, -900, -600},       //Low
                           // 0, -900, 510 degrees
     {0,  0,  0},          //Med
-    {  0, 450, -450},   //High
+    {  0, 450, 450},   //High
     {0,  0,  0},          //Med
-    {0, -700, 500}       //Low
+    {0, -900, -600}       //Low
   };
 //=================================================================================
 void generateGait()
@@ -981,7 +981,7 @@ void generateGait()
 	myLSS.setServoID(RF_FEMUR);
 	myLSS.moveT(-312, servo_move_time);
 	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(343, servo_move_time);
+	myLSS.moveT(-343, servo_move_time);
   delay(delay1);
   //Serial.println("Position Start Leg Up: ");
   checkStatus();
@@ -1034,7 +1034,7 @@ void cycleStance()
        }
        delay(delay1);
        checkStatus();
-
+       GetServoPositions();
        delay(3*delay1);
     }
   }
