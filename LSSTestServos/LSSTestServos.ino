@@ -93,7 +93,33 @@ const char* IKPinsNames[] = {
 
 //====================================
 //set MJS RF config Gait Test Values
+// and Mucked up by KJE ;)
 //====================================
+typedef struct {
+  uint8_t         id;
+  LSS_ConfigGyre  gyre;
+  int16_t         offset;
+  int16_t         max_speed;
+} servo_info_t;
+typedef struct {
+  const char    *leg_name;
+  servo_info_t  coxa;
+  servo_info_t  femur;
+  servo_info_t  tibia;
+} leg_info_t;
+
+leg_info_t legs[] = {
+  {"Left Front",  {LF_COXA, LSS_GyreCounterClockwise, 0, 600}, {LF_FEMUR, LSS_GyreClockwise, -104, 600}, {LF_TIBIA, LSS_GyreClockwise, -137, 600}},
+  {"Left Middle", {LM_COXA, LSS_GyreCounterClockwise, 0, 600}, {LM_FEMUR, LSS_GyreClockwise, -104, 600}, {LM_TIBIA, LSS_GyreClockwise, -137, 600}},
+  {"Left Rear",   {LF_COXA, LSS_GyreCounterClockwise, 0, 600}, {LR_FEMUR, LSS_GyreClockwise, -104, 600}, {LR_TIBIA, LSS_GyreClockwise, -137, 600}},
+
+  {"Right Front",  {RF_COXA, LSS_GyreCounterClockwise, 0, 600}, {RF_FEMUR, LSS_GyreCounterClockwise, -104, 600}, {RF_TIBIA, LSS_GyreCounterClockwise, -137, 600}},
+  {"Right Middle", {RM_COXA, LSS_GyreCounterClockwise, 0, 600}, {RM_FEMUR, LSS_GyreCounterClockwise, -104, 600}, {RM_TIBIA, LSS_GyreCounterClockwise, -137, 600}},
+  {"Right Rear",   {RF_COXA, LSS_GyreCounterClockwise, 0, 600}, {RR_FEMUR, LSS_GyreCounterClockwise, -104, 600}, {RR_TIBIA, LSS_GyreCounterClockwise, -137, 600}}
+};
+#define COUNT_LEGS (sizeof(legs)/sizeof(legs[0]))
+
+
 #define RF_COXA_MaxSpeed  600
 #define RF_COXA_Gyre      LSS_GyreCounterClockwise
 #define RF_COXA_Offset      0
@@ -205,83 +231,83 @@ void loop() {
     Serial.println(g_aszCmdLine);
     g_iszCmdLine = 1;  // skip over first byte...
     switch (g_aszCmdLine[0]) {
-      case '0':
-        AllServosOff();
-        break;
-      case '1':
-        AllServosCenter();
-        break;
-      case '2':
-        SetServoPosition();
-        break;
-      case '3':
-        break;
-      case '4':
-        GetServoPositions();
-        break;
-      case '5':
-        FindServos();
-        break;
-      case '7':  
-        SetServoID();
-        break;
-      case '8':
-        PrintServoValues2();
-        break;
-      case '9':
-        PrintServoValues();
-        break;
-      case 'b':
-      case 'B':
-        SetBaudRate();
-        break;
-      case 'f':
-      case 'F':
-        HoldOrFreeServos(0);
-        break;
-      case 'g':
-      case 'G':
-        generateGait();
-        break;
-      case 'c':
-      case 'C':
-        setGaitConfig();
-        break;
-      case 'i':
-      case 'I':
-        cycleStance();
-        break;
-      case 'h':
-      case 'H':
-        HoldOrFreeServos(1);
-        break;
-      case 'q':
-      case 'Q':
-        QueryAllServos();
-        break;
-      case 'r':
-      case 'R':
-        RebootServos();
-        break;
-      case 't':
-      case 'T':
-        g_fTrackServos = !g_fTrackServos;
-        if (g_fTrackServos) {
-          Serial.println("Tracking On");
-          TrackServos(true);  // call to initialize all of the positions.
-        }
-        else
-          Serial.println("Tracking Off");
-        TrackPrintMinsMaxs();
-        break;
-      case 'm':
-      case 'M':
-        MoveAllServos();
-        break;
-      case 'w':
-      case 'W':
-        WriteServoValues();
-        break;
+    case '0':
+      AllServosOff();
+      break;
+    case '1':
+      AllServosCenter();
+      break;
+    case '2':
+      SetServoPosition();
+      break;
+    case '3':
+      break;
+    case '4':
+      GetServoPositions();
+      break;
+    case '5':
+      FindServos();
+      break;
+    case '7':
+      SetServoID();
+      break;
+    case '8':
+      PrintServoValues2();
+      break;
+    case '9':
+      PrintServoValues();
+      break;
+    case 'b':
+    case 'B':
+      SetBaudRate();
+      break;
+    case 'f':
+    case 'F':
+      HoldOrFreeServos(0);
+      break;
+    case 'g':
+    case 'G':
+      generateGait();
+      break;
+    case 'c':
+    case 'C':
+      setGaitConfig();
+      break;
+    case 'i':
+    case 'I':
+      cycleStance();
+      break;
+    case 'h':
+    case 'H':
+      HoldOrFreeServos(1);
+      break;
+    case 'q':
+    case 'Q':
+      QueryAllServos();
+      break;
+    case 'r':
+    case 'R':
+      RebootServos();
+      break;
+    case 't':
+    case 'T':
+      g_fTrackServos = !g_fTrackServos;
+      if (g_fTrackServos) {
+        Serial.println("Tracking On");
+        TrackServos(true);  // call to initialize all of the positions.
+      }
+      else
+        Serial.println("Tracking Off");
+      TrackPrintMinsMaxs();
+      break;
+    case 'm':
+    case 'M':
+      MoveAllServos();
+      break;
+    case 'w':
+    case 'W':
+      WriteServoValues();
+      break;
     }
   }
 }
@@ -330,8 +356,8 @@ uint8_t GetCommandLine(void) {
 //=======================================================================================
 boolean FGetNextCmdNum(int32_t * pw ) {
   // Skip all leading none number characters...
-  while (((g_aszCmdLine[g_iszCmdLine] < '0') || (g_aszCmdLine[g_iszCmdLine] > '9')) 
-      && (g_aszCmdLine[g_iszCmdLine] != '-')) {
+  while (((g_aszCmdLine[g_iszCmdLine] < '0') || (g_aszCmdLine[g_iszCmdLine] > '9'))
+         && (g_aszCmdLine[g_iszCmdLine] != '-')) {
     if (g_aszCmdLine[g_iszCmdLine] == 0)
       return false;  // end of the line...
     g_iszCmdLine++;
@@ -342,7 +368,7 @@ boolean FGetNextCmdNum(int32_t * pw ) {
     sign = -1;
     g_iszCmdLine++;
   }
-  
+
   while ((g_aszCmdLine[g_iszCmdLine] >= '0') && (g_aszCmdLine[g_iszCmdLine] <= '9')) {
     *pw = *pw * 10 + (g_aszCmdLine[g_iszCmdLine] - '0');
     g_iszCmdLine++;
@@ -381,7 +407,7 @@ void MoveAllServos(void) {
   AllServosCenter();
 
   static int MIN_SERVO_POS = -200;
-  static int MAX_SERVO_POS = 200; 
+  static int MAX_SERVO_POS = 200;
   int servo_angle = 0;
   int servo_increment = 5;
 
@@ -410,8 +436,8 @@ void MoveAllServos(void) {
     }
     uint32_t time_loop = em;
     // Now lets look how long it took plus print out some of it...
-    Serial.printf("%u %u (%u) P:%d V:%u T:%u ", time_send_positions, time_loop, 1000000/time_loop,
-        servo_angle, voltages[index_print], temps[index_print]);
+    Serial.printf("%u %u (%u) P:%d V:%u T:%u ", time_send_positions, time_loop, 1000000 / time_loop,
+                  servo_angle, voltages[index_print], temps[index_print]);
     if (++index_print == NUM_SERVOS) index_print = 0;
 
     for (int j = 0; j < NUM_SERVOS; j++) {
@@ -515,13 +541,13 @@ void SetServoID(void) {
 
   // Now lets try to update the servo ID
   LSS_SERIAL.printf("#%uCID%u\r", wIDFrom, wIDTo);
-  LSS_SERIAL.flush(); 
+  LSS_SERIAL.flush();
   delay(250);
   LSS_SERIAL.printf("#254RESET\r");
-  LSS_SERIAL.flush(); 
+  LSS_SERIAL.flush();
 //  myLSS.setServoID(254);    // So first is which servo
 //  myLSS.reset();
-  delay(1000);  // wait for servos to reset. 
+  delay(1000);  // wait for servos to reset.
 }
 
 
@@ -676,7 +702,7 @@ typedef enum {
 typedef struct {
   LSSQRT lsqrt;
   const char *str;
-  int16_t param; 
+  int16_t param;
 } LSSQLIST;
 
 const LSSQLIST query_list[] = {
@@ -732,7 +758,7 @@ void PrintServoValues2(void) {
         bool success;
         if (query_list[index_command_tx].param == -1) success = LSS::genericWrite(wID, query_list[index_command_tx].str);
         else  success = LSS::genericWrite(wID, query_list[index_command_tx].str, query_list[index_command_tx].param );
-        
+
         if (!success)
         {
           Serial.printf("  Failed genericWrite %s\n", query_list[index_command_tx]);
@@ -782,7 +808,7 @@ void PrintServoValues(void) {
       bool success;
       if (query_list[i].param == -1) success = LSS::genericWrite(wID, query_list[i].str);
       else  success = LSS::genericWrite(wID, query_list[i].str, query_list[i].param );
-      
+
       if (!success)
       {
         Serial.printf("  Failed genericWrite %s\n", query_list[i].str);
@@ -934,54 +960,54 @@ void printMemoryUsage()
 
 //================================================================================
 // RF leg array pins
-uint16_t rf_ids [] = { RF_COXA, RF_FEMUR, RF_TIBIA }; 
+uint16_t rf_ids [] = { RF_COXA, RF_FEMUR, RF_TIBIA };
 int16_t rf_rip6_gait [5][3] =
-	{ 
-		{-48, 11, 110}, 	//Start position 1 - start position
-                      // -4.8, 1.1, 11 degrees
-		{-26,  3,  51},		//position2
-                      //-2.6, 0.3, 5.1
-		{  0,  0,   0},		//position3
-                      // 0, 0, 0
-		{ 31,  3,  -44},		//position4
-                      // 3.1, 0.3, -4.4
-		{ 67, 10, -82}		//position5 - end position
-                      // 6.7, 1, -8.2
-	};
+{
+  { -48, 11, 110},  //Start position 1 - start position
+  // -4.8, 1.1, 11 degrees
+  { -26,  3,  51},  //position2
+  //-2.6, 0.3, 5.1
+  {  0,  0,   0},   //position3
+  // 0, 0, 0
+  { 31,  3,  -44},    //position4
+  // 3.1, 0.3, -4.4
+  { 67, 10, -82}    //position5 - end position
+  // 6.7, 1, -8.2
+};
 
 
 int16_t rf_stance [5][3] =
-  { 
-    {0, -900, -600},       //Low
-                          // 0, -900, 510 degrees
-    {0,  0,  0},          //Med
-    {  0, 450, 450},   //High
-    {0,  0,  0},          //Med
-    {0, -900, -600}       //Low
-  };
+{
+  {0, -900, -600},       //Low
+  // 0, -900, 510 degrees
+  {0,  0,  0},          //Med
+  {  0, 450, 450},   //High
+  {0,  0,  0},          //Med
+  {0, -900, -600}       //Low
+};
 //=================================================================================
 void generateGait()
 {
-  for(uint8_t count = 0; count <1; count++) {
-  	for(uint8_t position = 0; position < 5; position++) {
-  		 for(uint8_t ids = 0; ids < 3; ids++){
-  			myLSS.setServoID(rf_ids[ids]);
-  			myLSS.moveT(rf_rip6_gait[position][ids], servo_move_time);
-       }
-       delay(delay1);
-       checkStatus();
+  for (uint8_t count = 0; count < 1; count++) {
+    for (uint8_t position = 0; position < 5; position++) {
+      for (uint8_t ids = 0; ids < 3; ids++) {
+        myLSS.setServoID(rf_ids[ids]);
+        myLSS.moveT(rf_rip6_gait[position][ids], servo_move_time);
+      }
+      delay(delay1);
+      checkStatus();
 
-  	}
+    }
   }
 
-	//leg up start position
-	//6.7, -31.2, -34.3
-	myLSS.setServoID(RF_COXA);
-	myLSS.moveT(67, servo_move_time);
-	myLSS.setServoID(RF_FEMUR);
-	myLSS.moveT(-312, servo_move_time);
-	myLSS.setServoID(RF_TIBIA);
-	myLSS.moveT(-343, servo_move_time);
+  //leg up start position
+  //6.7, -31.2, -34.3
+  myLSS.setServoID(RF_COXA);
+  myLSS.moveT(67, servo_move_time);
+  myLSS.setServoID(RF_FEMUR);
+  myLSS.moveT(-312, servo_move_time);
+  myLSS.setServoID(RF_TIBIA);
+  myLSS.moveT(-343, servo_move_time);
   delay(delay1);
   //Serial.println("Position Start Leg Up: ");
   checkStatus();
@@ -992,13 +1018,13 @@ void checkStatus()
 {
   int8_t status1 = -1, status2 = -1, status3 = -1;
   uint32_t statusTime = 0;
-  while(status1 != 6 || status2 != 6 || status3 != 6) {
+  while (status1 != 6 || status2 != 6 || status3 != 6) {
     myLSS.setServoID(RF_COXA);
-    if(status1 != 6) status1 = myLSS.getStatus();
+    if (status1 != 6) status1 = myLSS.getStatus();
     myLSS.setServoID(RF_FEMUR);
-    if(status2 != 6) status2 = myLSS.getStatus();
+    if (status2 != 6) status2 = myLSS.getStatus();
     myLSS.setServoID(RF_TIBIA);
-    if(status3 != 6) status3 = myLSS.getStatus();
+    if (status3 != 6) status3 = myLSS.getStatus();
     delay(2);
     statusTime += 2;
   }
@@ -1007,36 +1033,74 @@ void checkStatus()
 
 void setGaitConfig()
 {
+#if 1
+  for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+    myLSS.setServoID(legs[leg].coxa.id);
+    myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
+    myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
+    myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
+
+    myLSS.setServoID(legs[leg].femur.id);
+    myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
+    myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
+    myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
+
+    myLSS.setServoID(legs[leg].tibia.id);
+    myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
+    myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
+    myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
+
+  }
+#else
   myLSS.setServoID(RF_COXA);
   myLSS.setMaxSpeed(RF_COXA_MaxSpeed, LSS_SetSession);
   myLSS.setGyre(RF_COXA_Gyre, LSS_SetSession);
   myLSS.setOriginOffset(RF_COXA_Offset, LSS_SetSession);
-  
+
   myLSS.setServoID(RF_FEMUR);
   myLSS.setMaxSpeed(RF_FEMUR_MaxSpeed, LSS_SetSession);
   myLSS.setGyre(RF_FEMUR_Gyre, LSS_SetSession);
   myLSS.setOriginOffset(RF_FEMUR_Offset, LSS_SetSession);
-  
+
   myLSS.setServoID(RF_TIBIA);
   myLSS.setMaxSpeed(RF_TIBIA_MaxSpeed, LSS_SetSession);
-  myLSS.setGyre(RF_TIBIA_Gyre,LSS_SetSession);
+  myLSS.setGyre(RF_TIBIA_Gyre, LSS_SetSession);
   myLSS.setOriginOffset(RF_TIBIA_Offset, LSS_SetSession);
-
+#endif
 }
 
-void cycleStance() 
+void cycleStance()
 {
-  for(uint8_t count = 0; count <1; count++) {
-    for(uint8_t position = 0; position < 5; position++) {
-       for(uint8_t ids = 0; ids < 3; ids++){
+#if 1
+  for (uint8_t count = 0; count < 1; count++) {
+    for (uint8_t position = 0; position < 5; position++) {
+      for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+        myLSS.setServoID(legs[leg].coxa.id);
+        myLSS.moveT(rf_stance[position][0], servo_move_time);
+        myLSS.setServoID(legs[leg].femur.id);
+        myLSS.moveT(rf_stance[position][1], servo_move_time);
+        myLSS.setServoID(legs[leg].tibia.id);
+        myLSS.moveT(rf_stance[position][2], servo_move_time);
+      }
+      delay(delay1);
+      checkStatus();
+      GetServoPositions();
+      delay(3 * delay1);
+    }
+#else
+  for (uint8_t count = 0; count < 1; count++) {
+
+    for (uint8_t position = 0; position < 5; position++) {
+      for (uint8_t ids = 0; ids < 3; ids++) {
         myLSS.setServoID(rf_ids[ids]);
         myLSS.moveT(rf_stance[position][ids], servo_move_time);
-       }
-       delay(delay1);
-       checkStatus();
-       GetServoPositions();
-       delay(3*delay1);
+      }
+      delay(delay1);
+      checkStatus();
+      GetServoPositions();
+      delay(3 * delay1);
     }
+#endif
   }
-  
+
 }
