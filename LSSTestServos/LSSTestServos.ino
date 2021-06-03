@@ -100,6 +100,7 @@ typedef struct {
   LSS_ConfigGyre  gyre;
   int16_t         offset;
   int16_t         max_speed;
+  LSS_Status      move_status;
 } servo_info_t;
 typedef struct {
   const char    *leg_name;
@@ -218,6 +219,7 @@ void loop() {
   Serial.println("c - Gait Config for Gait Sim");
   Serial.println("g - Gait Sim RF");
   Serial.println("i - Cycle Low/Med/High Stance");
+  Serial.println("j - Hold Mid Stance several cycles");
   Serial.println("m - move all servos");
   Serial.println("q - test/time Q command");
   Serial.println("r - Reboot [<sn>]");
@@ -276,6 +278,10 @@ void loop() {
     case 'i':
     case 'I':
       cycleStance();
+      break;
+    case 'j':
+    case 'J':
+      holdMidStance();
       break;
     case 'h':
     case 'H':
@@ -1031,6 +1037,48 @@ void checkStatus()
   //Serial.printf("Status: %d: %d, %d, %d\n", statusTime, status1, status2, status3);
 }
 
+void checkStatus2()
+{
+  elapsedMicros emCheck = 0;
+  uint32_t loop_count = 0;
+  bool servo_moving;
+  do {
+    servo_moving = false;
+    loop_count++;
+    // Should use different table for this
+    for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+      if (legs[leg].coxa.move_status != LSS_StatusHolding) {
+        myLSS.setServoID(legs[leg].coxa.id);
+        legs[leg].coxa.move_status = myLSS.getStatus();
+        if (legs[leg].coxa.move_status == LSS_StatusUnknown) {
+          legs[leg].coxa.move_status = LSS_StatusHolding;
+          Serial.printf("get status for Coxa servo:%u for leg:%u failed on loop: %u\n", legs[leg].coxa.id, leg, loop_count);
+        }
+        if (legs[leg].coxa.move_status != LSS_StatusHolding) servo_moving = true;
+      }
+      if (legs[leg].femur.move_status != LSS_StatusHolding) {
+        myLSS.setServoID(legs[leg].femur.id);
+        legs[leg].femur.move_status = myLSS.getStatus();
+        if (legs[leg].femur.move_status == LSS_StatusUnknown) {
+          legs[leg].femur.move_status = LSS_StatusHolding; 
+          Serial.printf("get status for Femur servo:%u for leg:%u failed on loop: %u\n", legs[leg].femur.id, leg, loop_count);
+        }
+        if (legs[leg].femur.move_status != LSS_StatusHolding) servo_moving = true;
+      }
+      if (legs[leg].tibia.move_status != LSS_StatusHolding) {
+        myLSS.setServoID(legs[leg].tibia.id);
+        legs[leg].tibia.move_status = myLSS.getStatus();
+        if (legs[leg].tibia.move_status == LSS_StatusUnknown) {
+          legs[leg].tibia.move_status = LSS_StatusHolding;
+          Serial.printf("get status for Tibia servo:%u for leg:%u failed on loop: %u\n", legs[leg].tibia.id, leg, loop_count);
+        }
+        if (legs[leg].tibia.move_status != LSS_StatusHolding) servo_moving = true;
+      }
+    }
+  } while (servo_moving);
+  Serial.printf("Checks Status wait loops %u in us: %u\n", loop_count, (uint32_t)emCheck);
+}
+
 void setGaitConfig()
 {
 #if 1
@@ -1081,12 +1129,16 @@ void cycleStance()
         myLSS.moveT(rf_stance[position][1], servo_move_time);
         myLSS.setServoID(legs[leg].tibia.id);
         myLSS.moveT(rf_stance[position][2], servo_move_time);
+        legs[leg].coxa.move_status = LSS_StatusUnknown;
+        legs[leg].femur.move_status = LSS_StatusUnknown;
+        legs[leg].tibia.move_status = LSS_StatusUnknown;
       }
       delay(delay1);
-      checkStatus();
+      checkStatus2();
       GetServoPositions();
       delay(3 * delay1);
     }
+  }
 #else
   for (uint8_t count = 0; count < 1; count++) {
 
@@ -1100,7 +1152,62 @@ void cycleStance()
       GetServoPositions();
       delay(3 * delay1);
     }
+  }
 #endif
+}
+
+void holdMidStance() {
+#define POSITION 1
+#define HOLD_CYCLE_COUNT 2500
+#define CYCLE_TIME_MS 4
+
+  for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+    myLSS.setServoID(legs[leg].coxa.id);
+    myLSS.moveT(rf_stance[POSITION][0], servo_move_time);
+    myLSS.setServoID(legs[leg].femur.id);
+    myLSS.moveT(rf_stance[POSITION][1], servo_move_time);
+    myLSS.setServoID(legs[leg].tibia.id);
+    myLSS.moveT(rf_stance[POSITION][2], servo_move_time);
+    legs[leg].coxa.move_status = LSS_StatusUnknown;
+    legs[leg].femur.move_status = LSS_StatusUnknown;
+    legs[leg].tibia.move_status = LSS_StatusUnknown;
+  }
+//  delay(delay1);
+  checkStatus2();
+  GetServoPositions();
+//  delay(3 * delay1);
+  
+  Serial.println("Try holding this position with timed moves...");
+  // Now lets repeat snding same position every 25 times per second. 
+  while (Serial.read() != -1);  // make sure nothing entered...
+  elapsedMillis em = 0;
+  for (int i = 0; i < HOLD_CYCLE_COUNT/2; i++) {
+    while (em < CYCLE_TIME_MS) ;
+    em = 0;
+    for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+      myLSS.setServoID(legs[leg].coxa.id);
+      myLSS.moveT(rf_stance[POSITION][0], CYCLE_TIME_MS);
+      myLSS.setServoID(legs[leg].femur.id);
+      myLSS.moveT(rf_stance[POSITION][1], CYCLE_TIME_MS);
+      myLSS.setServoID(legs[leg].tibia.id);
+      myLSS.moveT(rf_stance[POSITION][2], CYCLE_TIME_MS);
+    }
+    if (Serial.available()) break;
+  }
+  Serial.println("Try holding this position with Simple moves...");
+  for (int i = 0; i < HOLD_CYCLE_COUNT/2; i++) {
+    while (em < CYCLE_TIME_MS) ;
+    em = 0;
+    for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+      myLSS.setServoID(legs[leg].coxa.id);
+      myLSS.move(rf_stance[POSITION][0]);
+      myLSS.setServoID(legs[leg].femur.id);
+      myLSS.move(rf_stance[POSITION][1]);
+      myLSS.setServoID(legs[leg].tibia.id);
+      myLSS.move(rf_stance[POSITION][2]);
+    }
+    if (Serial.available()) break;
   }
 
+  Serial.println("Completed hold");
 }
