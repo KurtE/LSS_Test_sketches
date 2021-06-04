@@ -1133,7 +1133,7 @@ void cycleStance()
         legs[leg].femur.move_status = LSS_StatusUnknown;
         legs[leg].tibia.move_status = LSS_StatusUnknown;
       }
-      delay(delay1);
+      //delay(delay1);
       checkStatus2();
       GetServoPositions();
       delay(3 * delay1);
