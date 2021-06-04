@@ -101,6 +101,7 @@ typedef struct {
   int16_t         offset;
   int16_t         max_speed;
   LSS_Status      move_status;
+  int32_t         time_position;
 } servo_info_t;
 typedef struct {
   const char    *leg_name;
@@ -178,9 +179,9 @@ void setup() {
   pinMode(2, OUTPUT); // use to toggle showing failures of status...
   pinMode(3, OUTPUT); // use to toggle showing failures of status...
   pinMode(4, OUTPUT); // use to toggle showing failures of status...
-  digitalWriteFast(2, LOW); 
-  digitalWriteFast(3, LOW); 
-  digitalWriteFast(4, LOW); 
+  digitalWriteFast(2, LOW);
+  digitalWriteFast(3, LOW);
+  digitalWriteFast(4, LOW);
   Serial.begin(38400);  // start off the serial port.
   initMemoryUsageTest();
   Serial.println("\nLSS Servo Test program");
@@ -1044,21 +1045,29 @@ void checkStatus()
   //Serial.printf("Status: %d: %d, %d, %d\n", statusTime, status1, status2, status3);
 }
 
-void checkStatus2()
+void checkStatus2(uint8_t position)
 {
   elapsedMicros emCheck = 0;
   uint32_t loop_count = 0;
+  bool captured_positions_at_expected_time = false;
   bool servo_moving;
+  uint32_t move_time_us = (uint32_t)servo_move_time * 1000;
   do {
     servo_moving = false;
+    bool query_pos = false;
+    if (!captured_positions_at_expected_time && ((uint32_t)emCheck >= move_time_us)) {
+      captured_positions_at_expected_time = true;
+      query_pos = true;
+      digitalToggleFast(4);
+    }
     loop_count++;
     // Should use different table for this
     digitalWriteFast(3, HIGH);
     for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
       if (legs[leg].leg_found)
       {
+        myLSS.setServoID(legs[leg].coxa.id);
         if (legs[leg].coxa.move_status != LSS_StatusHolding) {
-          myLSS.setServoID(legs[leg].coxa.id);
           legs[leg].coxa.move_status = myLSS.getStatus();
           if (legs[leg].coxa.move_status == LSS_StatusUnknown) {
             digitalToggleFast(2);
@@ -1067,8 +1076,10 @@ void checkStatus2()
           }
           if (legs[leg].coxa.move_status != LSS_StatusHolding) servo_moving = true;
         }
+        if (query_pos) legs[leg].coxa.time_position = myLSS.getPosition();
+
+        myLSS.setServoID(legs[leg].femur.id);
         if (legs[leg].femur.move_status != LSS_StatusHolding) {
-          myLSS.setServoID(legs[leg].femur.id);
           legs[leg].femur.move_status = myLSS.getStatus();
           if (legs[leg].femur.move_status == LSS_StatusUnknown) {
             digitalToggleFast(2);
@@ -1077,8 +1088,10 @@ void checkStatus2()
           }
           if (legs[leg].femur.move_status != LSS_StatusHolding) servo_moving = true;
         }
+        if (query_pos) legs[leg].femur.time_position = myLSS.getPosition();
+
+        myLSS.setServoID(legs[leg].tibia.id);
         if (legs[leg].tibia.move_status != LSS_StatusHolding) {
-          myLSS.setServoID(legs[leg].tibia.id);
           legs[leg].tibia.move_status = myLSS.getStatus();
           if (legs[leg].tibia.move_status == LSS_StatusUnknown) {
             digitalToggleFast(2);
@@ -1087,9 +1100,12 @@ void checkStatus2()
           }
           if (legs[leg].tibia.move_status != LSS_StatusHolding) servo_moving = true;
         }
+        if (query_pos) legs[leg].tibia.time_position = myLSS.getPosition();
       }
     }
     digitalWriteFast(3, LOW);
+
+
   } while (servo_moving);
   Serial.printf("Checks Status wait loops %u in us: %u\n", loop_count, (uint32_t)emCheck);
 }
@@ -1159,8 +1175,22 @@ void cycleStance()
         }
       }
       //delay(delay1);
-      checkStatus2();
-      GetServoPositions();
+      checkStatus2(position);
+      // lets try printing out positions of the legs (goal, timed position, end_position)
+      Serial.println("Print Servo Positions Joint(Goal, timed, end)");
+
+      for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+        if (legs[leg].leg_found) {
+          myLSS.setServoID(legs[leg].coxa.id);
+          Serial.printf("C:%u(%d, %d, %d)", myLSS.getServoID(), rf_stance[position][0], legs[leg].coxa.time_position, myLSS.getPosition());
+          myLSS.setServoID(legs[leg].femur.id);
+          Serial.printf("\tF:%u(%d, %d, %d)", myLSS.getServoID(), rf_stance[position][1], legs[leg].femur.time_position, myLSS.getPosition());
+          myLSS.setServoID(legs[leg].tibia.id);
+          Serial.printf("\tT:%u(%d, %d, %d)\n", myLSS.getServoID(), rf_stance[position][2], legs[leg].tibia.time_position, myLSS.getPosition());
+        }
+      }
+
+      //GetServoPositions();
       delay(3 * delay1);
     }
   }
@@ -1200,7 +1230,7 @@ void holdMidStance() {
     }
   }
 //  delay(delay1);
-  checkStatus2();
+  checkStatus2(POSITION);
   GetServoPositions();
 //  delay(3 * delay1);
 
