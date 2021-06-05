@@ -494,7 +494,10 @@ void HoldOrFreeServos(byte fHold) {
 //=======================================================================================
 //=======================================================================================
 void RebootServos() {
+  Serial.println("Sending Broadcast RESET");
   LSS::genericWrite(LSS_BroadcastID, LSS_ActionReset); // Tell all of the servos to reset
+  delay(2000);
+  Serial.println("Reset Sent");
 }
 
 //=======================================================================================
@@ -990,13 +993,16 @@ int16_t rf_rip6_gait [5][3] =
 };
 
 
-int16_t rf_stance [5][3] =
+#define RF_STANCE_COUNT 7
+int16_t rf_stance [RF_STANCE_COUNT][3] =
 {
   {0, -900, -600},       //Low
   // 0, -900, 510 degrees
+  {0, -450, -300},       //mid Low
   {0,  0,  0},          //Med
   {  0, 450, 450},   //High
   {0,  0,  0},          //Med
+  {0, -450, -300},       //mid Low
   {0, -900, -600}       //Low
 };
 //=================================================================================
@@ -1117,19 +1123,19 @@ void setGaitConfig()
     legs[leg].leg_found = true;
     myLSS.setServoID(legs[leg].coxa.id);
     if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-    myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
+    //myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
     myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
     myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
 
     myLSS.setServoID(legs[leg].femur.id);
     if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-    myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
+    //myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
     myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
     myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
 
     myLSS.setServoID(legs[leg].tibia.id);
     if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-    myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
+    //myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
     myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
     myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
 
@@ -1160,15 +1166,18 @@ void cycleStance()
 {
 #if 1
   for (uint8_t count = 0; count < 1; count++) {
-    for (uint8_t position = 0; position < 5; position++) {
+    for (uint8_t position = 0; position < RF_STANCE_COUNT; position++) {
       for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
         if (legs[leg].leg_found) {
           myLSS.setServoID(legs[leg].coxa.id);
           myLSS.moveT(rf_stance[position][0], servo_move_time);
+          //myLSS.move(rf_stance[position][0]);
           myLSS.setServoID(legs[leg].femur.id);
           myLSS.moveT(rf_stance[position][1], servo_move_time);
+          //myLSS.move(rf_stance[position][1]);
           myLSS.setServoID(legs[leg].tibia.id);
           myLSS.moveT(rf_stance[position][2], servo_move_time);
+          //myLSS.move(rf_stance[position][2]);
           legs[leg].coxa.move_status = LSS_StatusUnknown;
           legs[leg].femur.move_status = LSS_StatusUnknown;
           legs[leg].tibia.move_status = LSS_StatusUnknown;
