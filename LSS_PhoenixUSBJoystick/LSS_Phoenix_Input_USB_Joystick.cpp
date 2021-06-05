@@ -77,6 +77,8 @@
 #include "LSS_Phoenix.h"
 #include <USBHost_t36.h>
 
+#define DBGSerial Serial
+
 #if __has_include(<TeensyDebug.h>)
 #include <TeensyDebug.h>
 #endif
@@ -141,14 +143,15 @@ const static uint32_t PS3_BTNS[] = { 0x400, 0x100, 0x2, 0x800, 0x200, 0x4,
 };
 
 const static uint32_t PS4_BTNS[] = {
-	0x10, 0x40, 0x400, 0x20, 0x80, 0x800,
-	0x8, 0x1, 0x2, 0x4,
+	0x10, 0x40, 0x400, 0x20, 0x80, 0x800,    //L1,L2,??? , R1, R2 ?????
+	0x8, 0x1, 0x2, 0x4,         //tri, square, cross, circle
 	0x1000, 0x200, 0x100,       // PS, options, Share
-	0x10000, 0x40000, 0x80000, 0x20000       // HAT 
+	0x10000, 0x40000, 0x80000, 0x20000       // HAT - up, down, left, right
 };
 const static uint32_t PS4_MAP_HAT_MAP[] = {
 	//0x10, 0x30, 0x20, 0x60, 0x40, 0xc0, 0x80, 0x90, 0x00 };
 	0x10000, 0x30000, 0x20000, 0x60000, 0x40000, 0xC0000, 0x80000, 0x90000, 0x0 };
+  //up,    NE,      right,   SE,      down,    SW,      left,    NW,   ???
  uint32_t const * BTN_MASKS = PS3_BTNS;
 
 //=============================================================================
@@ -311,7 +314,7 @@ void USBJoystickInputController::ControlInput(void)
 		// [SWITCH MODES]
 		g_buttons = joystick1.getButtons();
 		if (joystick1.joystickType() == JoystickController::PS4) {
-			int hat = joystick1.getAxis(9);  // get hat
+			int hat = joystick1.getAxis(10);  // get hat - up/dwn buttons
 			if ((hat >= 0) && (hat < 8)) g_buttons |= PS4_MAP_HAT_MAP[hat];
 			BTN_MASKS = PS4_BTNS;	// should have been set earlier, but just in case...
 		}
@@ -408,7 +411,7 @@ void USBJoystickInputController::ControlInput(void)
 			g_fDynamicLegXZLength = false;
 		}
 
-		// We will use L6 with the Right joystick to control both body offset as well as Speed...
+		// We will use L1 with the Right joystick to control both body offset as well as Speed...
 		// We move each pass through this by a percentage of how far we are from center in each direction
 		// We get feedback with height by seeing the robot move up and down.  For Speed, I put in sounds
 		// which give an idea, but only for those whoes robot has a speaker

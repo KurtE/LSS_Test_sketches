@@ -29,9 +29,9 @@
 
 //#define USE_TEENSY_DEBUG
 
-#ifdef USE_TEENSY_DEBUG
-#include <TeensyDebug.h>
-#endif
+//#ifdef USE_TEENSY_DEBUG
+//#include <TeensyDebug.h>
+//#endif
 
 #define DEFINE_HEX_GLOBALS
 #include <Arduino.h>
@@ -49,10 +49,11 @@
 //#include <Wire.h>
 //#include <I2CEEProm.h>
 
+#define DBGSerial Serial
 // Only compile in Debug code if we have something to output to
 #ifdef DBGSerial
 #define DEBUG
-//#define DEBUG_X
+#define DEBUG_X
 #endif
 
 
@@ -512,7 +513,7 @@ void setup() {
 
     // Debugger will use second USB Serial; this line is not need if using menu option
 #ifdef USE_TEENSY_DEBUG
-    debug.begin(SerialUSB1);
+    DBGSerial.begin(SerialUSB1);
 #endif
 #endif
 
@@ -578,7 +579,7 @@ void setup() {
     g_InputController.Init();
 
     // Servo Driver
-    ServoMoveTime = 150;
+    ServoMoveTime = 250;	//was 150
     g_InControlState.fRobotOn = 0;
     g_fLowVoltageShutdown = false;
 #ifdef DEBUG_IOPINS    
