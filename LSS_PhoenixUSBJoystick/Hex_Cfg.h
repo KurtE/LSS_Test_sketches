@@ -207,6 +207,7 @@ extern ST7789_t3 tft;
 //#define cTurretRotPin  20   // Turret Rotate Pin
 //#define cTurretTiltPin 21  // Turret Tilt pin
 
+
 //--------------------------------------------------------------------
 //[MIN/MAX ANGLES] - Start off assume same as Phoenix...
 #define cXXTibiaMin1    -600
@@ -335,9 +336,9 @@ extern ST7789_t3 tft;
 #define cLFOffsetZ      -89    //Distance Z from center of the body to the Left Front coxa
 //--------------------------------------------------------------------
 //[START POSITIONS FEET]
-#define cHexInitXZ   239
-#define CHexInitXZCos60  134    // COS(56) = .707
-#define CHexInitXZSin60  198    // sin(56) = .707
+#define cHexInitXZ   131
+#define CHexInitXZCos60  73    // COS(56) = .707
+#define CHexInitXZSin60  109    // sin(56) = .707
 #define CHexInitY  116 //30
 
 

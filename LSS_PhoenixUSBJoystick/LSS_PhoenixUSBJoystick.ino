@@ -522,6 +522,8 @@ void setup() {
     // Init our ServoDriver
     g_ServoDriver.Init();
 
+    g_ServoDriver.setGaitConfig();  //sets servo config to MJS version
+
     //Checks to see if our Servo Driver support a GP Player
     //    DBGSerial.write("Program Start\n\r");
     // debug stuff
@@ -566,7 +568,7 @@ void setup() {
     //Gait
     g_InControlState.GaitType = 0;
     g_InControlState.BalanceMode = 0;
-    g_InControlState.LegLiftHeight = 50;
+    g_InControlState.LegLiftHeight = 50;  changed from 50
     g_InControlState.ForceGaitStepCnt = 0;    // added to try to adjust starting positions depending on height...
     g_InControlState.GaitStep = 1;
     GaitSelect();
@@ -579,7 +581,7 @@ void setup() {
     g_InputController.Init();
 
     // Servo Driver
-    ServoMoveTime = 250;	//was 150
+    ServoMoveTime = 150;	//was 150
     g_InControlState.fRobotOn = 0;
     g_fLowVoltageShutdown = false;
 #ifdef DEBUG_IOPINS    
@@ -868,9 +870,6 @@ void StartUpdateServos()
     g_ServoDriver.OutputServoInfoForTurret(g_InControlState.TurretRotAngle1, g_InControlState.TurretTiltAngle1);  // fist just see if it will talk
 #endif  
 }
-
-
-
 
 //--------------------------------------------------------------------
 //[WriteOutputs] Updates the state of the leds
