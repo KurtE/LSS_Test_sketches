@@ -256,6 +256,8 @@ public:
 
   word GetBatteryVoltage(void);
 
+  void setGaitConfig();  //kludge MJS
+
   void            BeginServoUpdate(void);    // Start the update 
 #ifdef c4DOF
   void            OutputServoInfoForLeg(byte LegIndex, short sCoxaAngle1, short sFemurAngle1, short sTibiaAngle1, short sTarsAngle1);
