@@ -112,9 +112,9 @@ typedef struct {
 } leg_info_t;
 
 leg_info_t legs[] = {
-  {"Left Front",  {LF_COXA, LSS_GyreCounterClockwise, 0, 600}, {LF_FEMUR, LSS_GyreClockwise, -104, 600}, {LF_TIBIA, LSS_GyreClockwise, -137, 600}},
-  {"Left Middle", {LM_COXA, LSS_GyreCounterClockwise, 0, 600}, {LM_FEMUR, LSS_GyreClockwise, -104, 600}, {LM_TIBIA, LSS_GyreClockwise, -137, 600}},
-  {"Left Rear",   {LF_COXA, LSS_GyreCounterClockwise, 0, 600}, {LR_FEMUR, LSS_GyreClockwise, -104, 600}, {LR_TIBIA, LSS_GyreClockwise, -137, 600}},
+  {"Left Front",  {LF_COXA, LSS_GyreClockwise, 0, 600}, {LF_FEMUR, LSS_GyreClockwise, -104, 600}, {LF_TIBIA, LSS_GyreClockwise, -137, 600}},
+  {"Left Middle", {LM_COXA, LSS_GyreClockwise, 0, 600}, {LM_FEMUR, LSS_GyreClockwise, -104, 600}, {LM_TIBIA, LSS_GyreClockwise, -137, 600}},
+  {"Left Rear",   {LF_COXA, LSS_GyreClockwise, 0, 600}, {LR_FEMUR, LSS_GyreClockwise, -104, 600}, {LR_TIBIA, LSS_GyreClockwise, -137, 600}},
 
   {"Right Front",  {RF_COXA, LSS_GyreCounterClockwise, 0, 600}, {RF_FEMUR, LSS_GyreCounterClockwise, -104, 600}, {RF_TIBIA, LSS_GyreCounterClockwise, -137, 600}},
   {"Right Middle", {RM_COXA, LSS_GyreCounterClockwise, 0, 600}, {RM_FEMUR, LSS_GyreCounterClockwise, -104, 600}, {RM_TIBIA, LSS_GyreCounterClockwise, -137, 600}},
@@ -998,11 +998,11 @@ int16_t rf_stance [RF_STANCE_COUNT][3] =
 {
   {0, -900, -600},       //Low
   // 0, -900, 510 degrees
-  {0, -450, -300},       //mid Low
-  {0,  0,  0},          //Med
-  {  0, 450, 450},   //High
-  {0,  0,  0},          //Med
-  {0, -450, -300},       //mid Low
+  {100, -450, -300},      //mid Low
+  {200,  0,  0},          //Med
+  {0,  450, 450},         //High
+  {-100,  0,  0},         //Med
+  {-200, -450, -300},     //mid Low
   {0, -900, -600}       //Low
 };
 //=================================================================================
@@ -1165,6 +1165,7 @@ void setGaitConfig()
 void cycleStance()
 {
 #if 1
+  while (Serial.read() != -1) ; // clear any remaining serial input.
   for (uint8_t count = 0; count < 1; count++) {
     for (uint8_t position = 0; position < RF_STANCE_COUNT; position++) {
       for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
@@ -1200,7 +1201,12 @@ void cycleStance()
       }
 
       //GetServoPositions();
-      delay(3 * delay1);
+      if (Serial.available()) {
+        Serial.println("*** Paused hit any key to continue ***");
+        while (Serial.read() != -1);
+        while (Serial.read() == -1);
+        while (Serial.read() != -1);
+      } else delay(3 * delay1);
     }
   }
 #else
