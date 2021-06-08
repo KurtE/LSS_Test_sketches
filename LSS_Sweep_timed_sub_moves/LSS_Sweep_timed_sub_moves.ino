@@ -29,6 +29,7 @@ USBHIDParser hid1(myusb);
 USBHIDParser hid2(myusb);
 USBSerial userial(myusb);  // works only for those Serial devices who transfer <=64 bytes (like T3.x, FTDI...)
 bool userial_prev = false;
+bool use_em_control = false;
 #else
 #undef USE_USB_RC_SERVOS
 #endif
@@ -74,6 +75,11 @@ void moveTSSC32(uint8_t servo, int pos, uint32_t time) {
 
 void loop()
 {
+  // Play turning on and off em control
+  use_em_control = !use_em_control;
+  myLSS.setMotionControlEnabled(use_em_control ? 1 : 0);
+  Serial.println(use_em_control ? "Using EM Control"
+                 : "Not using EM Control");
 #if defined(USE_USB_RC_SERVOS)
   myusb.Task();
   if (userial && !userial_prev) {
