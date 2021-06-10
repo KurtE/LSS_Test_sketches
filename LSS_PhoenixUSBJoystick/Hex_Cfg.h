@@ -59,17 +59,17 @@ extern ST7789_t3 tft;
 //#define cFemurHornOffset1 -35
 //#define cTibiaHornOffset1 463
 // Coxa may be reversed from default
-#define cRRCoxaInv 1
-#define cRRFemurInv 1
-#define cRRTibiaInv 1
+#define cRRCoxaInv 0
+#define cRRFemurInv 0
+#define cRRTibiaInv 0
 
-#define cRMCoxaInv 1
-#define cRMFemurInv 1
-#define cRMTibiaInv 1
+#define cRMCoxaInv 0
+#define cRMFemurInv 0
+#define cRMTibiaInv 0
 
-#define cRFCoxaInv 1 
-#define cRFFemurInv 1 
-#define cRFTibiaInv 1
+#define cRFCoxaInv 0 
+#define cRFFemurInv 0 
+#define cRFTibiaInv 0
 
 /* I think femur directions are same as default
 #define cRRFemurInv 1 

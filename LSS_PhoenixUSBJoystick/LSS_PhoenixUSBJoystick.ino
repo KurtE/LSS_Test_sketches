@@ -568,7 +568,7 @@ void setup() {
     //Gait
     g_InControlState.GaitType = 0;
     g_InControlState.BalanceMode = 0;
-    g_InControlState.LegLiftHeight = 50;  //changed from 50
+    g_InControlState.LegLiftHeight = 50;
     g_InControlState.ForceGaitStepCnt = 0;    // added to try to adjust starting positions depending on height...
     g_InControlState.GaitStep = 1;
     GaitSelect();
@@ -701,6 +701,7 @@ void loop(void)
             LegPosY[LegIndex] + g_InControlState.BodyPos.y - BodyFKPosY + GaitPosY[LegIndex] - TotalTransY,
             LegPosZ[LegIndex] + g_InControlState.BodyPos.z - BodyFKPosZ + GaitPosZ[LegIndex] - TotalTransZ, LegIndex);
     }
+	
     //Check mechanical limits
     CheckAngles();
 

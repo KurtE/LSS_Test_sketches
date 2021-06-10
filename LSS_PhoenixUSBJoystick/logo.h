@@ -7,4 +7,3 @@ extern const unsigned short lynxmotion_logo[];
 #define LOGO_WIDTH 240
 #define LOGO_HEIGHT 102
 #endif
-

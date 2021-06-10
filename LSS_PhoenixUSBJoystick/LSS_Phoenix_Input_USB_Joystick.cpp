@@ -459,7 +459,7 @@ void USBJoystickInputController::ControlInput(void)
 		}
 
 #ifdef DBGSerial
-		if ((g_buttons & BTN_MASKS[BUT_R3]) && !(g_buttons_prev & BTN_MASKS[BUT_R3])) {
+		if ((g_buttons & BTN_MASKS[BUT_X]) && !(g_buttons_prev & BTN_MASKS[BUT_X])) {
 			MSound(1, 50, 2000);
 			g_fDebugJoystick = !g_fDebugJoystick;
 		}

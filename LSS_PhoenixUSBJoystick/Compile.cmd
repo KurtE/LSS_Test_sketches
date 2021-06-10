@@ -13,9 +13,9 @@ rem - Attention: Place compile.cmd in Sketch folder!
 rem
 rem Edit these paths:
 
-set arduino=C:\arduino-1.8.15
-set TyTools=C:\Program Files\TyQt
-rem set TyTools=D:\GitHub\tytools\build\win64\Release
+set arduino=C:\arduino-1.8.13
+rem set TyTools=C:\Program Files\TyQt
+set TyTools=D:\GitHub\tytools\build\win64\Release
 set libs=C:\Users\kurte\Documents\Arduino\libraries
 set tools=D:\GitHub\Tset
 
