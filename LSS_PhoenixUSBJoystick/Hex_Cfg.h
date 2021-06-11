@@ -21,6 +21,7 @@
 //==================================================================================================================================
 //#define USECOMMANDER
 #define USEJOYSTICK		// Use T3.6 or T4.x USB Host control
+//#define BLUETOOTH
 
 #define LSS_SERIAL_PORT     Serial1
 #define LSS_BAUD            250000
