@@ -137,7 +137,7 @@ leg_info_t legs[] = {
 
 //Time delays for Gait MoveT commands
 uint16_t delay1 = 450;
-uint16_t servo_move_time = 250;
+uint16_t servo_move_time = 500; //250;
 
 
 //=============================================================================
@@ -219,7 +219,7 @@ void loop() {
   //  Serial.println("6 - Set Servo return delay time");
   Serial.println("7 - Set ID: <old> <new>");
   Serial.println("9 - Print Servo Values");
-  Serial.println("9 - Print Servo Values fill tx");
+  Serial.println("8 - Print Servo Values fill tx");
   Serial.println("b - Baud <new baud>");
   Serial.println("t - Toggle track Servos");
   Serial.println("h - hold [<sn>]");
@@ -1126,7 +1126,7 @@ void setGaitConfig()
     //myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
     myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
     myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
-    myLSS.setMotionControlEnabled(0);
+    myLSS.setMotionControlEnabled(1);
     myLSS.setAngularHoldingStiffness(-4);
 
     myLSS.setServoID(legs[leg].femur.id);
@@ -1134,7 +1134,7 @@ void setGaitConfig()
     //myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
     myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
     myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
-    myLSS.setMotionControlEnabled(0);
+    myLSS.setMotionControlEnabled(1);
     myLSS.setAngularHoldingStiffness(-4);
 
     myLSS.setServoID(legs[leg].tibia.id);
@@ -1142,7 +1142,7 @@ void setGaitConfig()
     //myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
     myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
     myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
-    myLSS.setMotionControlEnabled(0);
+    myLSS.setMotionControlEnabled(1);
     myLSS.setAngularHoldingStiffness(-4);
 
     if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
@@ -1166,6 +1166,14 @@ void setGaitConfig()
   myLSS.setGyre(RF_TIBIA_Gyre, LSS_SetSession);
   myLSS.setOriginOffset(RF_TIBIA_Offset, LSS_SetSession);
 #endif
+}
+
+
+int ComputeServoMoveSpeed(int delta_pos, int move_time_ms) {
+  if (delta_pos == 0) return 3600; // full speed nothing to do
+  float move_speed = (36000000.0f  / (abs(delta_pos) * move_time_ms)) + 0.5f;
+
+  return (int)move_speed;
 }
 
 void cycleStance()
@@ -1195,19 +1203,19 @@ void cycleStance()
           myLSS.setServoID(legs[leg].coxa.id);
           // compute speed... 
           int delta_pos = abs(legs[leg].coxa.time_position - rf_stance[position][0]); 
-          int move_speed = 3600000l  / (delta_pos * servo_move_time);
+          int move_speed = ComputeServoMoveSpeed(delta_pos, servo_move_time);
           LSS::genericWrite(myLSS.getServoID(), LSS_ActionMove, rf_stance[position][0], "SD", move_speed);
           //myLSS.moveT(rf_stance[position][0], servo_move_time);
           //myLSS.move(rf_stance[position][0]);
           myLSS.setServoID(legs[leg].femur.id);
           delta_pos = abs(legs[leg].femur.time_position - rf_stance[position][1]); 
-          int move_speedf = 3600000l  / (delta_pos * servo_move_time);
+          int move_speedf = ComputeServoMoveSpeed(delta_pos, servo_move_time);;
           LSS::genericWrite(myLSS.getServoID(), LSS_ActionMove, rf_stance[position][1], "SD", move_speedf);
           //myLSS.moveT(rf_stance[position][1], servo_move_time);
           //myLSS.move(rf_stance[position][1]);
           myLSS.setServoID(legs[leg].tibia.id);
           delta_pos = abs(legs[leg].tibia.time_position - rf_stance[position][2]); 
-          int move_speedt = 3600000l  / (delta_pos * servo_move_time);
+          int move_speedt = ComputeServoMoveSpeed(delta_pos, servo_move_time);;
           LSS::genericWrite(myLSS.getServoID(), LSS_ActionMove, rf_stance[position][2], "SD", move_speedt);
           //myLSS.moveT(rf_stance[position][2], servo_move_time);
           //myLSS.move(rf_stance[position][2]);
@@ -1218,6 +1226,7 @@ void cycleStance()
         }
       }
       //delay(delay1);
+      Serial.println();
       checkStatus2(position);
       // lets try printing out positions of the legs (goal, timed position, end_position)
       Serial.println("\nPrint Servo Positions Joint(Goal, timed, end)");
