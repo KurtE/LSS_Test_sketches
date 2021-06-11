@@ -145,7 +145,7 @@ extern ST7789_t3 tft;
 //--------------------------------------------------------------------
 //[Arbotix Pin Numbers]
 #if defined(KINETISK) || defined(__IMXRT1062__)
-#define SOUND_PIN    5
+#define SOUND_PIN    36
 #else
 #define SOUND_PIN    1 //0xff        // Tell system we have no IO pin...
 #define USER 0                        // defaults to 13 but Arbotix on 0...

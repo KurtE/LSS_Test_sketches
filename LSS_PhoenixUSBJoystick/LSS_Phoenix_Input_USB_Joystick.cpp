@@ -164,8 +164,26 @@ USBHIDParser hid1(myusb);
 USBHIDParser hid2(myusb);
 USBHIDParser hid3(myusb);
 JoystickController joystick1(myusb);
-//BluetoothController bluet(myusb, true, "0000");   // Version does pairing to device
-BluetoothController bluet(myusb);   // version assumes it already was paired
+#if defined(BLUETOOTH)
+	//BluetoothController bluet(myusb, true, "0000");   // Version does pairing to device
+	BluetoothController bluet(myusb);   // version assumes it already was paired
+
+  USBDriver* drivers[] = { &hub1, &hub2, &joystick1, &bluet, &hid1, &hid2, &hid3 };
+  
+  #define CNT_DEVICES (sizeof(drivers)/sizeof(drivers[0]))
+  const char* driver_names[CNT_DEVICES] = { "Hub1", "Hub2", "JOY1D", "Bluet", "HID1" , "HID2", "HID3" };
+  
+  bool driver_active[CNT_DEVICES] = { false, false, false, false };
+#else
+  BluetoothController bluet(myusb);   // version assumes it already was paired
+
+  USBDriver* drivers[] = { &hub1, &hub2, &joystick1, &hid1, &hid2, &hid3 };
+  
+  #define CNT_DEVICES (sizeof(drivers)/sizeof(drivers[0]))
+  const char* driver_names[CNT_DEVICES] = { "Hub1", "Hub2", "JOY1D", "HID1" , "HID2", "HID3" };
+  
+  bool driver_active[CNT_DEVICES] = { false, false, false };
+#endif
 
 int user_axis[64];
 uint32_t g_buttons_prev = 0;
@@ -174,12 +192,7 @@ bool first_joystick_message = true;
 uint8_t last_bdaddr[6] = { 0, 0, 0, 0, 0, 0 };
 
 
-USBDriver* drivers[] = { &hub1, &hub2, &joystick1, &bluet, &hid1, &hid2, &hid3 };
 
-#define CNT_DEVICES (sizeof(drivers)/sizeof(drivers[0]))
-const char* driver_names[CNT_DEVICES] = { "Hub1", "Hub2", "JOY1D", "Bluet", "HID1" , "HID2", "HID3" };
-
-bool driver_active[CNT_DEVICES] = { false, false, false, false };
 
 // Lets also look at HID Input devices
 USBHIDInput* hiddrivers[] = { &joystick1 };
@@ -188,12 +201,12 @@ USBHIDInput* hiddrivers[] = { &joystick1 };
 const char* hid_driver_names[CNT_DEVICES] = { "Joystick1" };
 
 bool hid_driver_active[CNT_DEVICES] = { false };
-
-BTHIDInput* bthiddrivers[] = { &joystick1 };
-#define CNT_BTHIDDEVICES (sizeof(bthiddrivers)/sizeof(bthiddrivers[0]))
-const char* bthid_driver_names[CNT_HIDDEVICES] = { "joystick" };
-bool bthid_driver_active[CNT_HIDDEVICES] = { false };
-
+#if defined(BLUETOOTH)
+	BTHIDInput* bthiddrivers[] = { &joystick1 };
+	#define CNT_BTHIDDEVICES (sizeof(bthiddrivers)/sizeof(bthiddrivers[0]))
+	const char* bthid_driver_names[CNT_HIDDEVICES] = { "joystick" };
+	bool bthid_driver_active[CNT_HIDDEVICES] = { false };
+#endif
 
 unsigned long g_ulLastMsgTime;
 short  g_sGPSMController;    // What GPSM value have we calculated. 0xff - Not used yet
@@ -314,7 +327,11 @@ void USBJoystickInputController::ControlInput(void)
 		// [SWITCH MODES]
 		g_buttons = joystick1.getButtons();
 		if (joystick1.joystickType() == JoystickController::PS4) {
+#if defined(BLUETOOTH)
 			int hat = joystick1.getAxis(10);  // get hat - up/dwn buttons
+#else
+			int hat = joystick1.getAxis(9);  // get hat - up/dwn buttons
+#endif
 			if ((hat >= 0) && (hat < 8)) g_buttons |= PS4_MAP_HAT_MAP[hat];
 			BTN_MASKS = PS4_BTNS;	// should have been set earlier, but just in case...
 		}
@@ -322,6 +339,7 @@ void USBJoystickInputController::ControlInput(void)
 			BTN_MASKS = PS3_BTNS;
 		}
 
+#if defined(BLUETOOTH)
 		if ((g_buttons & BTN_MASKS[BUT_PS3]) && !(g_buttons_prev & BTN_MASKS[BUT_PS3])) {
 			if ((joystick1.joystickType() == JoystickController::PS3) &&
 				(g_buttons & (BTN_MASKS[BUT_L1] | BTN_MASKS[BUT_R1]))) {
@@ -344,20 +362,31 @@ void USBJoystickInputController::ControlInput(void)
 						Serial.println("  Pairing complete (I hope), make sure Bluetooth adapter is plugged in and try PS3 without USB");
 					}
 				}
-			}
-			else {
+			} else {
 				// Maybe lets toggle the 
 				if (!g_InControlState.fRobotOn) {
 					g_InControlState.fRobotOn = true;
 					fAdjustLegPositions = true;
+					Serial.println("Robot Power On.....");
 				}
 				else {
 					JoystickTurnRobotOff();
+					Serial.println("Robot Power Off.....");
 				}
 			}
 		}
-
-
+#endif
+		if ((g_buttons & BTN_MASKS[BUT_PS3]) && !(g_buttons_prev & BTN_MASKS[BUT_PS3])) {
+				if (!g_InControlState.fRobotOn) {
+					g_InControlState.fRobotOn = true;
+					fAdjustLegPositions = true;
+					Serial.println("Robot Power On.....");
+				}
+				else {
+					JoystickTurnRobotOff();
+					Serial.println("Robot Power Off.....");
+				}
+		}
 
 		// Cycle through modes...
 		if ((g_buttons & BTN_MASKS[BUT_TRI]) && !(g_buttons_prev & BTN_MASKS[BUT_TRI])) {
@@ -375,7 +404,7 @@ void USBJoystickInputController::ControlInput(void)
 				g_InControlState.SelectedLeg = 0;   // Select leg 0 when we go into this mode. 
 				g_InControlState.PrevSelectedLeg = 255;
 #ifdef DEBUG_SINGLELEG
-				Serial.println("Single Leg Mode");
+				Serial.println("Single Leg Mode .....");
 #endif
 			}
 #endif
@@ -387,6 +416,8 @@ void USBJoystickInputController::ControlInput(void)
 			tft.print(mode_names[ControlMode]);
 			tft.fillRect(tft.getCursorX(), tft.getCursorY(), tft.width(), 15, ST77XX_RED);
 #endif
+			Serial.println(mode_names[ControlMode]);
+
 		}
 
 		//[Common functions]
@@ -395,20 +426,25 @@ void USBJoystickInputController::ControlInput(void)
 			g_InControlState.BalanceMode = !g_InControlState.BalanceMode;
 			if (g_InControlState.BalanceMode) {
 				MSound(1, 250, 1500);
+				Serial.println("Balance Mode: On ........");
 			}
 			else {
 				MSound(2, 100, 2000, 50, 4000);
+				Serial.println("Balance Mode: Off ........");
 			}
+
 		}
 
 		//Stand up, sit down  
 		if ((g_buttons & BTN_MASKS[BUT_HAT_DOWN]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_DOWN])) {
 			g_BodyYOffset = 0;
+			Serial.println("Sitting ........");
 		}
 		if ((g_buttons & BTN_MASKS[BUT_HAT_UP]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_UP])) {
 			g_BodyYOffset = 35;
 			fAdjustLegPositions = true;
 			g_fDynamicLegXZLength = false;
+			Serial.println("Ready for Action ........");
 		}
 
 		// We will use L1 with the Right joystick to control both body offset as well as Speed...
@@ -424,7 +460,8 @@ void USBJoystickInputController::ControlInput(void)
 				lx, ly, rx, ry, joystick1.getAxis(AXIS_LT), joystick1.getAxis(AXIS_RT));
 		}
 
-		if (g_buttons & BTN_MASKS[BUT_L1]) {
+		if (g_buttons & BTN_MASKS[BUT_L1] && !(g_buttons_prev & BTN_MASKS[BUT_L1])) {
+			Serial.println("Adjusting up/down (Ry) /speed (Rx) ........");
 			// raise or lower the robot on the joystick up /down
 			// Maybe should have Min/Max
 			int delta = ry / 25;
@@ -505,10 +542,13 @@ void USBJoystickInputController::ControlInput(void)
 				MSound(1, 50, 2000);
 				HeightSpeedMode = (HeightSpeedMode + 1) & 0x3; // wrap around mode
 				DoubleTravelOn = HeightSpeedMode & 0x1;
-				if (HeightSpeedMode & 0x2)
+				if (HeightSpeedMode & 0x2) {
 					g_InControlState.LegLiftHeight = 80;
-				else
+					Serial.println("Double Leg Height Selected .....");
+				} else {
 					g_InControlState.LegLiftHeight = 50;
+					Serial.println("Normal Leg Height Selected .....");
+				}
 			}
 
 			// Switch between Walk method 1 && Walk method 2
@@ -520,6 +560,7 @@ void USBJoystickInputController::ControlInput(void)
 #endif 
 					bJoystickWalkMode = 0;
 				MSound(1, 50, 2000 + bJoystickWalkMode * 250);
+				Serial.printf("Walkmethod %d Selected ........\n", bJoystickWalkMode );
 			}
 
 			//Walking
@@ -577,10 +618,12 @@ void USBJoystickInputController::ControlInput(void)
 			//Switch leg for single leg control
 			if ((g_buttons & BTN_MASKS[BUT_SELECT]) && !(g_buttons_prev & BTN_MASKS[BUT_SELECT])) {
 				MSound(1, 50, 2000);
-				if (g_InControlState.SelectedLeg < (CNT_LEGS - 1))
+				if (g_InControlState.SelectedLeg < (CNT_LEGS - 1)) {
 					g_InControlState.SelectedLeg = g_InControlState.SelectedLeg + 1;
-				else
+					Serial.printf("Leg #%d Selected .....\n", g_InControlState.SelectedLeg);
+				} else {
 					g_InControlState.SelectedLeg = 0;
+				}
 			}
 
 #if 0
@@ -601,9 +644,10 @@ void USBJoystickInputController::ControlInput(void)
 			Serial.println(g_InControlState.SLLeg.z, DEC);
 #endif
 			// Hold single leg in place
-			if ((g_buttons & BTN_MASKS[BUT_R2]) && !(g_buttons_prev & BTN_MASKS[BUT_R2])) {
+			if ((g_buttons & BTN_MASKS[BUT_R1]) && !(g_buttons_prev & BTN_MASKS[BUT_R1])) {
 				MSound(1, 50, 2000);
 				g_InControlState.fSLHold = !g_InControlState.fSLHold;
+				Serial.println("Holding selected leg in position ...........");
 			}
 		}
 #endif
@@ -802,6 +846,8 @@ void UpdateActiveDeviceInfo() {
 			}
 		}
 	}
+	
+#if defined(BLUETOOTH)
 	// Then Bluetooth devices
 	for (uint8_t i = 0; i < CNT_BTHIDDEVICES; i++) {
 		if (*bthiddrivers[i] != bthid_driver_active[i]) {
@@ -835,4 +881,6 @@ void UpdateActiveDeviceInfo() {
 			}
 		}
 	}
+#endif
+	
 }

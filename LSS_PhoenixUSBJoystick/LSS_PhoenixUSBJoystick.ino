@@ -1017,6 +1017,7 @@ void GaitSelect(void)
     tft.print(g_InControlState.gaitCur.pszName);
     tft.fillRect(tft.getCursorX(), tft.getCursorY(), tft.width(), 15, ST77XX_RED);
 #endif
+	Serial.printf("Gait Select: %s\n", g_InControlState.gaitCur.pszName);
 
 
 #ifdef DBGSerial  
