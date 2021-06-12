@@ -17,6 +17,7 @@
 #define LSS_BAUD   250000
 #define MAX_SERVO_NUM 32
 #define LSS_ID    0
+#define DEFAULT_CYCLE_US 2000
 //=============================================================================
 // Define differnt robots..
 //=============================================================================
@@ -232,6 +233,7 @@ void loop() {
   Serial.println("g - Gait Sim RF");
   Serial.println("i - Cycle Low/Med/High Stance");
   Serial.println("j - Hold Mid Stance several cycles");
+  Serial.println("k - Cycle Low/Mid/High bypass servo firmware");
   Serial.println("m - move all servos");
   Serial.println("q - test/time Q command");
   Serial.println("r - Reboot [<sn>]");
@@ -294,6 +296,10 @@ void loop() {
     case 'j':
     case 'J':
       holdMidStance();
+      break;
+    case 'k':
+    case 'K':
+      cycleStanceBypassServoFirmware();
       break;
     case 'h':
     case 'H':
@@ -1262,6 +1268,7 @@ void cycleStance()
     }
   }
 }
+
 void holdMidStance() {
 #define POSITION 1
 #define HOLD_CYCLE_COUNT 2500
@@ -1318,4 +1325,172 @@ void holdMidStance() {
   }
 
   Serial.println("Completed hold");
+}
+
+//=============================================================================
+// Quick and dirty timed move functions
+//=============================================================================
+#define MAX_MOVE_SERVOS 20
+typedef struct {
+  uint8_t id;   // id of servo
+  int16_t target_pos; // our target position
+  int16_t starting_pos; // our target position
+  float   pos;        // our current working position
+  float   cycle_delta;      // how much to change per cycle
+} tm_servo_t;
+
+
+// Again quick and dirty
+tm_servo_t tmServos[MAX_MOVE_SERVOS];
+uint32_t   tmCycleTime = 20000;
+elapsedMicros tmTimer;
+uint32_t      tmMovetime = 0;
+uint32_t      tmCyclesLeft;
+uint8_t       tmServoCount = 0;
+bool          tmSetupServos = true;
+
+void TMReset(bool setup_servos = false) {
+  tmServoCount = 0;
+  tmSetupServos = setup_servos;
+}
+
+void TMSetServoTarget(uint8_t id, int16_t target_pos, int16_t starting_pos = -1)
+{
+  tmServos[tmServoCount].id = id;
+  tmServos[tmServoCount].target_pos = target_pos;
+  tmServos[tmServoCount].starting_pos = starting_pos;
+  tmServoCount++;
+}
+
+void TMSetup(uint32_t move_time) {
+  // BUGBUG should we output all servos every cycle?
+  // start off only when they move.
+  tmMovetime = move_time;
+  tmCyclesLeft = (move_time + tmCycleTime/2)/tmCycleTime;
+  for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+    myLSS.setServoID(tmServos[servo].id);
+    if (tmSetupServos) myLSS.setMotionControlEnabled(0);
+    if (tmServos[servo].starting_pos == -1) tmServos[servo].starting_pos = myLSS.getPosition();
+    tmServos[servo].pos = tmServos[servo].starting_pos;
+    tmServos[servo].cycle_delta = ((tmServos[servo].target_pos - tmServos[servo].starting_pos)) / tmCyclesLeft;
+  }
+  tmSetupServos = false;
+  tmTimer = 0;
+}
+
+void TMPrintDebugInfo() {
+  Serial.println("*** TM debug info");
+  Serial.printf("Move Time:%u Cyle time:%u cycles:%u\n", tmMovetime, tmCycleTime, tmCyclesLeft);
+  Serial.println("ID\t Start\t End\tCyle Delta");
+  for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+    Serial.printf("  %u\t%d\t%d\t%f\n", tmServos[servo].id, tmServos[servo].starting_pos, tmServos[servo].target_pos, tmServos[servo].cycle_delta);
+  }
+}
+
+int TMStep(bool wait = true) {
+  if (!tmCyclesLeft) return 0;
+
+  // BUGBUG not processing wait yet... but normally 
+  // can set false so can return between steps to do other stuff.
+  while (tmTimer < tmCycleTime) ; 
+  // how many cycles.
+  for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+    if (tmServos[servo].cycle_delta) {
+
+      int cur_pos = tmServos[servo].pos;
+      tmServos[servo].pos += tmServos[servo].cycle_delta; 
+      int next_pos = tmServos[servo].pos;
+      if (tmCyclesLeft == 1) next_pos = tmServos[servo].target_pos;
+      else {
+        if (tmServos[servo].cycle_delta < 0) {
+          if (next_pos < tmServos[servo].target_pos) next_pos = tmServos[servo].target_pos;
+        } else if (next_pos > tmServos[servo].target_pos) next_pos = tmServos[servo].target_pos;
+      }
+      if (next_pos != cur_pos) {
+        myLSS.setServoID(tmServos[servo].id);
+        myLSS.move(next_pos);
+        if (next_pos == tmServos[servo].target_pos) tmServos[servo].cycle_delta = 0; // servo done
+      }
+    }
+  }
+  tmCyclesLeft--;
+  tmTimer -= tmCycleTime; 
+  return tmCyclesLeft? 1 : 0; // 
+}
+
+
+
+//=============================================================================
+
+void cycleStanceBypassServoFirmware() 
+{
+  int32_t servo_cycle_time;
+
+  if (!FGetNextCmdNum(&servo_cycle_time))
+    servo_cycle_time = DEFAULT_CYCLE_US;
+  tmCycleTime = servo_cycle_time;
+
+  while (Serial.read() != -1) ; // clear any remaining serial input.
+  bool first_move = true;
+
+  for (uint8_t count = 0; count < 1; count++) {
+    for (uint8_t position = 0; position < RF_STANCE_COUNT; position++) {
+      TMReset(first_move);
+      first_move = 0;
+      for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+        if (legs[leg].leg_found) {
+          TMSetServoTarget(legs[leg].coxa.id, rf_stance[position][0], position? rf_stance[position-1][0] : -1);
+          TMSetServoTarget(legs[leg].femur.id, rf_stance[position][1], position? rf_stance[position-1][1] : -1);
+          TMSetServoTarget(legs[leg].tibia.id, rf_stance[position][2], position? rf_stance[position-1][2] : -1);
+        }
+      }
+      TMSetup(servo_move_time * 1000);
+      TMPrintDebugInfo();
+      // now lets interpolate.
+      while (TMStep(true)) ; //       
+      // lets try printing out positions of the legs (goal, timed position, end_position)
+      Serial.println("\nPrint Servo Positions Joint(Goal, end)");
+
+      for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+        if (legs[leg].leg_found) {
+          myLSS.setServoID(legs[leg].coxa.id);
+          Serial.printf("C:%u(%d, %d)", myLSS.getServoID(), legs[leg].coxa.time_position, myLSS.getPosition());
+          myLSS.setServoID(legs[leg].femur.id);
+          Serial.printf("\tF:%u(%d, %d)", myLSS.getServoID(), legs[leg].femur.time_position, myLSS.getPosition());
+          myLSS.setServoID(legs[leg].tibia.id);
+          Serial.printf("\tT:%u(%d, %d)\n", myLSS.getServoID(), legs[leg].tibia.time_position, myLSS.getPosition());
+        }
+      }
+
+      //GetServoPositions();
+      if (Serial.available()) {
+        Serial.println("*** Paused hit any key to continue ***");
+        while (Serial.read() != -1);
+        while (Serial.read() == -1);
+        while (Serial.read() != -1);
+      } else delay(3 * delay1);
+    }
+    // BUGBUG lets duplicate with no delays between moves and no printing...
+    Serial.println("Cycle through all steps no delays but slower");
+    for (uint8_t position = 0; position < RF_STANCE_COUNT; position++) {
+      TMReset(first_move);
+      first_move = 0;
+      for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+        if (legs[leg].leg_found) {
+          TMSetServoTarget(legs[leg].coxa.id, rf_stance[position][0], position? rf_stance[position-1][0] : -1);
+          TMSetServoTarget(legs[leg].femur.id, rf_stance[position][1], position? rf_stance[position-1][1] : -1);
+          TMSetServoTarget(legs[leg].tibia.id, rf_stance[position][2], position? rf_stance[position-1][2] : -1);
+        }
+      }
+      TMSetup(servo_move_time * 4000);
+      // now lets interpolate.
+      while (TMStep(true)) ; //       
+      if (Serial.available()) {
+        Serial.println("*** Paused hit any key to continue ***");
+        while (Serial.read() != -1);
+        while (Serial.read() == -1);
+        while (Serial.read() != -1);
+      }
+    }
+  }
 }
