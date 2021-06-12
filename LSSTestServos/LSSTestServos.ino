@@ -1372,7 +1372,8 @@ void TMSetup(uint32_t move_time) {
     if (tmSetupServos) myLSS.setMotionControlEnabled(0);
     if (tmServos[servo].starting_pos == -1) tmServos[servo].starting_pos = myLSS.getPosition();
     tmServos[servo].pos = tmServos[servo].starting_pos;
-    tmServos[servo].cycle_delta = ((tmServos[servo].target_pos - tmServos[servo].starting_pos)) / tmCyclesLeft;
+    tmServos[servo].cycle_delta = ((tmServos[servo].target_pos - tmServos[servo].starting_pos)); // set it first to get into floating point
+    tmServos[servo].cycle_delta /= tmCyclesLeft;
   }
   tmSetupServos = false;
   tmTimer = 0;
