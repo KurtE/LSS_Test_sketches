@@ -425,7 +425,7 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
 			}
 		} else {
 			TMSetupMove(wMoveTime);
-			if (g_fDebugOutput) TMPrintDebugInfo();
+			if (g_fDebugOutput || servo_debug) TMPrintDebugInfo();
 			TMStep(true); // force the first step..
 		}
 	} 	else {
@@ -583,6 +583,8 @@ void ServoDriver::ShowTerminalCommandList(void)
 	DBGSerial.println(F("T - Test Servos"));
 	DBGSerial.println(F("P - Servo Positions"));
 	DBGSerial.println(F("A - Toggle LSS speed control"));
+	DBGSerial.println(F("L - Toggle LSS Servo Debug output"));
+	DBGSerial.println(F("F <FPS> - Set FPS for Interpolation mode"));
 	DBGSerial.println(F("S - Track Servos"));
 #ifdef OPT_PYPOSE
 	DBGSerial.println(F("P<DL PC> - Pypose"));
@@ -622,9 +624,10 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 		DBGSerial.print(F("From Servo 2: "));
 		myLSS.setServoID(2);
 		DBGSerial.println(myLSS.getVoltage(), DEC);
+		return true;
 	}
 
-	if ((bLen == 1) && ((*psz == 't') || (*psz == 'T'))) {
+	else if ((bLen == 1) && ((*psz == 't') || (*psz == 'T'))) {
 		// Test to see if any servos are responding
 		for (int i = 1; i <= 32; i++) {
 			int iPos;
@@ -641,19 +644,44 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 			delay(25);
 		}
 	}
-	if (((*psz == 'p') || (*psz == 'P'))) {
+	else if (((*psz == 'p') || (*psz == 'P'))) {
 		TCServoPositions();
 	}
-	if ((*psz == 's') || (*psz == 'S')) {
+	else if ((*psz == 's') || (*psz == 'S')) {
 		TCTrackServos();
 	}
 
-	if ((bLen == 1) && ((*psz == 'a') || (*psz == 'A'))) {
+	else if ((bLen == 1) && ((*psz == 'a') || (*psz == 'A'))) {
 		use_servos_timed_moves = !use_servos_timed_moves;
-		if (use_servos_timed_moves)
+		if (use_servos_timed_moves){
 			DBGSerial.println(F("Use Servo moveT"));
-		else
+		}
+		else {
 			DBGSerial.println(F("Use Software Interplation"));
+		}
+		TMConfigureServos();
+		return true;
+	}
+	else if ((bLen == 1) && ((*psz == 'l') || (*psz == 'L'))) {
+				servo_debug = !servo_debug;
+		if (servo_debug){
+			DBGSerial.println(F("LSS Debug output enabled"));
+		}
+		else {
+			DBGSerial.println(F("LSS Debug output disabled"));
+		}
+		return true;
+	}
+	else if ((*psz == 'f') || (*psz == 'F')) {
+		uint16_t fps = 0;
+		psz++;
+		while (*psz == ' ') psz++; // ignore any blanks.
+		while ((*psz >= '0') && (*psz <= '9')) {
+			fps = fps * 10 + *psz++ - '0';
+		}
+		if (fps == 0) fps = DEFAULT_FRAMES_PER_SECOND;
+		tmCycleTime = 1000000 / fps;	
+		DBGSerial.printf("Set FPS to: %u Cycle time\n", fps, tmCycleTime);
 	}
 
 
@@ -1414,6 +1442,14 @@ void ServoDriver::TMInitWithCurrentservoPositions() {
 		myLSS.setMotionControlEnabled(0);
 		tmServos[servo].starting_pos = myLSS.getPosition();
 		tmServos[servo].target_pos = tmServos[servo].starting_pos;
+	}
+}
+void ServoDriver::TMConfigureServos() {
+	int em_mode = use_servos_timed_moves? 1 : 0;
+	DBGSerial.printf("Set Servo EM=%u\n", em_mode);
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+		myLSS.setServoID(tmServos[servo].id);
+		myLSS.setMotionControlEnabled(em_mode);
 	}
 }
 

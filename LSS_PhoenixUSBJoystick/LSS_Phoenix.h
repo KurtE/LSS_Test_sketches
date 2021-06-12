@@ -308,6 +308,7 @@ public:
   uint8_t       tmServoCount = 0;
   bool          tmSetupServos = true;
   bool          use_servos_timed_moves = false;
+  bool          servo_debug = false;
 
   // functions for
   void TMReset();
@@ -318,6 +319,8 @@ public:
   void TMSetupMove(uint32_t move_time);
   int  TMStep(bool wait = true);
   void TMPrintDebugInfo();
+  void TMConfigureServos();
+
 
 
 
