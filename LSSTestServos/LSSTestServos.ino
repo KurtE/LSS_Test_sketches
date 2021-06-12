@@ -17,7 +17,7 @@
 #define LSS_BAUD   250000
 #define MAX_SERVO_NUM 32
 #define LSS_ID    0
-#define DEFAULT_CYCLE_US 2000
+#define DEFAULT_FRAMES_PER_SECOND  50  // used for code that bypass Servo firmware
 //=============================================================================
 // Define differnt robots..
 //=============================================================================
@@ -1342,7 +1342,7 @@ typedef struct {
 
 // Again quick and dirty
 tm_servo_t tmServos[MAX_MOVE_SERVOS];
-uint32_t   tmCycleTime = 20000;
+uint32_t   tmCycleTime = 2;
 elapsedMicros tmTimer;
 uint32_t      tmMovetime = 0;
 uint32_t      tmCyclesLeft;
@@ -1365,8 +1365,8 @@ void TMSetServoTarget(uint8_t id, int16_t target_pos, int16_t starting_pos = -1)
 void TMSetup(uint32_t move_time) {
   // BUGBUG should we output all servos every cycle?
   // start off only when they move.
-  tmMovetime = move_time;
-  tmCyclesLeft = (move_time + tmCycleTime/2)/tmCycleTime;
+  tmMovetime = move_time * 1000; // convert to us
+  tmCyclesLeft = (tmMovetime + tmCycleTime/2)/tmCycleTime;
   for (uint8_t servo = 0; servo < tmServoCount; servo++) {
     myLSS.setServoID(tmServos[servo].id);
     if (tmSetupServos) myLSS.setMotionControlEnabled(0);
@@ -1425,11 +1425,11 @@ int TMStep(bool wait = true) {
 
 void cycleStanceBypassServoFirmware() 
 {
-  int32_t servo_cycle_time;
+  int32_t frames_per_second;
 
-  if (!FGetNextCmdNum(&servo_cycle_time))
-    servo_cycle_time = DEFAULT_CYCLE_US;
-  tmCycleTime = servo_cycle_time;
+  if (!FGetNextCmdNum(&frames_per_second))
+    frames_per_second = DEFAULT_FRAMES_PER_SECOND;
+  tmCycleTime = 1000000l / frames_per_second;
 
   while (Serial.read() != -1) ; // clear any remaining serial input.
   bool first_move = true;
@@ -1445,7 +1445,7 @@ void cycleStanceBypassServoFirmware()
           TMSetServoTarget(legs[leg].tibia.id, rf_stance[position][2], position? rf_stance[position-1][2] : -1);
         }
       }
-      TMSetup(servo_move_time * 1000);
+      TMSetup(servo_move_time);
       TMPrintDebugInfo();
       // now lets interpolate.
       while (TMStep(true)) ; //       
@@ -1483,7 +1483,7 @@ void cycleStanceBypassServoFirmware()
           TMSetServoTarget(legs[leg].tibia.id, rf_stance[position][2], position? rf_stance[position-1][2] : -1);
         }
       }
-      TMSetup(servo_move_time * 4000);
+      TMSetup(servo_move_time * 4);
       // now lets interpolate.
       while (TMStep(true)) ; //       
       if (Serial.available()) {
