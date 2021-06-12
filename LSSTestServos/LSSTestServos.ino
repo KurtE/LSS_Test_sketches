@@ -191,6 +191,10 @@ void setup() {
   // Lets start of trying to locate all servos.
   // Initialize the LSS bus
   LSS::initBus(LSS_SERIAL, LSS_BAUD);
+  #ifdef LSS_SupportsSettingTimeouts
+  LSS::setReadTimeouts(20, 5); // define we will wait for 20ms for response to start and 5ms for in message characters
+  #endif
+  
 
   FindServos();
 
