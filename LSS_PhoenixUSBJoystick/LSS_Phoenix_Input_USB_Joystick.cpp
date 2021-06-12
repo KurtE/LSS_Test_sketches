@@ -442,7 +442,9 @@ void USBJoystickInputController::ControlInput(void)
 			Serial.println("Sitting ........");
 		}
 		if ((g_buttons & BTN_MASKS[BUT_HAT_UP]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_UP])) {
-			g_BodyYOffset = 35;
+			if (g_BodyYOffset < 35) g_BodyYOffset = 35;
+			else g_BodyYOffset += 10;
+			if (g_BodyYOffset > MAX_BODY_Y) g_BodyYOffset = MAX_BODY_Y;
 			fAdjustLegPositions = true;
 			g_fDynamicLegXZLength = false;
 			Serial.println("Ready for Action ........");

@@ -21,7 +21,7 @@
 //==================================================================================================================================
 //#define USECOMMANDER
 #define USEJOYSTICK		// Use T3.6 or T4.x USB Host control
-//#define BLUETOOTH
+#define BLUETOOTH
 
 #define LSS_SERIAL_PORT     Serial1
 #define LSS_BAUD            250000
@@ -340,7 +340,7 @@ extern ST7789_t3 tft;
 #define cHexInitXZ   131
 #define CHexInitXZCos60  73    // COS(56) = .707
 #define CHexInitXZSin60  109    // sin(56) = .707
-#define CHexInitY  116 //30
+#define CHexInitY  30 // 116 //30
 
 
 // Lets try some multi leg positions depending on height settings.

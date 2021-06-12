@@ -1490,7 +1490,7 @@ int  ServoDriver::TMStep(bool wait) {
 
 	// BUGBUG not processing wait yet... but normally
 	// can set false so can return between steps to do other stuff.
-	if (!wait && ((tmCycleTime - tmTimer) > tmMinNotwaitTime)) return -1; //
+	//if (!wait && ((tmCycleTime - tmTimer) > tmMinNotwaitTime)) return -1; //
 	while (tmTimer < tmCycleTime) ;
 	// how many cycles.
 	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
