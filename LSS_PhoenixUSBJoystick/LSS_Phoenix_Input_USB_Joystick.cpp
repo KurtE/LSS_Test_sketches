@@ -375,7 +375,7 @@ void USBJoystickInputController::ControlInput(void)
 				}
 			}
 		}
-#endif
+#else
 		if ((g_buttons & BTN_MASKS[BUT_PS3]) && !(g_buttons_prev & BTN_MASKS[BUT_PS3])) {
 				if (!g_InControlState.fRobotOn) {
 					g_InControlState.fRobotOn = true;
@@ -387,6 +387,7 @@ void USBJoystickInputController::ControlInput(void)
 					Serial.println("Robot Power Off.....");
 				}
 		}
+#endif
 
 		// Cycle through modes...
 		if ((g_buttons & BTN_MASKS[BUT_TRI]) && !(g_buttons_prev & BTN_MASKS[BUT_TRI])) {
