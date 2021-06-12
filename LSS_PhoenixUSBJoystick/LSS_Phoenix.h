@@ -283,6 +283,45 @@ public:
   boolean         ProcessTerminalCommand(byte *psz, byte bLen);
 #endif
 
+  //=====================================================================
+  // added stuff for bioloid like pose support to bypass servo
+  //    firmware support for timed moves
+  //=====================================================================
+  enum {MAX_MOVE_SERVOS = 20, DEFAULT_FRAMES_PER_SECOND = 50, DEFAULT_MIN_NOT_WAIT_TIME = 1000};
+
+  typedef struct {
+    uint8_t id;   // id of servo
+    int16_t target_pos; // our target position
+    int16_t starting_pos; // our target position
+    float   pos;        // our current working position
+    float   cycle_delta;      // how much to change per cycle
+  } tm_servo_t;
+
+
+  // Again quick and dirty
+  tm_servo_t tmServos[MAX_MOVE_SERVOS];
+  uint32_t      tmCycleTime = 1000000l/DEFAULT_FRAMES_PER_SECOND;
+  uint32_t      tmMinNotwaitTime = DEFAULT_MIN_NOT_WAIT_TIME; 
+  elapsedMicros tmTimer;
+  uint32_t      tmMovetime = 0;
+  uint32_t      tmCyclesLeft = 0;
+  uint8_t       tmServoCount = 0;
+  bool          tmSetupServos = true;
+  bool          use_servos_timed_moves = false;
+
+  // functions for
+  void TMReset();
+  uint8_t TMAddID(uint8_t id);
+  void TMInitWithCurrentservoPositions();
+  bool TMSetTargetByID(uint8_t id, int16_t target);
+  void TMSetTargetByIndex(uint8_t index, int16_t target);
+  void TMSetupMove(uint32_t move_time);
+  int  TMStep(bool wait = true);
+  void TMPrintDebugInfo();
+
+
+
+  //======================================================================
 private:
 
 #ifdef OPT_GPPLAYER    

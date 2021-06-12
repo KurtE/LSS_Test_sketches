@@ -58,19 +58,20 @@ int16_t      g_goal_servo_pos[NUMSERVOS];
 //=============================================================================
 static const char *lss_status_text[] PROGMEM  = {
 	"Unknown",	"Limp",	"FreeMoving",	"Accelerating",	"Travelling",	"Decelerating",
-	"Holding",	"OutsideLimits",	"Stuck",  "Blocked", 
-	"SafeMode", "Last" };
+	"Holding",	"OutsideLimits",	"Stuck",  "Blocked",
+	"SafeMode", "Last"
+};
 
 static const byte cPinTable[] = {
-  cRRCoxaPin,  cRMCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLMCoxaPin,  cLFCoxaPin,
-  cRRFemurPin, cRMFemurPin, cRFFemurPin, cLRFemurPin, cLMFemurPin, cLFFemurPin,
-  cRRTibiaPin, cRMTibiaPin, cRFTibiaPin, cLRTibiaPin, cLMTibiaPin, cLFTibiaPin
+	cRRCoxaPin,  cRMCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLMCoxaPin,  cLFCoxaPin,
+	cRRFemurPin, cRMFemurPin, cRFFemurPin, cLRFemurPin, cLMFemurPin, cLFFemurPin,
+	cRRTibiaPin, cRMTibiaPin, cRFTibiaPin, cLRTibiaPin, cLMTibiaPin, cLFTibiaPin
 #ifdef c4DOF
-  , cRRTarsPin, cRMTarsPin, cRFTarsPin, cLRTarsPin, cLMTarsPin, cLFTarsPin
+	, cRRTarsPin, cRMTarsPin, cRFTarsPin, cLRTarsPin, cLMTarsPin, cLFTarsPin
 #endif
 #ifdef cTurretRotPin
-  , cTurretRotPin, cTurretTiltPin
-#endif  
+	, cTurretRotPin, cTurretTiltPin
+#endif
 };
 
 #define FIRSTCOXAPIN     0
@@ -135,57 +136,57 @@ extern void SetRegOnAllServos(uint8_t bReg, uint8_t bVal);
 // and Mucked up by KJE ;)
 //====================================
 typedef struct {
-  uint8_t         id;
-  LSS_ConfigGyre  gyre;
-  int16_t         offset;
-  int16_t         max_speed;
-  LSS_Status      move_status;
-  int32_t         time_position;
+	uint8_t         id;
+	LSS_ConfigGyre  gyre;
+	int16_t         offset;
+	int16_t         max_speed;
+	LSS_Status      move_status;
+	int32_t         time_position;
 } servo_info_t;
 typedef struct {
-  const char    *leg_name;
-  servo_info_t  coxa;
-  servo_info_t  femur;
-  servo_info_t  tibia;
-  bool          leg_found;
+	const char    *leg_name;
+	servo_info_t  coxa;
+	servo_info_t  femur;
+	servo_info_t  tibia;
+	bool          leg_found;
 } leg_info_t;
 
 leg_info_t legs[] = {
-  {"Left Front",  {cLFCoxaPin, LSS_GyreClockwise, 0, 600}, {cLFFemurPin, LSS_GyreClockwise, -104, 600}, {cLFTibiaPin, LSS_GyreClockwise, -137, 600}},
-  {"Left Middle", {cLMCoxaPin, LSS_GyreClockwise, 0, 600}, {cLMFemurPin, LSS_GyreClockwise, -104, 600}, {cLMTibiaPin, LSS_GyreClockwise, -137, 600}},
-  {"Left Rear",   {cLRCoxaPin, LSS_GyreClockwise, 0, 600}, {cLRFemurPin, LSS_GyreClockwise, -104, 600}, {cLRTibiaPin, LSS_GyreClockwise, -137, 600}},
+	{"Left Front",  {cLFCoxaPin, LSS_GyreClockwise, 0, 600}, {cLFFemurPin, LSS_GyreClockwise, -104, 600}, {cLFTibiaPin, LSS_GyreClockwise, -137, 600}},
+	{"Left Middle", {cLMCoxaPin, LSS_GyreClockwise, 0, 600}, {cLMFemurPin, LSS_GyreClockwise, -104, 600}, {cLMTibiaPin, LSS_GyreClockwise, -137, 600}},
+	{"Left Rear",   {cLRCoxaPin, LSS_GyreClockwise, 0, 600}, {cLRFemurPin, LSS_GyreClockwise, -104, 600}, {cLRTibiaPin, LSS_GyreClockwise, -137, 600}},
 
-  {"Right Front",  {cRFCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRFFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRFTibiaPin, LSS_GyreCounterClockwise, -137, 600}},
-  {"Right Middle", {cRMCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRMFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRMTibiaPin, LSS_GyreCounterClockwise, -137, 600}},
-  {"Right Rear",   {cRRCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRRFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRRTibiaPin, LSS_GyreCounterClockwise, -137, 600}}
+	{"Right Front",  {cRFCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRFFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRFTibiaPin, LSS_GyreCounterClockwise, -137, 600}},
+	{"Right Middle", {cRMCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRMFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRMTibiaPin, LSS_GyreCounterClockwise, -137, 600}},
+	{"Right Rear",   {cRRCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRRFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRRTibiaPin, LSS_GyreCounterClockwise, -137, 600}}
 };
 #define COUNT_LEGS (sizeof(legs)/sizeof(legs[0]))
 
 void ServoDriver::setGaitConfig()
 {
-  for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
-    legs[leg].leg_found = true;
-    myLSS.setServoID(legs[leg].coxa.id);
-    if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-    myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
-    myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
-    myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
+	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+		legs[leg].leg_found = true;
+		myLSS.setServoID(legs[leg].coxa.id);
+		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
+		myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
+		myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
+		myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
 
-    myLSS.setServoID(legs[leg].femur.id);
-    if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-    myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
-    myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
-    myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
+		myLSS.setServoID(legs[leg].femur.id);
+		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
+		myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
+		myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
+		myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
 
-    myLSS.setServoID(legs[leg].tibia.id);
-    if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-    myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
-    myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
-    myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
+		myLSS.setServoID(legs[leg].tibia.id);
+		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
+		myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
+		myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
+		myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
 
-    if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
-    else Serial.printf("Servos for Leg %s **NOT found**\n", legs[leg].leg_name);
-  }
+		if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
+		else Serial.printf("Servos for Leg %s **NOT found**\n", legs[leg].leg_name);
+	}
 }
 
 //--------------------------------------------------------------------
@@ -201,9 +202,12 @@ void ServoDriver::Init(void) {
 	int32_t pos;
 	int     count_missing = 0;
 
+	TMReset(); // reset our servo list
+
 	for (int i = 0; i < NUMSERVOS; i++) {
 		// Set the id
 		int servo_id = pgm_read_byte(&cPinTable[i]);
+		uint8_t index = TMAddID(servo_id); // bugbug assuming some position stuff...
 		myLSS.setServoID(servo_id);
 
 		// Now try to get it's position
@@ -215,6 +219,7 @@ void ServoDriver::Init(void) {
 		pos = myLSS.getPosition();
 		if (myLSS.getLastCommStatus() == LSS_CommStatus_ReadSuccess) {
 			DBGSerial.printf(" %d\n", pos);
+			TMSetTargetByIndex(index, pos);
 		}
 		else {
 			DBGSerial.println(" not found");
@@ -249,7 +254,7 @@ void ServoDriver::Init(void) {
 
 #ifdef cVoltagePin
 word  g_awVoltages[8] = {
-  0, 0, 0, 0, 0, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0, 0
 };
 word  g_wVoltageSum = 0;
 byte  g_iVoltages = 0;
@@ -280,7 +285,7 @@ word ServoDriver::GetBatteryVoltage(void) {
 	unsigned long ulDeltaTime = millis() - g_ulTimeLastBatteryVoltage;
 	if (g_wLastVoltage != 0xffff) {
 		if ((ulDeltaTime < VOLTAGE_MIN_TIME_BETWEEN_CALLS)
-			|| (bioloid.interpolating && (ulDeltaTime < VOLTAGE_MAX_TIME_BETWEEN_CALLS)))
+		    || (bioloid.interpolating && (ulDeltaTime < VOLTAGE_MAX_TIME_BETWEEN_CALLS)))
 			return g_wLastVoltage;
 	}
 
@@ -310,15 +315,6 @@ word ServoDriver::GetBatteryVoltage(void) {
 void ServoDriver::BeginServoUpdate(void)    // Start the update
 {
 	MakeSureServosAreOn();
-#if 0
-	if (ServosEnabled) {
-		// If we are trying our own Servo control need to save away the new positions...
-		for (byte i = 0; i < NUMSERVOS; i++) {
-			g_cur_servo_pos[i] = g_goal_servo_pos[i];
-		}
-	}
-#endif
-
 }
 
 //------------------------------------------------------------------------------------------
@@ -332,6 +328,14 @@ void ServoDriver::OutputServoInfoForLeg(byte LegIndex, short sCoxaAngle1, short 
 #endif
 {
 	// Save away the new positions...
+	// Sort of duplicate stuff now... May clean up.
+	TMSetTargetByIndex(FIRSTCOXAPIN + LegIndex, sCoxaAngle1);  // What order should we store these values?
+	TMSetTargetByIndex(FIRSTFEMURPIN + LegIndex, sFemurAngle1);
+	TMSetTargetByIndex(FIRSTTIBIAPIN + LegIndex, sTibiaAngle1);
+#ifdef c4DOF
+	TMSetTargetByIndex(FIRSTTARSPIN + LegIndex, sTarsAngle);
+#endif
+
 	g_goal_servo_pos[FIRSTCOXAPIN + LegIndex] = sCoxaAngle1;  // What order should we store these values?
 	g_goal_servo_pos[FIRSTFEMURPIN + LegIndex] = sFemurAngle1;
 	g_goal_servo_pos[FIRSTTIBIAPIN + LegIndex] = sTibiaAngle1;
@@ -409,24 +413,29 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
 {
 	g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 	if (ServosEnabled) {
-		for (int i = 0; i < NUMSERVOS; i++) {
-			if (g_cur_servo_pos[i] != g_goal_servo_pos[i]) {
-				g_cur_servo_pos[i] = g_goal_servo_pos[i];
-				// Set the id
-				int servo_id = pgm_read_byte(&cPinTable[i]);
-				myLSS.setServoID(servo_id);
-				myLSS.moveT(g_goal_servo_pos[i], wMoveTime);
+		if (use_servos_timed_moves) {
+			for (int i = 0; i < NUMSERVOS; i++) {
+				if (g_cur_servo_pos[i] != g_goal_servo_pos[i]) {
+					g_cur_servo_pos[i] = g_goal_servo_pos[i];
+					// Set the id
+					int servo_id = pgm_read_byte(&cPinTable[i]);
+					myLSS.setServoID(servo_id);
+					myLSS.moveT(g_goal_servo_pos[i], wMoveTime);
+				}
 			}
+		} else {
+			TMSetupMove(wMoveTime);
+			if (g_fDebugOutput) TMPrintDebugInfo();
+			TMStep(true); // force the first step..
 		}
-	}
-	else {
+	} 	else {
 		// Rear middle front
 		//DBGSerial.println("Servo positions shown by leg joints\n(Rear)");
 		//DBGSerial.println("    T     F     C |     C     F     T");
 		for (int legs = 0; legs < 3; legs++) {
 			DBGSerial.printf("%5d %5d %5d | %5d %5d %5d || ",
-				g_goal_servo_pos[FIRSTTIBIAPIN + legs], g_goal_servo_pos[FIRSTFEMURPIN + legs], g_goal_servo_pos[FIRSTCOXAPIN + legs],
-				g_goal_servo_pos[FIRSTCOXAPIN + legs + 3], g_goal_servo_pos[FIRSTFEMURPIN + legs + 3], g_goal_servo_pos[FIRSTTIBIAPIN + legs + 3]);
+			                 g_goal_servo_pos[FIRSTTIBIAPIN + legs], g_goal_servo_pos[FIRSTFEMURPIN + legs], g_goal_servo_pos[FIRSTCOXAPIN + legs],
+			                 g_goal_servo_pos[FIRSTCOXAPIN + legs + 3], g_goal_servo_pos[FIRSTFEMURPIN + legs + 3], g_goal_servo_pos[FIRSTTIBIAPIN + legs + 3]);
 		}
 		Serial.printf("%u\n", wMoveTime);
 	}
@@ -456,7 +465,7 @@ void ServoDriver::FreeServos(void)
 //Function that gets called from the main loop if the robot is not logically
 //     on.  Gives us a chance to play some...
 //--------------------------------------------------------------------
-static uint8_t g_iIdleServoNum = (uint8_t)-1;
+static uint8_t g_iIdleServoNum = (uint8_t) - 1;
 static uint8_t g_iIdleLedState = 1;  // what state to we wish to set...
 void ServoDriver::IdleTime(void)
 {
@@ -484,10 +493,10 @@ void ServoDriver::IdleTime(void)
 //--------------------------------------------------------------------
 void ServoDriver::showUserFeedback(int feedback_state) {
 	switch (feedback_state) {
-		case 0:
-			// turn off all leds... 
-			LSS::genericWrite(LSS_BroadcastID, LSS_ActionColorLED, LSS_LED_Black);
-			break;
+	case 0:
+		// turn off all leds...
+		LSS::genericWrite(LSS_BroadcastID, LSS_ActionColorLED, LSS_LED_Black);
+		break;
 	}
 }
 
@@ -508,7 +517,7 @@ void MakeSureServosAreOn(void)
 		boolean servos_reset = false;
 		for (int i = 0; i < NUMSERVOS; i++) {
 			g_cur_servo_pos[i] = 32768; // set to a value that is not valid to force next output
-			// lets make sure that servos are not in an error state.   
+			// lets make sure that servos are not in an error state.
 			myLSS.setServoID(cPinTable[i]);
 			LSS_Status servo_status = myLSS.getStatus();
 			switch (servo_status) {
@@ -525,9 +534,9 @@ void MakeSureServosAreOn(void)
 			case LSS_StatusBlocked:
 			case LSS_StatusSafeMode:
 			default:
-				DBGSerial.printf("EnableServos: Servo %d reset due to status: %s(%d)\n", cPinTable[i], 
-						(servo_status < (sizeof(lss_status_text)/sizeof(lss_status_text[0]))) ? lss_status_text[servo_status] : "?",
-						servo_status); 
+				DBGSerial.printf("EnableServos: Servo %d reset due to status: %s(%d)\n", cPinTable[i],
+				                 (servo_status < (sizeof(lss_status_text) / sizeof(lss_status_text[0]))) ? lss_status_text[servo_status] : "?",
+				                 servo_status);
 				myLSS.reset();
 				servos_reset = true;
 				break;
@@ -536,7 +545,7 @@ void MakeSureServosAreOn(void)
 
 		if (servos_reset) {
 			delay(3000);  // give servos some time to reset.
-			// try again to hold servos. 
+			// try again to hold servos.
 			LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position
 		}
 
@@ -551,6 +560,8 @@ void MakeSureServosAreOn(void)
 //==============================================================================
 void  ServoDriver::BackgroundProcess(void)
 {
+	if (!use_servos_timed_moves)
+		TMStep(false); // force the first step..
 #ifdef cTurnOffVol          // only do if we a turn off voltage is defined
 #ifndef cVoltagePin         // and we are not doing AtoD type of conversion...
 	if (iTimeToNextInterpolate > VOLTAGE_MIN_TIME_UNTIL_NEXT_INTERPOLATE)      // At least 4ms until next interpolation.  See how this works...
@@ -571,6 +582,7 @@ void ServoDriver::ShowTerminalCommandList(void)
 	DBGSerial.println(F("M - Toggle Motors on or off"));
 	DBGSerial.println(F("T - Test Servos"));
 	DBGSerial.println(F("P - Servo Positions"));
+	DBGSerial.println(F("A - Toggle LSS speed control"));
 	DBGSerial.println(F("S - Track Servos"));
 #ifdef OPT_PYPOSE
 	DBGSerial.println(F("P<DL PC> - Pypose"));
@@ -594,7 +606,7 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 		}
 		else {
 			DBGSerial.println(F("Motors are off"));
-			FreeServos();	// make sure we turn off servos. 
+			FreeServos();	// make sure we turn off servos.
 		}
 
 		return true;
@@ -636,6 +648,14 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 		TCTrackServos();
 	}
 
+	if ((bLen == 1) && ((*psz == 'a') || (*psz == 'A'))) {
+		use_servos_timed_moves = !use_servos_timed_moves;
+		if (use_servos_timed_moves)
+			DBGSerial.println(F("Use Servo moveT"));
+		else
+			DBGSerial.println(F("Use Software Interplation"));
+	}
+
 
 #ifdef OPT_FIND_SERVO_OFFSETS
 	else if ((bLen == 1) && ((*psz == 'o') || (*psz == 'O'))) {
@@ -670,12 +690,12 @@ void TCServoPositions() {
 	DBGSerial.println("    T     F     C |     C     F     T");
 	for (int legs = 0; legs < 3; legs++) {
 		DBGSerial.printf("%5d(%u) %5d(%u) %5d(%u) | %5d(%u) %5d(%u) %5d(%u)\n",
-			servo_pos[FIRSTTIBIAPIN + legs], 	 servo_status[FIRSTTIBIAPIN + legs], 
-			servo_pos[FIRSTFEMURPIN + legs], 	 servo_status[FIRSTFEMURPIN + legs], 
-			servo_pos[FIRSTCOXAPIN + legs], 	 servo_status[FIRSTCOXAPIN + legs],
-			servo_pos[FIRSTCOXAPIN + legs + 3],  servo_status[FIRSTCOXAPIN + legs + 3], 
-			servo_pos[FIRSTFEMURPIN + legs + 3], servo_status[FIRSTFEMURPIN + legs + 3], 
-			servo_pos[FIRSTTIBIAPIN + legs + 3], servo_status[FIRSTTIBIAPIN + legs + 3]);
+		                 servo_pos[FIRSTTIBIAPIN + legs], 	 servo_status[FIRSTTIBIAPIN + legs],
+		                 servo_pos[FIRSTFEMURPIN + legs], 	 servo_status[FIRSTFEMURPIN + legs],
+		                 servo_pos[FIRSTCOXAPIN + legs], 	 servo_status[FIRSTCOXAPIN + legs],
+		                 servo_pos[FIRSTCOXAPIN + legs + 3],  servo_status[FIRSTCOXAPIN + legs + 3],
+		                 servo_pos[FIRSTFEMURPIN + legs + 3], servo_status[FIRSTFEMURPIN + legs + 3],
+		                 servo_pos[FIRSTTIBIAPIN + legs + 3], servo_status[FIRSTTIBIAPIN + legs + 3]);
 	}
 }
 
@@ -731,7 +751,7 @@ void TCTrackServos()
 	// Print out Mins and Max.
 	//DBGSerial.println("    T     F     C |     C     F     T");
 	static const char* apszLegs[] = {
-	  "RR", "RM", "RF", "LR", "LM", "LF"
+		"RR", "RM", "RF", "LR", "LM", "LF"
 	};      // Leg Order
 
 	for (int legs = 0; legs < 6; legs++) {
@@ -773,10 +793,10 @@ void FindServoOffsets()
 	signed short asOffsets[NUMSERVOSPERLEG * CNT_LEGS];      // we have 18 servos to find/set offsets for...
 
 	static const char* apszLegs[] = {
-	  "RR", "RM", "RF", "LR", "LM", "LF"
+		"RR", "RM", "RF", "LR", "LM", "LF"
 	};      // Leg Order
 	static const char* apszLJoints[] = {
-	  " Coxa", " Femur", " Tibia", " tArs"
+		" Coxa", " Femur", " Tibia", " tArs"
 	};   // which joint on the leg...
 
 
@@ -799,14 +819,14 @@ void FindServoOffsets()
 	// Now lets enable all servos and set them to zero point
 	MakeSureServosAreOn();
 	LSS::genericWrite(LSS_BroadcastID, LSS_ActionMove, 0,
-		LSS_ActionParameterTime, 500);  // move in half second
+	                  LSS_ActionParameterTime, 500);  // move in half second
 
 // OK lets move all of the servos to their zero point.
 	Serial.println("Find Servo Zeros.\n$-Exit, +- changes, *-change servo");
 	Serial.println("    0-n Chooses a leg, C-Coxa, F-Femur, T-Tibia");
 	//#define NUMSERVOS (NUMSERVOSPERLEG*CNT_LEGS)
 
-	// Lets show some information about each of the servos. 
+	// Lets show some information about each of the servos.
 	for (sSN = 0; sSN < NUMSERVOS; sSN++) {
 		asOffsets[sSN] = 0;
 		myLSS.setServoID(cPinTable[sSN]);
@@ -1038,7 +1058,7 @@ void DoPyPose(byte* psz)
 	DBGSerial.println(F("Exit Terminal and Start Pypose"));
 	DBGSerial.println(F("$TEXTM$"));  // add some support in VB side to convert to text mode...
 #endif
-  // Now lets reset our xbee...
+	// Now lets reset our xbee...
 	APISendXBeeGetCmd('F', 'R'); // Send a Forced reset...
 	delay(2000);
 	while (Serial.read() != -1)
@@ -1370,3 +1390,104 @@ boolean PyPoseSaveToEEPROM(byte bSeqNum) {
 
 
 #endif  //DOPypose
+
+//=============================================================================
+// Do our own timed moves support functions.
+//=============================================================================
+
+void ServoDriver::TMReset() {
+	tmServoCount = 0;
+}
+
+// Add a servo to the list.
+uint8_t ServoDriver::TMAddID(uint8_t id) {
+	tmServos[tmServoCount].id = id;
+	tmServos[tmServoCount].target_pos = 0;
+	tmServos[tmServoCount].starting_pos = 0;
+	tmServoCount++;
+	return tmServoCount - 1;
+}
+
+void ServoDriver::TMInitWithCurrentservoPositions() {
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+		myLSS.setServoID(tmServos[servo].id);
+		myLSS.setMotionControlEnabled(0);
+		tmServos[servo].starting_pos = myLSS.getPosition();
+		tmServos[servo].target_pos = tmServos[servo].starting_pos;
+	}
+}
+
+bool ServoDriver::TMSetTargetByID(uint8_t id, int16_t target) {
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+		if (id == tmServos[servo].id) {
+			TMSetTargetByIndex(servo, target);
+			return true;
+		}
+	}
+	return false;
+}
+
+void ServoDriver::TMSetTargetByIndex(uint8_t index, int16_t target) {
+	tmServos[index].starting_pos = tmServos[index].target_pos; // set source as last target
+	tmServos[index].target_pos = target;
+}
+void ServoDriver::TMSetupMove(uint32_t move_time) {
+	// BUGBUG should we output all servos every cycle?
+	// start off only when they move.
+	tmMovetime = move_time * 1000; // convert to us
+	tmCyclesLeft = (tmMovetime + tmCycleTime / 2) / tmCycleTime;
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+		myLSS.setServoID(tmServos[servo].id);
+		if (tmSetupServos) myLSS.setMotionControlEnabled(0);
+		if (tmServos[servo].starting_pos == -1) tmServos[servo].starting_pos = myLSS.getPosition();
+		tmServos[servo].pos = tmServos[servo].starting_pos;
+		tmServos[servo].cycle_delta = ((tmServos[servo].target_pos - tmServos[servo].starting_pos)); // set it first to get into floating point
+		tmServos[servo].cycle_delta /= tmCyclesLeft;
+	}
+	tmSetupServos = false;
+	tmTimer = 0;
+
+}
+
+int  ServoDriver::TMStep(bool wait) {
+	if (!tmCyclesLeft) return 0;
+
+	// BUGBUG not processing wait yet... but normally
+	// can set false so can return between steps to do other stuff.
+	if (!wait && ((tmCycleTime - tmTimer) > tmMinNotwaitTime)) return -1; //
+	while (tmTimer < tmCycleTime) ;
+	// how many cycles.
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+		if (tmServos[servo].cycle_delta) {
+
+			int cur_pos = tmServos[servo].pos;
+			tmServos[servo].pos += tmServos[servo].cycle_delta;
+			int next_pos = tmServos[servo].pos;
+			if (tmCyclesLeft == 1) next_pos = tmServos[servo].target_pos;
+			else {
+				if (tmServos[servo].cycle_delta < 0) {
+					if (next_pos < tmServos[servo].target_pos) next_pos = tmServos[servo].target_pos;
+				} else if (next_pos > tmServos[servo].target_pos) next_pos = tmServos[servo].target_pos;
+			}
+			if (next_pos != cur_pos) {
+				myLSS.setServoID(tmServos[servo].id);
+				myLSS.move(next_pos);
+				if (next_pos == tmServos[servo].target_pos) tmServos[servo].cycle_delta = 0; // servo done
+			}
+		}
+	}
+	tmCyclesLeft--;
+	tmTimer -= tmCycleTime;
+	return tmCyclesLeft ? 1 : 0; //
+}
+
+void ServoDriver::TMPrintDebugInfo() {
+#ifdef DBGSerial
+  DBGSerial.println("*** TM debug info");
+  DBGSerial.printf("Move Time:%u Cyle time:%u cycles:%u\n", tmMovetime, tmCycleTime, tmCyclesLeft);
+  DBGSerial.println("ID\t Start\t End\tCyle Delta");
+  for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+    DBGSerial.printf("  %u\t%d\t%d\t%f\n", tmServos[servo].id, tmServos[servo].starting_pos, tmServos[servo].target_pos, tmServos[servo].cycle_delta);
+  }
+#endif  
+}
