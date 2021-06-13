@@ -153,6 +153,7 @@ const static uint32_t PS4_MAP_HAT_MAP[] = {
 	0x10000, 0x30000, 0x20000, 0x60000, 0x40000, 0xC0000, 0x80000, 0x90000, 0x0 };
   //up,    NE,      right,   SE,      down,    SW,      left,    NW,   ???
  uint32_t const * BTN_MASKS = PS3_BTNS;
+ static bool joystick_ps4_bt = false;
 
 //=============================================================================
 // Global - Local to this file only...
@@ -304,10 +305,16 @@ void USBJoystickInputController::ControlInput(void)
 
 			const uint8_t* psz = joystick1.manufacturer();
 			if (psz && *psz) Serial.printf("  manufacturer: %s\n", psz);
-			psz = joystick1.product();
-			if (psz && *psz) Serial.printf("  product: %s\n", psz);
+			const uint8_t* pszProduct = joystick1.product();
+			if (pszProduct && *pszProduct) Serial.printf("  product: %s\n", pszProduct);
 			psz = joystick1.serialNumber();
 			if (psz && *psz) Serial.printf("  Serial: %s\n", psz);
+
+			if (pszProduct && strncmp((const char *)pszProduct, "Wireless Controller", 19) == 0) {
+				BTN_MASKS = PS4_BTNS;
+				joystick_ps4_bt = true;
+				DBGSerial.println("      BlueTooth PS4");
+			}
 
 			// lets try to reduce number of fields that update
 			joystick1.axisChangeNotifyMask(0xFFFFFl);
@@ -326,10 +333,11 @@ void USBJoystickInputController::ControlInput(void)
 #endif
 		// [SWITCH MODES]
 		g_buttons = joystick1.getButtons();
-		if (joystick1.joystickType() == JoystickController::PS4) {
 #if defined(BLUETOOTH)
-			int hat = joystick1.getAxis(10);  // get hat - up/dwn buttons
+		if (joystick_ps4_bt || joystick1.joystickType() == JoystickController::PS4) {
+			int hat = joystick_ps4_bt? joystick1.getAxis(10) : joystick1.getAxis(9);  // get hat - up/dwn buttons
 #else
+		if (joystick1.joystickType() == JoystickController::PS4) {
 			int hat = joystick1.getAxis(9);  // get hat - up/dwn buttons
 #endif
 			if ((hat >= 0) && (hat < 8)) g_buttons |= PS4_MAP_HAT_MAP[hat];
@@ -864,12 +872,13 @@ void UpdateActiveDeviceInfo() {
 
 				const uint8_t* psz = bthiddrivers[i]->manufacturer();
 				if (psz && *psz) Serial.printf("  manufacturer: %s\n", psz);
-				psz = bthiddrivers[i]->product();
-				if (psz && *psz) Serial.printf("  product: %s\n", psz);
+				const uint8_t *pszProduct = bthiddrivers[i]->product();
+				if (pszProduct && *pszProduct) Serial.printf("  product: %s\n", pszProduct);
 				psz = bthiddrivers[i]->serialNumber();
 				if (psz && *psz) Serial.printf("  Serial: %s\n", psz);
 				// See if this is our joystick object...
 				if (hiddrivers[i] == &joystick1) {
+					joystick_ps4_bt = false; // lets assume not...
 					DBGSerial.printf("  Joystick type: %d\n", joystick1.joystickType());
 					switch (joystick1.joystickType()) {
 					case JoystickController::PS4:
@@ -879,6 +888,12 @@ void UpdateActiveDeviceInfo() {
 					case JoystickController::PS3:
 						BTN_MASKS = PS3_BTNS;
 						break;
+					}
+					// See if this is a BT 
+					if (pszProduct && strncmp((const char *)pszProduct, "Wireless Controller", 19) == 0) {
+						BTN_MASKS = PS4_BTNS;
+						joystick_ps4_bt = true;
+						DBGSerial.println("      BlueTooth PS4");
 					}
 				}
 			}
