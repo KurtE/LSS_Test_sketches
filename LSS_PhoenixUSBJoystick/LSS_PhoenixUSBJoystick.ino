@@ -1577,8 +1577,10 @@ void LegIK(short IKFeetPosX, short IKFeetPosY, short IKFeetPosZ, byte LegIKLegNr
         else
             IKSolutionError = 1;
     }
-#ifdef DEBUG
+/*#ifdef DEBUG
     if (g_fDebugOutput && g_InControlState.fRobotOn) {
+        DBGSerial.print("i");
+        DBGSerial.print(LegIKLegNr, DEC);
         DBGSerial.print("(");
         DBGSerial.print(IKFeetPosX, DEC);
         DBGSerial.print(",");
@@ -1596,7 +1598,7 @@ void LegIK(short IKFeetPosX, short IKFeetPosY, short IKFeetPosZ, byte LegIKLegNr
         if (LegIKLegNr == (CNT_LEGS - 1))
             DBGSerial.println();
     }
-#endif  
+#endif */ 
 }
 
 //--------------------------------------------------------------------

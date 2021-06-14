@@ -345,12 +345,12 @@ void ServoDriver::OutputServoInfoForLeg(byte LegIndex, short sCoxaAngle1, short 
 #ifdef DEBUG_SERVOS
 	if (g_fDebugOutput) {
 		DBGSerial.print(LegIndex, DEC);
-		DBGSerial.print("(");
+		DBGSerial.print("C");
 		DBGSerial.print(sCoxaAngle1, DEC);
-		DBGSerial.print("),(");
+		DBGSerial.print("),F");
 		DBGSerial.print(sFemurAngle1, DEC);
 		DBGSerial.print("),(");
-		DBGSerial.print("(");
+		DBGSerial.print("T");
 		DBGSerial.print(sTibiaAngle1, DEC);
 		DBGSerial.print(") :");
 	}
