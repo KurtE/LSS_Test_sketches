@@ -21,7 +21,7 @@
 //==================================================================================================================================
 //#define USECOMMANDER
 #define USEJOYSTICK		// Use T3.6 or T4.x USB Host control
-#define BLUETOOTH
+//#define BLUETOOTH
 
 #define LSS_SERIAL_PORT     Serial1
 #define LSS_BAUD            250000
@@ -59,18 +59,28 @@ extern ST7789_t3 tft;
 // Define other optional compnents to be included or not...
 //#define cFemurHornOffset1 -35
 //#define cTibiaHornOffset1 463
-// Coxa may be reversed from default
+// Zenta LSS:
 #define cRRCoxaInv 0
-#define cRRFemurInv 0
-#define cRRTibiaInv 0
-
 #define cRMCoxaInv 0
-#define cRMFemurInv 0
-#define cRMTibiaInv 0
-
 #define cRFCoxaInv 0 
+#define cLFCoxaInv 1 
+#define cLMCoxaInv 1 
+#define cLRCoxaInv 1 
+
+
+#define cRRFemurInv 0 
+#define cRMFemurInv 0 
 #define cRFFemurInv 0 
-#define cRFTibiaInv 0
+#define cLRFemurInv 0 
+#define cLMFemurInv 0 
+#define cLFFemurInv 0 
+
+#define cRRTibiaInv 0 
+#define cRMTibiaInv 0 
+#define cRFTibiaInv 0 
+#define cLRTibiaInv 0 
+#define cLMTibiaInv 0 
+#define cLFTibiaInv 0 
 
 /* I think femur directions are same as default
 #define cRRFemurInv 1 
@@ -213,7 +223,7 @@ extern ST7789_t3 tft;
 //[MIN/MAX ANGLES] - Start off assume same as Phoenix...
 #define cXXTibiaMin1    -600
 #define cXXTibiaMax1     750
-#define cXXFemurMin		-900
+#define cXXFemurMin		-1200
 #define cXXFemurMax		 900
 #define cXXCoxaMin		-750
 #define cXXCoxaMax		 750
@@ -269,7 +279,7 @@ extern ST7789_t3 tft;
 //--------------------------------------------------------------------
 //[LEG DIMENSIONS]
 //Universal dimensions for each leg in mm
-#define cXXCoxaLength     51    // 50.8 to be exact
+#define cXXCoxaLength     54    //Zenta measured about 54mm // 50.8 to be exact
 #define cXXFemurLength    80    // 80.32mm to be exact
 #define cXXTibiaLength    116  //116.24 from drawing
 
@@ -314,10 +324,11 @@ extern ST7789_t3 tft;
 #define cLMCoxaAngle1    0      //Default Coxa setup angle
 #define cLFCoxaAngle1    560     //Default Coxa setup angle
 
+/*Zenta Not used
 #define X_COXA      89  // MM between front and back legs /2  ???????????
 #define Y_COXA      89  // MM between front/back legs /2   ????????????????????????????
 #define M_COXA      61  // MM between two middle legs /2   ????????????????????????????
-
+*/
 #define cRROffsetX      -61    //Distance X from center of the body to the Right Rear coxa
 #define cRROffsetZ       89     //Distance Z from center of the body to the Right Rear coxa
 
@@ -337,10 +348,10 @@ extern ST7789_t3 tft;
 #define cLFOffsetZ      -89    //Distance Z from center of the body to the Left Front coxa
 //--------------------------------------------------------------------
 //[START POSITIONS FEET]
-#define cHexInitXZ   131
-#define CHexInitXZCos60  73    // COS(56) = .707
-#define CHexInitXZSin60  109    // sin(56) = .707
-#define CHexInitY  30 // 116 //30
+#define cHexInitXZ   145 //Zenta 145 //131
+#define CHexInitXZCos60  81    // COS(56) = .559
+#define CHexInitXZSin60  120    // sin(56) = .829
+#define CHexInitY  14 //Zenta About 14mm is correct //116 //30
 
 
 // Lets try some multi leg positions depending on height settings.

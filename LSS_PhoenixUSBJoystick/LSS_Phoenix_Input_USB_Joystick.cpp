@@ -70,7 +70,7 @@
 // [Include files]
 
 #include <Arduino.h>
-#include <TeensyDebug.h>
+//#include <TeensyDebug.h>
 #include <EEPROM.h>
 #include <avr/pgmspace.h>
 
@@ -410,7 +410,7 @@ void USBJoystickInputController::ControlInput(void)
 			if (ControlMode != SINGLELEGMODE)
 				g_InControlState.SelectedLeg = 255;
 			else {
-				g_InControlState.SelectedLeg = 0;   // Select leg 0 when we go into this mode. 
+				g_InControlState.SelectedLeg = 5;   // Select leg 5 (LF) when we go into this mode. 
 				g_InControlState.PrevSelectedLeg = 255;
 #ifdef DEBUG_SINGLELEG
 				Serial.println("Single Leg Mode .....");
@@ -613,7 +613,7 @@ void USBJoystickInputController::ControlInput(void)
 			//      g_InControlState.BodyPos.x = (lx)/2;
 			//      g_InControlState.BodyPos.z = -(ly)/3;
 			//      g_InControlState.BodyRot1.y = (rx)*2;
-			g_BodyYShift = (-(joystick1.getAxis(AXIS_RY)) / 2);
+			g_BodyYShift = (-(joystick1.getAxis(AXIS_RY)-127) / 2); //Zenta should be joystick1.getAxis(AXIS_RY) - 127
 		}
 
 		//[Rotate functions]
@@ -621,7 +621,7 @@ void USBJoystickInputController::ControlInput(void)
 			g_InControlState.BodyRot1.x = (ly);
 			g_InControlState.BodyRot1.y = (rx) * 2;
 			g_InControlState.BodyRot1.z = (lx);
-			g_BodyYShift = (-(joystick1.getAxis(AXIS_RY)) / 2);
+			g_BodyYShift = (-(joystick1.getAxis(AXIS_RY)-127) / 2); //Zenta Should be -127 or just replace with ry
 		}
 		//[Single leg functions]
 #ifdef OPT_SINGLELEG      
