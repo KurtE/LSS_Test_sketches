@@ -152,18 +152,20 @@ typedef struct {
 } leg_info_t;
 
 leg_info_t legs[] = {
-	{"Left Front",  {cLFCoxaPin, LSS_GyreClockwise, 0, 600}, {cLFFemurPin, LSS_GyreClockwise, -104, 600}, {cLFTibiaPin, LSS_GyreClockwise, -137, 600}},
-	{"Left Middle", {cLMCoxaPin, LSS_GyreClockwise, 0, 600}, {cLMFemurPin, LSS_GyreClockwise, -104, 600}, {cLMTibiaPin, LSS_GyreClockwise, -137, 600}},
-	{"Left Rear",   {cLRCoxaPin, LSS_GyreClockwise, 0, 600}, {cLRFemurPin, LSS_GyreClockwise, -104, 600}, {cLRTibiaPin, LSS_GyreClockwise, -137, 600}},
+{"Left Front", {cLFCoxaPin, cLFCoxaGyre, cLFCoxaOff, cServoSpeed}, {cLFFemurPin, cLFFemurGyre, cLFFemurOff, cServoSpeed}, {cLFTibiaPin, cLFTibiaGyre, cLFTibiaOff, cServoSpeed}},
+{"Left Middle", {cLMCoxaPin, cLMCoxaGyre, cLMCoxaOff, cServoSpeed}, {cLMFemurPin, cLMFemurGyre, cLMFemurOff, cServoSpeed}, {cLMTibiaPin, cLMTibiaGyre, cLMTibiaOff, cServoSpeed}},
+{"Left Rear", {cLRCoxaPin, cLRCoxaGyre, cLRCoxaOff, cServoSpeed}, {cLRFemurPin, cLRFemurGyre, cLRFemurOff, cServoSpeed}, {cLRTibiaPin, cLRTibiaGyre, cLRTibiaOff, cServoSpeed}},
 
-	{"Right Front",  {cRFCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRFFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRFTibiaPin, LSS_GyreCounterClockwise, -137, 600}},
-	{"Right Middle", {cRMCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRMFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRMTibiaPin, LSS_GyreCounterClockwise, -137, 600}},
-	{"Right Rear",   {cRRCoxaPin, LSS_GyreCounterClockwise, 0, 600}, {cRRFemurPin, LSS_GyreCounterClockwise, -104, 600}, {cRRTibiaPin, LSS_GyreCounterClockwise, -137, 600}}
+{"Right Front", {cRFCoxaPin, cRFCoxaGyre, cRFCoxaOff, cServoSpeed}, {cRFFemurPin, cRFFemurGyre, cRFFemurOff, cServoSpeed}, {cRFTibiaPin, cRFTibiaGyre, cRFTibiaOff, cServoSpeed}},
+{"Right Middle", {cRMCoxaPin, cRMCoxaGyre, cRMCoxaOff, cServoSpeed}, {cRMFemurPin, cRMFemurGyre, cRMFemurOff, cServoSpeed}, {cRMTibiaPin, cRMTibiaGyre, cRMTibiaOff, cServoSpeed}},
+{"Right Rear", {cRRCoxaPin, cRRCoxaGyre, cRRCoxaOff, cServoSpeed}, {cRRFemurPin, cRRFemurGyre, cRRFemurOff, cServoSpeed}, {cRRTibiaPin, cRRTibiaGyre, cRRTibiaOff, cServoSpeed}}
 };
 #define COUNT_LEGS (sizeof(legs)/sizeof(legs[0]))
 
 void ServoDriver::setGaitConfig()
 {
+	use_servos_timed_moves = true;
+	
 	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
 		legs[leg].leg_found = true;
 		myLSS.setServoID(legs[leg].coxa.id);
@@ -171,18 +173,21 @@ void ServoDriver::setGaitConfig()
 		myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
 		myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
 		myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
-
+		myLSS.setMotionControlEnabled(1);
+		
 		myLSS.setServoID(legs[leg].femur.id);
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
 		myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
 		myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
 		myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
-
+		myLSS.setMotionControlEnabled(1);
+		
 		myLSS.setServoID(legs[leg].tibia.id);
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
 		myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
 		myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
 		myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
+		myLSS.setMotionControlEnabled(1);
 
 		if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
 		else Serial.printf("Servos for Leg %s **NOT found**\n", legs[leg].leg_name);
