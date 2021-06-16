@@ -169,28 +169,35 @@ void ServoDriver::setGaitConfig()
 	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
 		legs[leg].leg_found = true;
 		myLSS.setServoID(legs[leg].coxa.id);
+#ifndef USELSSCONFIG
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
 		myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
 		myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
 		myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
+#endif
 		myLSS.setMotionControlEnabled(1);
 		
 		myLSS.setServoID(legs[leg].femur.id);
+#ifndef USELSSCONFIG
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
 		myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
 		myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
 		myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
 		myLSS.setMotionControlEnabled(1);
-		
+#endif
+
 		myLSS.setServoID(legs[leg].tibia.id);
+#ifndef USELSSCONFIG
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
 		myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
 		myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
 		myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
+#endif
 		myLSS.setMotionControlEnabled(1);
-
+#ifndef USELSSCONFIG
 		if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
 		else Serial.printf("Servos for Leg %s **NOT found**\n", legs[leg].leg_name);
+#endif
 	}
 }
 
