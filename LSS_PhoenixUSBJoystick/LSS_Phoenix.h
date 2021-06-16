@@ -287,7 +287,11 @@ public:
   // added stuff for bioloid like pose support to bypass servo
   //    firmware support for timed moves
   //=====================================================================
-  enum {MAX_MOVE_SERVOS = 20, DEFAULT_FRAMES_PER_SECOND = 50, DEFAULT_MIN_NOT_WAIT_TIME = 1000};
+  enum {MAX_MOVE_SERVOS = 20, 
+    DEFAULT_FRAMES_PER_SECOND = 50,
+    MAX_FPS = 50, 
+    DEFAULT_MIN_NOT_WAIT_TIME = 1000
+  };
 
   typedef struct {
     uint8_t id;   // id of servo

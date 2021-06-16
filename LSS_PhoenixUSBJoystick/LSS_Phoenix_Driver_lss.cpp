@@ -12,6 +12,11 @@
 #include "LSS_Phoenix.h"
 #include <LSS.h>
 
+// Some options for how we do interpolation
+#define OUTPUT_ONLY_CHANGED_SERVOS 1
+#define DYNAMIC_FPS 0
+
+
 
 #ifdef c4DOF
 #define NUMSERVOSPERLEG 4
@@ -1434,6 +1439,7 @@ boolean PyPoseSaveToEEPROM(byte bSeqNum) {
 //=============================================================================
 // Do our own timed moves support functions.
 //=============================================================================
+// Add in experiments to see if they improve servo...
 
 void ServoDriver::TMReset() {
 	tmServoCount = 0;
@@ -1480,18 +1486,44 @@ void ServoDriver::TMSetTargetByIndex(uint8_t index, int16_t target) {
 	tmServos[index].target_pos = target;
 }
 void ServoDriver::TMSetupMove(uint32_t move_time) {
-	// BUGBUG should we output all servos every cycle?
-	// start off only when they move.
 	tmMovetime = move_time * 1000; // convert to us
-	tmCyclesLeft = (tmMovetime + tmCycleTime / 2) / tmCycleTime;
+
+	// setup to maybe do dynmic cycle times... First maybe compute max delta...
+#if DYNAMIC_FPS
+	int max_delta = 0;
+	int second_max_delta = 0;
 	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
 		myLSS.setServoID(tmServos[servo].id);
 		if (tmSetupServos) myLSS.setMotionControlEnabled(0);
 		if (tmServos[servo].starting_pos == -1) tmServos[servo].starting_pos = myLSS.getPosition();
+		int servo_delta = abs(tmServos[servo].target_pos - tmServos[servo].starting_pos);
+		if (servo_delta > max_delta) { second_max_delta = max_delta;  max_delta = servo_delta;}
+		else if (servo_delta > second_max_delta) second_max_delta = servo_delta;
+	}
+	// lets take some guesses on good frame time... 
+	tmCyclesLeft = (second_max_delta)? max_delta * second_max_delta : max_delta;  
+	if (tmCyclesLeft > MAX_FPS) tmCyclesLeft = MAX_FPS;
+	if (!tmCyclesLeft) tmCyclesLeft = 1;
+	tmCycleTime = 1000000l / tmCyclesLeft; 
+
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
 		tmServos[servo].pos = tmServos[servo].starting_pos;
 		tmServos[servo].cycle_delta = ((tmServos[servo].target_pos - tmServos[servo].starting_pos)); // set it first to get into floating point
 		tmServos[servo].cycle_delta /= tmCyclesLeft;
 	}
+
+
+#else
+	tmCyclesLeft = (tmMovetime + tmCycleTime / 2) / tmCycleTime;
+	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+		myLSS.setServoID(tmServos[servo].id);
+		if (tmSetupServos) myLSS.setMotionControlEnabled(0);
+		tmServos[servo].pos = tmServos[servo].starting_pos;
+		tmServos[servo].cycle_delta = ((tmServos[servo].target_pos - tmServos[servo].starting_pos)); // set it first to get into floating point
+		tmServos[servo].cycle_delta /= tmCyclesLeft;
+	}
+#endif
+
 	tmSetupServos = false;
 	tmTimer = 0;
 
@@ -1518,14 +1550,24 @@ int  ServoDriver::TMStep(bool wait) {
 				} else if (next_pos > tmServos[servo].target_pos) next_pos = tmServos[servo].target_pos;
 			}
 			if (next_pos != cur_pos) {
+				#if (OUTPUT_ONLY_CHANGED_SERVOS == 1)
 				myLSS.setServoID(tmServos[servo].id);
 				myLSS.move(next_pos);
+				#endif
 				if (next_pos == tmServos[servo].target_pos) tmServos[servo].cycle_delta = 0; // servo done
 			}
+			#if (OUTPUT_ONLY_CHANGED_SERVOS == 0)  // output every servo on every step.
+			myLSS.setServoID(tmServos[servo].id);
+			myLSS.move(next_pos);
+			#endif			
 		}
 	}
 	tmCyclesLeft--;
 	tmTimer -= tmCycleTime;
+#if DYNAMIC_FPS
+	tmMovetime -= tmCycleTime;
+	if (tmCyclesLeft == 1) tmCycleTime = tmMovetime; // last frame setup to get to the right timing
+#endif
 	return tmCyclesLeft ? 1 : 0; //
 }
 

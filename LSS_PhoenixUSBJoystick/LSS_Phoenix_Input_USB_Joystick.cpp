@@ -312,8 +312,13 @@ void USBJoystickInputController::ControlInput(void)
 
 			if (pszProduct && strncmp((const char *)pszProduct, "Wireless Controller", 19) == 0) {
 				BTN_MASKS = PS4_BTNS;
-				joystick_ps4_bt = true;
-				DBGSerial.println("      BlueTooth PS4");
+				// hack alert - but if we don't have BT object as active it won't be a BT PS4				
+				if (bluet) {
+					joystick_ps4_bt = true;
+					DBGSerial.println("      BlueTooth PS4");					
+				} else {
+					DBGSerial.println("      Wired PS4");					
+				}
 			}
 
 			// lets try to reduce number of fields that update
