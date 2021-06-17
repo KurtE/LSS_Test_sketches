@@ -273,6 +273,7 @@ void USBJoystickInputController::Init(void)
 	//    DoubleHeightOn = false;
 	DoubleTravelOn = false;
 	bJoystickWalkMode = 0;
+  g_InControlState.SpeedControl = 100;    // Sort of migrate stuff in from Devon.
 }
 
 //==============================================================================
@@ -462,6 +463,20 @@ void USBJoystickInputController::ControlInput(void)
 			g_fDynamicLegXZLength = false;
 			Serial.println("Ready for Action ........");
 		}
+		// add some speed control
+		if ((g_buttons & BTN_MASKS[BUT_HAT_RIGHT]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_RIGHT])) {
+        if (g_InControlState.SpeedControl>0) {
+          g_InControlState.SpeedControl = g_InControlState.SpeedControl - 50;
+          MSound( 1, 50, 2000);  
+        }
+		}
+		if ((g_buttons & BTN_MASKS[BUT_HAT_LEFT]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_LEFT])) {
+        if (g_InControlState.SpeedControl<2000 ) {
+          g_InControlState.SpeedControl = g_InControlState.SpeedControl + 50;
+          MSound( 1, 50, 2000); 
+        }
+		}
+
 
 		// We will use L1 with the Right joystick to control both body offset as well as Speed...
 		// We move each pass through this by a percentage of how far we are from center in each direction
