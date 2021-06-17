@@ -573,6 +573,8 @@ void USBJoystickInputController::ControlInput(void)
 				MSound(1, 50, 2000);
 				HeightSpeedMode = (HeightSpeedMode + 1) & 0x3; // wrap around mode
 				DoubleTravelOn = HeightSpeedMode & 0x1;
+				if (DoubleTravelOn) Serial.print("Double Travel On - ");
+				else Serial.print("Double Travel Off - ");
 				if (HeightSpeedMode & 0x2) {
 					g_InControlState.LegLiftHeight = 80;
 					Serial.println("Double Leg Height Selected .....");
