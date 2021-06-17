@@ -13,8 +13,8 @@
 #include <LSS.h>
 
 // Some options for how we do interpolation
-#define OUTPUT_ONLY_CHANGED_SERVOS 1
-#define DYNAMIC_FPS 0
+#define OUTPUT_ONLY_CHANGED_SERVOS 0
+#define DYNAMIC_FPS 1
 
 
 
@@ -169,7 +169,7 @@ leg_info_t legs[] = {
 
 void ServoDriver::setGaitConfig()
 {
-	use_servos_timed_moves = true;
+	use_servos_timed_moves = false;
 	
 	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
 		legs[leg].leg_found = true;
@@ -1500,11 +1500,13 @@ void ServoDriver::TMSetupMove(uint32_t move_time) {
 		if (servo_delta > max_delta) { second_max_delta = max_delta;  max_delta = servo_delta;}
 		else if (servo_delta > second_max_delta) second_max_delta = servo_delta;
 	}
-	// lets take some guesses on good frame time... 
+	// lets take some guesses on good frame time...
+
+	uint32_t max_frames_for_move_time = (MAX_FPS * move_time) / 1000;
 	tmCyclesLeft = (second_max_delta)? max_delta * second_max_delta : max_delta;  
-	if (tmCyclesLeft > MAX_FPS) tmCyclesLeft = MAX_FPS;
+	if (tmCyclesLeft > max_frames_for_move_time) tmCyclesLeft = max_frames_for_move_time;
 	if (!tmCyclesLeft) tmCyclesLeft = 1;
-	tmCycleTime = 1000000l / tmCyclesLeft; 
+	tmCycleTime = tmMovetime / tmCyclesLeft; 
 
 	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
 		tmServos[servo].pos = tmServos[servo].starting_pos;
