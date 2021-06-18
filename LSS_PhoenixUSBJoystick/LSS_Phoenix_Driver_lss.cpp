@@ -1448,6 +1448,7 @@ void ServoDriver::TMReset() {
 // Add a servo to the list.
 uint8_t ServoDriver::TMAddID(uint8_t id) {
 	tmServos[tmServoCount].id = id;
+	tmServos[tmServoCount].pos_repeated_count = 0;
 	tmServos[tmServoCount].target_pos = 0;
 	tmServos[tmServoCount].starting_pos = 0;
 	tmServoCount++;
@@ -1536,7 +1537,9 @@ int  ServoDriver::TMStep(bool wait) {
 
 	// BUGBUG not processing wait yet... but normally
 	// can set false so can return between steps to do other stuff.
-	//if (!wait && ((tmCycleTime - tmTimer) > tmMinNotwaitTime)) return -1; //
+	int time_left_in_cycle = (int)(tmCycleTime - tmTimer);
+	if (!wait && (time_left_in_cycle > tmMinNotwaitTime)) return time_left_in_cycle; //
+
 	while (tmTimer < tmCycleTime) ;
 	// how many cycles.
 	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
@@ -1552,15 +1555,25 @@ int  ServoDriver::TMStep(bool wait) {
 				} else if (next_pos > tmServos[servo].target_pos) next_pos = tmServos[servo].target_pos;
 			}
 			if (next_pos != cur_pos) {
+				tmServos[tmServoCount].pos_repeated_count = 0;
 				#if (OUTPUT_ONLY_CHANGED_SERVOS == 1)
 				myLSS.setServoID(tmServos[servo].id);
 				myLSS.move(next_pos);
 				#endif
 				if (next_pos == tmServos[servo].target_pos) tmServos[servo].cycle_delta = 0; // servo done
+			} else if (tmServos[tmServoCount].pos_repeated_count < OUTPUT_SAME_POS_COUNT) {
+				tmServos[tmServoCount].pos_repeated_count++;
+				#if (OUTPUT_ONLY_CHANGED_SERVOS == 1)
+				myLSS.setServoID(tmServos[servo].id);
+				myLSS.move(next_pos);
+				#endif
 			}
+
 			#if (OUTPUT_ONLY_CHANGED_SERVOS == 0)  // output every servo on every step.
-			myLSS.setServoID(tmServos[servo].id);
-			myLSS.move(next_pos);
+			if (tmServos[tmServoCount].pos_repeated_count < OUTPUT_SAME_POS_COUNT) {
+				myLSS.setServoID(tmServos[servo].id);
+				myLSS.move(next_pos);
+			}
 			#endif			
 		}
 	}
@@ -1570,7 +1583,7 @@ int  ServoDriver::TMStep(bool wait) {
 	tmMovetime -= tmCycleTime;
 	if (tmCyclesLeft == 1) tmCycleTime = tmMovetime; // last frame setup to get to the right timing
 #endif
-	return tmCyclesLeft ? 1 : 0; //
+	return 0;
 }
 
 void ServoDriver::TMPrintDebugInfo() {
