@@ -5,7 +5,7 @@ KEYPAD keypad1; //Create instance of this object
 
 
 #include <LSS.h>
-#define LSS_BAUD  (250000)
+#define LSS_BAUD  (921600)
 
 LSS LSS_1 = LSS(0); 
 
@@ -33,11 +33,11 @@ void setup() {
   delay(2000);
   LSS_1.setServoID(6);
   // LSS Settings
-  Serial.println("Set AngularStiffness: ");
+  Serial.println("Set AngularStiffness to -4: ");
   LSS_1.setAngularStiffness(-4);
   Serial.println("");
   delay(250);
-  Serial.print("Set Holding Stiffness: ");
+  Serial.print("Set Holding Stiffness to 4: ");
   LSS_1.setAngularHoldingStiffness(4);
   Serial.println("");
   delay(250);
@@ -47,9 +47,12 @@ void setup() {
   LSS_1.setMaxSpeed(1800, LSS_SetSession);
 
   
-  Serial.println("Set FPC: ");
-  Serial1.println("#6FPC5\r");
+  Serial.println("Do not Set FPC to 0: ");
+  //Serial1.println("#6FPC5\r");
   delay(250);
+  #ifdef LSS_SupportsSettingTimeouts
+  LSS::setReadTimeouts(20, 5); // define we will wait for 20ms for response to start and 5ms for in message characters
+  #endif
   
 }
 
@@ -66,7 +69,7 @@ void sequence(){
 
 void Spoofing(int32_t LSS_S_1,int32_t p2_timing){
   int pos_num = p2_timing/em0_rate;
-  int temp[pos_num];
+  int32_t temp[pos_num];
   uint32_t stime;
   
   int32_t   LSS_1_qd = query_LSS_1();
@@ -77,17 +80,20 @@ void Spoofing(int32_t LSS_S_1,int32_t p2_timing){
 
   temp[0] = LSS_1.getPosition();
   stime = millis();
-  for (int32_t i = 1; i < pos_num; i++){
+  for (int32_t i = 1; i < pos_num+1; i++){
+    Serial.printf("i: %d, move: %d\n", i, (LSS_1_min_pos * i) + LSS_1_qd);
     LSS_1.move((LSS_1_min_pos * i) + LSS_1_qd);
     delay(em0_rate);
-    temp[i] = LSS_1.getPosition();
+    temp[i] = query_LSS_1();
   } 
     LSS_1.move(LSS_S_1);
+    delay(2);
+    Serial.printf("Final Move: %d\n", LSS_S_1);
     uint32_t dt = millis() - stime;
     
     Serial.println("Time(ms)/ Pos(deg)");
     Serial.printf("%d / ", dt);
-    for(int32_t i = 0; i < pos_num; i++) {
+    for(int i = 0; i < pos_num; i++) {
       Serial.printf("%d, ", temp[i]);
     }
     Serial.print(LSS_1.getPosition()); 
@@ -99,9 +105,24 @@ int32_t query_LSS_1()
 {
   int32_t posLSS = 0;
   int32_t lastPosLSS = -1;
+  char readBuffer[100];
   lastPosLSS = posLSS;
-  posLSS = LSS_1.getPosition();
-  return posLSS;
+  Serial1.write("#6QD\r");
+  while(Serial1.available() == 0)
+  {
+  }
+  size_t readLength = 0;
+  readLength = Serial1.readBytesUntil('D', readBuffer, 100);  // Read until after the command (QD), indicating the start of the returned value (position in 1/10 deg)
+  readLength = Serial1.readBytesUntil('\r', readBuffer, 100); // Read until the carriage return (\r), indicating the end of the reply
+  readBuffer[readLength]=0;
+  if(readLength > 0)
+  {
+    if(LSS_1.charToInt(readBuffer, &posLSS))
+    {
+      Serial.printf("Returned Postition: %d\n", posLSS);
+      return posLSS;
+    }
+  } 
 }
 
 void loop() {
