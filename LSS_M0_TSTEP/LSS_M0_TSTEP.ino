@@ -47,7 +47,7 @@ void setup() {
   LSS_1.setMaxSpeed(1800, LSS_SetSession);
 
   
-  Serial.println("Do not Set FPC to 0: ");
+  Serial.println("Do not Set FPC: ");
   //Serial1.println("#6FPC5\r");
   delay(250);
   #ifdef LSS_SupportsSettingTimeouts
@@ -84,6 +84,7 @@ void Spoofing(int32_t LSS_S_1,int32_t p2_timing){
     Serial.printf("i: %d, move: %d\n", i, (LSS_1_min_pos * i) + LSS_1_qd);
     LSS_1.move((LSS_1_min_pos * i) + LSS_1_qd);
     delay(em0_rate);
+    checkStatus();
     temp[i] = query_LSS_1();
   } 
     LSS_1.move(LSS_S_1);
@@ -135,4 +136,16 @@ void loop() {
         Serial.println("Sequence Start");
         sequence(); 
       }                  
+}
+
+void checkStatus()
+{
+  int8_t status1 = -1;
+  uint32_t statusTime = 0;
+  while (status1 != 6) {
+    if (status1 != 6) status1 = LSS_1.getStatus();
+    //delay(2);
+    statusTime += 1;
+  }
+  Serial.printf("Status Loop CNT: %d: %d\n", statusTime, status1);
 }
