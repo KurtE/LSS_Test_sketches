@@ -160,52 +160,72 @@ leg_info_t legs[] = {
 };
 #define COUNT_LEGS (sizeof(legs)/sizeof(legs[0]))
 
-void ServoDriver::setGaitConfig()
+//============================================================================================
+// Check to see if the servos have been configured properly
+//============================================================================================
+void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 {
+
 	use_servos_timed_moves = false;
+
+	// lets see if we need to set the Origin and GYRE...
+	// start off if the GYRE does not match what we believe we need... Set everything
+	if (!force_defaults) {
+		for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+			if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
+			myLSS.setServoID(legs[leg].coxa.id);
+			LSS_ConfigGyre cgyre =  myLSS.getGyre(/*LSS_QueryConfig*/); 
+			if (myLSS.getLastCommStatus() == LSS_CommStatus_ReadSuccess) {
+				if (legs[leg].coxa.gyre != cgyre) {
+					Serial.println("checkAndInitServosConfig: Need to configure servos");
+					force_defaults = true;  // reuse variable
+					break;
+				}
+			}
+		}
+
+	}
+
+	// Either the caller to setup defaults or quick check above said to...
+	// First lets try broadcasts for the LSS=0 crud
+	myLSS.setServoID(LSS_BroadcastID);
+	myLSS.setMotionControlEnabled(0);
+	delay(5);
+	myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
+	delay(5);
+	myLSS.setAngularStiffness(-4, LSS_SetSession);
+	delay(5);
+	myLSS.setFilterPositionCount(5, LSS_SetSession);
+	delay(5);
+
 	
 	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
 		legs[leg].leg_found = true;
 		myLSS.setServoID(legs[leg].coxa.id);
-#ifndef USELSSCONFIG
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-		myLSS.setMaxSpeed(legs[leg].coxa.max_speed, LSS_SetSession);
-		myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
-		myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
-#endif
-		myLSS.setMotionControlEnabled(0);
-		myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
-		myLSS.setAngularStiffness(-4, LSS_SetSession);
-		myLSS.setFilterPositionCount(5, LSS_SetSession);
+		if (force_defaults) {
+			myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
+			myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
+		}
     		
 		myLSS.setServoID(legs[leg].femur.id);
-#ifndef USELSSCONFIG
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-		myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
-		myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
-		myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
-#endif
-		myLSS.setMotionControlEnabled(0);
-		myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
-		myLSS.setAngularStiffness(-4, LSS_SetSession);
-		myLSS.setFilterPositionCount(5, LSS_SetSession);
-    
+		if (force_defaults) {
+			myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
+			myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
+			myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
+		}
+
 		myLSS.setServoID(legs[leg].tibia.id);
-#ifndef USELSSCONFIG
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-		myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
-		myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
-		myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
-#endif
-		myLSS.setMotionControlEnabled(0);
-		myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
-		myLSS.setAngularStiffness(-4, LSS_SetSession);
-		myLSS.setFilterPositionCount(5, LSS_SetSession);
+		if (force_defaults) {
+			myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
+			myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
+			myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
+		}
     
-#ifndef USELSSCONFIG
 		if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
 		else Serial.printf("Servos for Leg %s **NOT found**\n", legs[leg].leg_name);
-#endif
 	}
 }
 
@@ -261,7 +281,12 @@ void ServoDriver::Init(void) {
 	for (byte i = 0; i < 8; i++)
 		GetBatteryVoltage();  // init the voltage pin
 #endif
-
+	// Check and set the servo register values
+	#ifdef RESET_LSS_SERVO_SETTINGS // turn this on if you want to reset servo settings...
+    checkAndInitServosConfig(true);  //sets servo config to MJS version
+	#else
+    checkAndInitServosConfig();  //sets servo config to MJS version
+	#endif
 
 }
 
@@ -568,7 +593,7 @@ void ServoDriver::MakeSureServosAreOn(void)
 			delay(3000);  // give servos some time to reset.
 
 			// Make sure the servos values are reset as well
-			setGaitConfig();
+			checkAndInitServosConfig();
 			// try again to hold servos.
 			LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position
 			delay(50);

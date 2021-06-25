@@ -522,8 +522,6 @@ void setup() {
     // Init our ServoDriver
     g_ServoDriver.Init();
 
-    g_ServoDriver.setGaitConfig();  //sets servo config to MJS version
-
     //Checks to see if our Servo Driver support a GP Player
     //    DBGSerial.write("Program Start\n\r");
     // debug stuff

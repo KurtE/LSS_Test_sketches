@@ -256,7 +256,7 @@ public:
 
   word GetBatteryVoltage(void);
 
-  void setGaitConfig();  //kludge MJS
+  void checkAndInitServosConfig(bool force_defaults=false);  //kludge MJS
 
   void            BeginServoUpdate(void);    // Start the update 
 #ifdef c4DOF

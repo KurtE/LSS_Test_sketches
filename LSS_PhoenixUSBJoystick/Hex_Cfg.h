@@ -23,6 +23,7 @@
 #define USEJOYSTICK		// Use T3.6 or T4.x USB Host control
 //#define BLUETOOTH
 //#define USELSSCONFIG
+//#define RESET_LSS_SERVO_SETTINGS // turn this on if you want to reset servo settings...
 
 #define LSS_SERIAL_PORT     Serial1
 #define LSS_BAUD            500000
