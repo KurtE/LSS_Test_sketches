@@ -22,10 +22,10 @@
 //#define USECOMMANDER
 #define USEJOYSTICK		// Use T3.6 or T4.x USB Host control
 //#define BLUETOOTH
-//#define USELSSCONFIG
+#define USELSSCONFIG
 
 #define LSS_SERIAL_PORT     Serial1
-#define LSS_BAUD            250000
+#define LSS_BAUD            500000
 // Global defines to control which configuration we are using.  Note: Only define one of these...
 // 
 // Which type of control(s) do you want to compile in
@@ -113,7 +113,7 @@ extern ST7789_t3 tft;
 // Define 0 position servo offsets
 //===================================================================
 // Zenta LSS:
-
+/*
 #define cRRCoxaOff	0
 #define cRMCoxaOff	0
 #define cRFCoxaOff  0 
@@ -134,7 +134,7 @@ extern ST7789_t3 tft;
 #define cLRTibiaOff -162 
 #define cLMTibiaOff -180 
 #define cLFTibiaOff -168
-/*
+*/
 // MJS LSS:
 #define cRRCoxaOff	0
 #define cRMCoxaOff	0
@@ -156,7 +156,7 @@ extern ST7789_t3 tft;
 #define cLRTibiaOff -137 
 #define cLMTibiaOff -137 
 #define cLFTibiaOff -137
-*/
+
 
 //===================================================================
 // Define Servo Gyre (left side CCW, Right side CW)

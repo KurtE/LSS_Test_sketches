@@ -273,7 +273,6 @@ void USBJoystickInputController::Init(void)
 	//    DoubleHeightOn = false;
 	DoubleTravelOn = false;
 	bJoystickWalkMode = 0;
-  g_InControlState.SpeedControl = 100;    // Sort of migrate stuff in from Devon.
 }
 
 //==============================================================================
@@ -313,13 +312,8 @@ void USBJoystickInputController::ControlInput(void)
 
 			if (pszProduct && strncmp((const char *)pszProduct, "Wireless Controller", 19) == 0) {
 				BTN_MASKS = PS4_BTNS;
-				// hack alert - but if we don't have BT object as active it won't be a BT PS4				
-				if (bluet) {
-					joystick_ps4_bt = true;
-					DBGSerial.println("      BlueTooth PS4");					
-				} else {
-					DBGSerial.println("      Wired PS4");					
-				}
+				joystick_ps4_bt = true;
+				DBGSerial.println("      BlueTooth PS4");
 			}
 
 			// lets try to reduce number of fields that update
@@ -463,20 +457,6 @@ void USBJoystickInputController::ControlInput(void)
 			g_fDynamicLegXZLength = false;
 			Serial.println("Ready for Action ........");
 		}
-		// add some speed control
-		if ((g_buttons & BTN_MASKS[BUT_HAT_RIGHT]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_RIGHT])) {
-        if (g_InControlState.SpeedControl>0) {
-          g_InControlState.SpeedControl = g_InControlState.SpeedControl - 50;
-          MSound( 1, 50, 2000);  
-        }
-		}
-		if ((g_buttons & BTN_MASKS[BUT_HAT_LEFT]) && !(g_buttons_prev & BTN_MASKS[BUT_HAT_LEFT])) {
-        if (g_InControlState.SpeedControl<2000 ) {
-          g_InControlState.SpeedControl = g_InControlState.SpeedControl + 50;
-          MSound( 1, 50, 2000); 
-        }
-		}
-
 
 		// We will use L1 with the Right joystick to control both body offset as well as Speed...
 		// We move each pass through this by a percentage of how far we are from center in each direction
@@ -573,8 +553,6 @@ void USBJoystickInputController::ControlInput(void)
 				MSound(1, 50, 2000);
 				HeightSpeedMode = (HeightSpeedMode + 1) & 0x3; // wrap around mode
 				DoubleTravelOn = HeightSpeedMode & 0x1;
-				if (DoubleTravelOn) Serial.print("Double Travel On - ");
-				else Serial.print("Double Travel Off - ");
 				if (HeightSpeedMode & 0x2) {
 					g_InControlState.LegLiftHeight = 80;
 					Serial.println("Double Leg Height Selected .....");
