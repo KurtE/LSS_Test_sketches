@@ -121,12 +121,10 @@ EEPROMPoseSeq;      // This is a sequence entry
 
 
 // Some forward references
-extern void MakeSureServosAreOn(void);
 extern void DoPyPose(byte* psz);
 extern void EEPROMReadData(word wStart, uint8_t* pv, byte cnt);
 extern void EEPROMWriteData(word wStart, uint8_t* pv, byte cnt);
 extern void TCServoPositions();
-extern void FindServoOffsets();
 
 extern void TCTrackServos();
 extern void SetRegOnAllServos(uint8_t bReg, uint8_t bVal);
@@ -527,7 +525,7 @@ void ServoDriver::showUserFeedback(int feedback_state) {
 //  transistioning from servos all off to being on.  May need to read
 //  in the current pose...
 //--------------------------------------------------------------------
-void MakeSureServosAreOn(void)
+void ServoDriver::MakeSureServosAreOn(void)
 {
 	if (ServosEnabled) {
 		if (!g_fServosFree)
@@ -536,6 +534,7 @@ void MakeSureServosAreOn(void)
 		g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 
 		LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position.
+		delay(50);
 		boolean servos_reset = false;
 		for (int i = 0; i < NUMSERVOS; i++) {
 			g_cur_servo_pos[i] = 32768; // set to a value that is not valid to force next output
@@ -567,8 +566,12 @@ void MakeSureServosAreOn(void)
 
 		if (servos_reset) {
 			delay(3000);  // give servos some time to reset.
+
+			// Make sure the servos values are reset as well
+			setGaitConfig();
 			// try again to hold servos.
 			LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position
+			delay(50);
 		}
 
 		g_InputController.AllowControllerInterrupts(true);
@@ -837,7 +840,7 @@ void TCTrackServos()
 #define NUMSERVOSPERLEG 3
 #endif
 
-void FindServoOffsets()
+void ServoDriver::FindServoOffsets()
 {
 	// not clean but...
 	signed short asOffsets[NUMSERVOSPERLEG * CNT_LEGS];      // we have 18 servos to find/set offsets for...
@@ -877,7 +880,7 @@ void FindServoOffsets()
 	//#define NUMSERVOS (NUMSERVOSPERLEG*CNT_LEGS)
 
 	// Lets show some information about each of the servos.
-	for (sSN = 0; sSN < NUMSERVOS; sSN++) {
+for (sSN = 0; sSN < NUMSERVOS; sSN++) {
 		asOffsets[sSN] = 0;
 		myLSS.setServoID(cPinTable[sSN]);
 		Serial.print("Servo: ");
@@ -887,11 +890,18 @@ void FindServoOffsets()
 		Serial.print(cPinTable[sSN], DEC);
 		Serial.print(") Pos:");
 		Serial.print(myLSS.getPosition(), DEC);
+		Serial.print(" Gyre:");
+		Serial.print(myLSS.getGyre(), DEC);
+		Serial.print(" EMC:");
+		Serial.print(myLSS.getIsMotionControlEnabled(), DEC);
+		Serial.print(" FPC:");
+		Serial.print(myLSS.getFilterPositionCount(), DEC);
+		Serial.print(" Ang Stiff:");
+		Serial.print(myLSS.getAngularStiffness(), DEC);
 		Serial.print(" Origin Offset: ");
 		Serial.print(myLSS.getOriginOffset(), DEC);
 		Serial.print(" Angular Range: ");
 		Serial.println(myLSS.getAngularRange(), DEC);
-
 	}
 
 

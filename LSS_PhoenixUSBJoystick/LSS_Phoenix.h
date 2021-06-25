@@ -321,6 +321,10 @@ public:
   void TMPrintDebugInfo();
   void TMConfigureServos();
 
+  // helper functions...
+  void MakeSureServosAreOn(void);
+  void FindServoOffsets();
+
 
 
 
