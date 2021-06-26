@@ -94,70 +94,69 @@ boolean g_fServosFree;    // Are the servos in a free state?
 
 
 //============================================================================================
-// Lets try rolling our own GPSequence code here...
-#define GPSEQ_EEPROM_START 0x40       // Reserve the first 64 bytes of EEPROM for other stuff...
-#define GPSEQ_EEPROM_START_DATA  0x50 // Reserved room for up to 8 in header...
-#define GPSEQ_EEPROM_SIZE 0x800       // I think we have 2K
-#define GPSEQ_EEPROM_MAX_SEQ 5        // For now this is probably the the max we can probably hold...
-
-
-// Not sure if pragma needed or not...
-//#pragma pack(1)
-typedef struct {
-	byte  bSeqNum;       // the sequence number, used to verify
-	byte  bCntServos;    // count of servos
-	byte  bCntSteps;     // How many steps there are
-	byte  bCntPoses;     // How many poses
-}
-EEPromPoseHeader;
-
-typedef struct {
-	byte bPoseNum;        // which pose to use
-	word wTime;        // Time to do pose
-}
-EEPROMPoseSeq;      // This is a sequence entry
-
-// Pose is just an array of words...
-
-
-// A sequence is stored as:
-//<header> <sequences><poses>
-
-
-
 // Some forward references
 extern void TCServoPositions();
 
 extern void TCTrackServos();
-extern void SetRegOnAllServos(uint8_t bReg, uint8_t bVal);
 
 //====================================
 //set MJS RF config Gait Test Values
 // and Mucked up by KJE ;)
 //====================================
-typedef struct {
+static const LSS_ConfigGyre cGyreTable[] = {
+	cRRCoxaGyre,  cRMCoxaGyre,  cRFCoxaGyre,  cLRCoxaGyre,  cLMCoxaGyre,  cLFCoxaGyre,
+	cRRFemurGyre, cRMFemurGyre, cRFFemurGyre, cLRFemurGyre, cLMFemurGyre, cLFFemurGyre,
+	cRRTibiaGyre, cRMTibiaGyre, cRFTibiaGyre, cLRTibiaGyre, cLMTibiaGyre, cLFTibiaGyre
+#ifdef c4DOF
+	, cRRTarsGyre, cRMTarsGyre, cRFTarsGyre, cLRTarsGyre, cLMTarsGyre, cLFTarsGyre
+#endif
+#ifdef cTurretRotGyre
+	, cTurretRotGyre, cTurretTiltGyre
+#endif
+};
+
+static const int16_t cDefaultServoOffsets[] = {
+	cRRCoxaOff,  cRMCoxaOff,  cRFCoxaOff,  cLRCoxaOff,  cLMCoxaOff,  cLFCoxaOff,
+	cRRFemurOff, cRMFemurOff, cRFFemurOff, cLRFemurOff, cLMFemurOff, cLFFemurOff,
+	cRRTibiaOff, cRMTibiaOff, cRFTibiaOff, cLRTibiaOff, cLMTibiaOff, cLFTibiaOff
+#ifdef c4DOF
+	, cRRTarsOff, cRMTarsOff, cRFTarsOff, cLRTarsOff, cLMTarsOff, cLFTarsOff
+#endif
+#ifdef cTurretRotOff
+	, cTurretRotOff, cTurretTiltOff
+#endif
+};
+
+/*typedef struct {
 	uint8_t         id;
 	LSS_ConfigGyre  gyre;
 	int16_t         offset;
 	int16_t         max_speed;
-} servo_info_t;
+} servo_info_t; */
 typedef struct {
 	const char    *leg_name;
-	servo_info_t  coxa;
-	servo_info_t  femur;
-	servo_info_t  tibia;
+//	servo_info_t  coxa;
+//	servo_info_t  femur;
+//	servo_info_t  tibia;
 	bool          leg_found;
 } leg_info_t;
 
 leg_info_t legs[] = {
-	{"Left Front", {cLFCoxaPin, cLFCoxaGyre, cLFCoxaOff, cServoSpeed}, {cLFFemurPin, cLFFemurGyre, cLFFemurOff, cServoSpeed}, {cLFTibiaPin, cLFTibiaGyre, cLFTibiaOff, cServoSpeed}},
-	{"Left Middle", {cLMCoxaPin, cLMCoxaGyre, cLMCoxaOff, cServoSpeed}, {cLMFemurPin, cLMFemurGyre, cLMFemurOff, cServoSpeed}, {cLMTibiaPin, cLMTibiaGyre, cLMTibiaOff, cServoSpeed}},
-	{"Left Rear", {cLRCoxaPin, cLRCoxaGyre, cLRCoxaOff, cServoSpeed}, {cLRFemurPin, cLRFemurGyre, cLRFemurOff, cServoSpeed}, {cLRTibiaPin, cLRTibiaGyre, cLRTibiaOff, cServoSpeed}},
-
-	{"Right Front", {cRFCoxaPin, cRFCoxaGyre, cRFCoxaOff, cServoSpeed}, {cRFFemurPin, cRFFemurGyre, cRFFemurOff, cServoSpeed}, {cRFTibiaPin, cRFTibiaGyre, cRFTibiaOff, cServoSpeed}},
-	{"Right Middle", {cRMCoxaPin, cRMCoxaGyre, cRMCoxaOff, cServoSpeed}, {cRMFemurPin, cRMFemurGyre, cRMFemurOff, cServoSpeed}, {cRMTibiaPin, cRMTibiaGyre, cRMTibiaOff, cServoSpeed}},
-	{"Right Rear", {cRRCoxaPin, cRRCoxaGyre, cRRCoxaOff, cServoSpeed}, {cRRFemurPin, cRRFemurGyre, cRRFemurOff, cServoSpeed}, {cRRTibiaPin, cRRTibiaGyre, cRRTibiaOff, cServoSpeed}}
+	{"Right Rear"},	{"Right Middle"}, {"Right Front"},
+	{"Left Rear"}, {"Left Middle"}, 	{"Left Front"}
 };
+
+/*leg_info_t legs[] = {
+	{"Right Rear", {cRRCoxaPin, cRRCoxaGyre, cRRCoxaOff, cServoSpeed}, {cRRFemurPin, cRRFemurGyre, cRRFemurOff, cServoSpeed}, {cRRTibiaPin, cRRTibiaGyre, cRRTibiaOff, cServoSpeed}}
+	{"Right Middle", {cRMCoxaPin, cRMCoxaGyre, cRMCoxaOff, cServoSpeed}, {cRMFemurPin, cRMFemurGyre, cRMFemurOff, cServoSpeed}, {cRMTibiaPin, cRMTibiaGyre, cRMTibiaOff, cServoSpeed}},
+	{"Right Front", {cRFCoxaPin, cRFCoxaGyre, cRFCoxaOff, cServoSpeed}, {cRFFemurPin, cRFFemurGyre, cRFFemurOff, cServoSpeed}, {cRFTibiaPin, cRFTibiaGyre, cRFTibiaOff, cServoSpeed}},
+
+	{"Left Rear", {cLRCoxaPin, cLRCoxaGyre, cLRCoxaOff, cServoSpeed}, {cLRFemurPin, cLRFemurGyre, cLRFemurOff, cServoSpeed}, {cLRTibiaPin, cLRTibiaGyre, cLRTibiaOff, cServoSpeed}},
+	{"Left Middle", {cLMCoxaPin, cLMCoxaGyre, cLMCoxaOff, cServoSpeed}, {cLMFemurPin, cLMFemurGyre, cLMFemurOff, cServoSpeed}, {cLMTibiaPin, cLMTibiaGyre, cLMTibiaOff, cServoSpeed}},
+	{"Left Front", {cLFCoxaPin, cLFCoxaGyre, cLFCoxaOff, cServoSpeed}, {cLFFemurPin, cLFFemurGyre, cLFFemurOff, cServoSpeed}, {cLFTibiaPin, cLFTibiaGyre, cLFTibiaOff, cServoSpeed}},
+
+};
+*/
 #define COUNT_LEGS (sizeof(legs)/sizeof(legs[0]))
 
 //============================================================================================
@@ -171,13 +170,16 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 	// lets see if we need to set the Origin and GYRE...
 	// start off if the GYRE does not match what we believe we need... Set everything
 	if (!force_defaults) {
+		Serial.println(">>> Check Servo Settings <<<");
 		for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
-			if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-			myLSS.setServoID(legs[leg].coxa.id);
-			LSS_ConfigGyre cgyre =  myLSS.getGyre(/*LSS_QueryConfig*/);
+			myLSS.setServoID(cPinTable[FIRSTCOXAPIN + leg]);
+			// BUGBUG we did reset but session did not equal config...
+			LSS_ConfigGyre cgyre_session =  myLSS.getGyre(LSS_QuerySession);
+			LSS_ConfigGyre cgyre_config =  myLSS.getGyre(LSS_QueryConfig);
 			if (myLSS.getLastCommStatus() == LSS_CommStatus_ReadSuccess) {
-				if (legs[leg].coxa.gyre != cgyre) {
-					Serial.println("checkAndInitServosConfig: Need to configure servos");
+				Serial.printf("%d:%d:%d:%d ", myLSS.getServoID(), cGyreTable[FIRSTCOXAPIN + leg], cgyre_session, cgyre_config);
+				if (cGyreTable[FIRSTCOXAPIN + leg] != cgyre_config) {
+					Serial.println("\n *** checkAndInitServosConfig: Need to configure servos ***");
 					force_defaults = true;  // reuse variable
 					break;
 				}
@@ -188,6 +190,7 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 
 	// Either the caller to setup defaults or quick check above said to...
 	// First lets try broadcasts for the LSS=0 crud
+	/*
 	myLSS.setServoID(LSS_BroadcastID);
 	myLSS.setMotionControlEnabled(0);
 	delay(5);
@@ -197,33 +200,51 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 	delay(5);
 	myLSS.setFilterPositionCount(5, LSS_SetSession);
 	delay(5);
-
+	*/
 
 	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
 		legs[leg].leg_found = true;
-		myLSS.setServoID(legs[leg].coxa.id);
+		myLSS.setServoID(cPinTable[FIRSTCOXAPIN + leg]);
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-		if (force_defaults) {
-			myLSS.setGyre(legs[leg].coxa.gyre, LSS_SetSession);
-			myLSS.setOriginOffset(legs[leg].coxa.offset, LSS_SetSession);
+		else {
+			myLSS.setMotionControlEnabled(0);
+			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
+			myLSS.setAngularStiffness(-4, LSS_SetSession);
+			myLSS.setFilterPositionCount(3, LSS_SetSession);
+
+			if (force_defaults) {
+				Serial.print("@");
+				myLSS.setGyre(cGyreTable[FIRSTCOXAPIN + leg], LSS_SetSession);
+				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTCOXAPIN + leg], LSS_SetSession);
+			}
 		}
 
-		myLSS.setServoID(legs[leg].femur.id);
+		myLSS.setServoID(cPinTable[FIRSTFEMURPIN + leg]);
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-		if (force_defaults) {
-			myLSS.setMaxSpeed(legs[leg].femur.max_speed, LSS_SetSession);
-			myLSS.setGyre(legs[leg].femur.gyre, LSS_SetSession);
-			myLSS.setOriginOffset(legs[leg].femur.offset, LSS_SetSession);
-		}
+		else {
+			myLSS.setMotionControlEnabled(0);
+			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
+			myLSS.setAngularStiffness(-4, LSS_SetSession);
+			myLSS.setFilterPositionCount(3, LSS_SetSession);
 
-		myLSS.setServoID(legs[leg].tibia.id);
+			if (force_defaults) {
+				myLSS.setGyre(cGyreTable[FIRSTFEMURPIN + leg], LSS_SetSession);
+				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTFEMURPIN + leg], LSS_SetSession);
+			}
+		}
+		myLSS.setServoID(cPinTable[FIRSTTIBIAPIN + leg]);
 		if (myLSS.getStatus() == LSS_StatusUnknown) legs[leg].leg_found = false;
-		if (force_defaults) {
-			myLSS.setMaxSpeed(legs[leg].tibia.max_speed, LSS_SetSession);
-			myLSS.setGyre(legs[leg].tibia.gyre, LSS_SetSession);
-			myLSS.setOriginOffset(legs[leg].tibia.offset, LSS_SetSession);
-		}
+		else {
+			myLSS.setMotionControlEnabled(0);
+			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
+			myLSS.setAngularStiffness(-4, LSS_SetSession);
+			myLSS.setFilterPositionCount(3, LSS_SetSession);
 
+			if (force_defaults) {
+				myLSS.setGyre(cGyreTable[FIRSTTIBIAPIN + leg], LSS_SetSession);
+				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTTIBIAPIN + leg], LSS_SetSession);
+			}
+		}
 		if (legs[leg].leg_found) Serial.printf("Servos for Leg %s **found**\n", legs[leg].leg_name);
 		else Serial.printf("Servos for Leg %s **NOT found**\n", legs[leg].leg_name);
 	}
@@ -921,20 +942,34 @@ void ServoDriver::FindServoOffsets()
 		Serial.print(cPinTable[sSN], DEC);
 		Serial.print(") Pos:");
 		Serial.print(myLSS.getPosition(), DEC);
-		Serial.print("\tG:");
-		Serial.print(myLSS.getGyre(), DEC);
-		Serial.print("\tEMC:");
-		Serial.print(myLSS.getIsMotionControlEnabled(), DEC);
-		Serial.print("\tFPC:");
-		Serial.print(myLSS.getFilterPositionCount(), DEC);
-		Serial.print("\tAS:");
-		Serial.print(myLSS.getAngularStiffness(), DEC);
-		Serial.print("\tAH:");
-    	Serial.print(myLSS.getAngularHoldingStiffness(), DEC);
 		Serial.print("\tO:");
 		Serial.print(myLSS.getOriginOffset(), DEC);
+		Serial.print(":");
+		Serial.print(myLSS.getOriginOffset(LSS_QueryConfig), DEC);
+		Serial.print("\tG:");
+		Serial.print(myLSS.getGyre(), DEC);
+		Serial.print(":");
+		Serial.print(myLSS.getGyre(LSS_QueryConfig), DEC);
+		Serial.print("\tEMC:");
+		Serial.print(myLSS.getIsMotionControlEnabled(), DEC);
+		//Serial.print(":");
+		//Serial.print(myLSS.getIsMotionControlEnabled(LSS_QueryConfig), DEC);
+		Serial.print("\tFPC:");
+		Serial.print(myLSS.getFilterPositionCount(), DEC);
+		Serial.print(":");
+		Serial.print(myLSS.getFilterPositionCount(LSS_QueryConfig), DEC);
+		Serial.print("\tAS:");
+		Serial.print(myLSS.getAngularStiffness(), DEC);
+		Serial.print(":");
+		Serial.print(myLSS.getAngularStiffness(LSS_QueryConfig), DEC);
+		Serial.print("\tAH:");
+		Serial.print(myLSS.getAngularHoldingStiffness(), DEC);
+		Serial.print(":");
+		Serial.print(myLSS.getAngularHoldingStiffness(LSS_QueryConfig), DEC);
 		Serial.print("\tAR:");
-		Serial.println(myLSS.getAngularRange(), DEC);
+		Serial.print(myLSS.getAngularRange(), DEC);
+		Serial.print(":");
+		Serial.println(myLSS.getAngularRange(LSS_QueryConfig), DEC);
 	}
 
 // OK lets move all of the servos to their zero point.
@@ -1210,7 +1245,7 @@ int  ServoDriver::TMStep(bool wait) {
 				if (next_pos == tmServos[servo].target_pos) {
 					tmServos[servo].cycle_delta = 0; // servo done
 					tmServos[servo].starting_pos = tmServos[servo].target_pos; // set source as last target
-				}	
+				}
 			} else if (tmServos[tmServoCount].pos_repeated_count < OUTPUT_SAME_POS_COUNT) {
 				tmServos[tmServoCount].pos_repeated_count++;
 #if (OUTPUT_ONLY_CHANGED_SERVOS == 1)
