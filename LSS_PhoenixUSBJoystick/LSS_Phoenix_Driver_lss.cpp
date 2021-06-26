@@ -98,6 +98,7 @@ boolean g_fServosFree;    // Are the servos in a free state?
 extern void TCServoPositions();
 
 extern void TCTrackServos();
+extern void ClearServoOffsets();
 
 //====================================
 //set MJS RF config Gait Test Values
@@ -665,6 +666,7 @@ void ServoDriver::ShowTerminalCommandList(void)
 	DBGSerial.println(F("S - Track Servos"));
 #ifdef OPT_FIND_SERVO_OFFSETS
 	DBGSerial.println(F("O - Enter Servo offset mode"));
+	DBGSerial.println(F("C - clear Servo Offsets"));
 #endif
 }
 
@@ -762,6 +764,9 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 #ifdef OPT_FIND_SERVO_OFFSETS
 	else if ((bLen == 1) && ((*psz == 'o') || (*psz == 'O'))) {
 		FindServoOffsets();
+	}
+	else if ((bLen == 1) && ((*psz == 'c') || (*psz == 'C'))) {
+		ClearServoOffsets();
 	}
 #endif
 	return false;
@@ -974,7 +979,7 @@ void ServoDriver::FindServoOffsets()
 	}
 
 	myLSS.setServoID(LSS_BroadcastID);
-	myLSS.setColorLED(LSS_LED_Black);	
+	myLSS.setColorLED(LSS_LED_Black);
 // OK lets move all of the servos to their zero point.
 	Serial.println("\nThe Goal is to align the top two servo pivots (Coxa and Femur) to be parallel to ground");
 	Serial.println("And the Tibia should be at a right angle to the ground\n");
@@ -988,7 +993,7 @@ void ServoDriver::FindServoOffsets()
 		if (fNew) {
 			uint8_t servo_id = cPinTable[servo_index];
 			myLSS.setServoID(servo_id);
-			myLSS.setColorLED(LSS_LED_Green);	
+			myLSS.setColorLED(LSS_LED_Green);
 			Serial.print("Servo: ");
 			Serial.print(apszLegs[servo_index % CNT_LEGS]);
 			Serial.print(apszLJoints[servo_index / CNT_LEGS]);
@@ -1039,7 +1044,7 @@ void ServoDriver::FindServoOffsets()
 						myLSS.setServoID(cPinTable[i]);
 						asOffsets[i] = myLSS.getPosition();	// get the position
 						TMSetTargetByIndex(i, asOffsets[i]); // called twice to make sure source and dest are set
-						TMSetTargetByIndex(i, asOffsets[i]); // 
+						TMSetTargetByIndex(i, asOffsets[i]); //
 						Serial.printf("%u:%d ", cPinTable[servo_index], asOffsets[i]);
 					}
 					Serial.println();
@@ -1055,7 +1060,7 @@ void ServoDriver::FindServoOffsets()
 
 					TMSetTargetByID(cPinTable[servo_index], asOffsets[servo_index]);
 					TMTimedMove(100);
-					myLSS.setColorLED(LSS_LED_Red);	
+					myLSS.setColorLED(LSS_LED_Red);
 				}
 				else if ((data >= '0') && (data <= '5')) {
 					// direct enter of which servo to change
@@ -1089,24 +1094,29 @@ void ServoDriver::FindServoOffsets()
 	}
 	Serial.print("Find Servo exit ");
 	for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
+		myLSS.setServoID(cPinTable[servo_index]);
 		Serial.print("Servo: ");
 		Serial.print(apszLegs[servo_index / NUMSERVOSPERLEG]);
 		Serial.print(apszLJoints[servo_index % NUMSERVOSPERLEG]);
-		Serial.println();
+		Serial.print("Session Offset: ");
+		Serial.print(myLSS.getOriginOffset(), DEC); 
+		Serial.print(" Delta: ");
+		Serial.println(asOffsets[servo_index]);
 	}
 
-	Serial.print("\nSave Changes? Y/N: ");
+	Serial.print("\nSave Changes? Y/N/C(choose): ");
 
 	//get user entered data
 	while (((data = Serial.read()) == -1) || ((data >= 10) && (data <= 15)))
 		;
 
-	if ((data == 'Y') || (data == 'y')) {
+	if ((data == 'Y') || (data == 'y') || (data == 'c') || (data == 'C')) {
 		// Ok they asked for the data to be saved.  So for each servo we will update their Gyre and Offset
-		// settings. 
+		// settings.
 		//
+		while (Serial.read() != -1) ; 
+		bool manually_choose = (data == 'c') || (data == 'C'); 
 		for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
-			asOffsets[servo_index] = 0;
 			myLSS.setServoID(cPinTable[servo_index]);
 			Serial.print("Servo: ");
 			Serial.print(apszLegs[servo_index % CNT_LEGS]);
@@ -1114,13 +1124,25 @@ void ServoDriver::FindServoOffsets()
 			Serial.print("(");
 			Serial.print(cPinTable[servo_index], DEC);
 			Serial.print(") Config Servo Offset: From: ");
-			int16_t origin_offset = myLSS.getOriginOffset(LSS_QueryConfig); 
+			int16_t origin_offset = myLSS.getOriginOffset(); // should use the working set...
 			Serial.print(origin_offset, DEC);
 			Serial.print(" to: ");
 			origin_offset += asOffsets[servo_index];
 			Serial.print(origin_offset, DEC);
-			myLSS.setOriginOffset(origin_offset, LSS_SetConfig);
-			myLSS.setOriginOffset(origin_offset, LSS_SetSession);
+			if (manually_choose) {
+				Serial.print(" Update ?"); 
+				int ch; 
+				while ((ch = Serial.read()) == -1);
+				if ((ch == 'Y') || (ch == 'y')) {
+					myLSS.setOriginOffset(origin_offset, LSS_SetConfig);
+					myLSS.setOriginOffset(origin_offset, LSS_SetSession);
+					Serial.print("*Updated*");					
+				}
+
+			} else {
+				myLSS.setOriginOffset(origin_offset, LSS_SetConfig);
+				myLSS.setOriginOffset(origin_offset, LSS_SetSession);
+			}
 
 			Serial.print(" Gyre: ");
 			Serial.println(cGyreTable[servo_index], DEC);
@@ -1129,7 +1151,7 @@ void ServoDriver::FindServoOffsets()
 		}
 
 		Serial.println("Find Offsets complete");
-		// Not sure if we need to reset or not??? 
+		// Not sure if we need to reset or not???
 		/* myLSS.setServoID(LSS_BroadcastID);
 		myLSS.reset();
 		delay(1500);  // make sure all servos reset. */
@@ -1140,6 +1162,26 @@ void ServoDriver::FindServoOffsets()
 	g_ServoDriver.FreeServos();
 
 }
+
+void ClearServoOffsets() {
+	Serial.println("This will clear out all of the servo offsets and Gyre, do you wish to continue (Y/N):");
+	while (Serial.read() != -1);
+	int ch; 
+	while ((ch = Serial.read()) == -1) ;
+	while (Serial.read() != -1);
+
+	if ((ch == 'y') || (ch == 'Y')) {
+		for (int servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
+			myLSS.setServoID(cPinTable[servo_index]);
+			myLSS.setOriginOffset(0, LSS_SetConfig);
+			myLSS.setOriginOffset(0, LSS_SetSession);
+			myLSS.setGyre(LSS_GyreClockwise, LSS_SetConfig);
+			myLSS.setGyre(LSS_GyreClockwise, LSS_SetSession);
+		}
+		Serial.println("Clear complete you should probably restart the program");
+	}
+}
+
 #endif  // OPT_FIND_SERVO_OFFSETS
 
 //==============================================================================
