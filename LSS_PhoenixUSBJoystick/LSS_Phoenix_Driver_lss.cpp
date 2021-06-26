@@ -930,12 +930,13 @@ void ServoDriver::FindServoOffsets()
 	//                  LSS_ActionParameterTime, 500);  // move in half second
 
 	//#define NUMSERVOS (NUMSERVOSPERLEG*CNT_LEGS)
-
+	Serial.println("\nUpdate Servos Offsets and their rotation direction(Gyre)");
+	Serial.println("Current Servo Information");
 	// Lets show some information about each of the servos.
 	for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
 		asOffsets[servo_index] = 0;
 		myLSS.setServoID(cPinTable[servo_index]);
-		Serial.print("Servo: ");
+		Serial.print("\tServo: ");
 		Serial.print(apszLegs[servo_index % CNT_LEGS]);
 		Serial.print(apszLJoints[servo_index / CNT_LEGS]);
 		Serial.print("(");
@@ -975,8 +976,11 @@ void ServoDriver::FindServoOffsets()
 	myLSS.setServoID(LSS_BroadcastID);
 	myLSS.setColorLED(LSS_LED_Black);	
 // OK lets move all of the servos to their zero point.
-	Serial.println("Find Servo Zeros.\n$-Exit, +- changes, *-change servo");
+	Serial.println("\nThe Goal is to align the top two servo pivots (Coxa and Femur) to be parallel to ground");
+	Serial.println("And the Tibia should be at a right angle to the ground\n");
+	Serial.println("Enter $-Exit, +- changes, *-change servo");
 	Serial.println("    0-n Chooses a leg, C-Coxa, F-Femur, T-Tibia");
+	Serial.println("    m - manually move mode to get close");
 
 	servo_index = 0;
 	bool data_received = false;
@@ -1021,7 +1025,25 @@ void ServoDriver::FindServoOffsets()
 				data_received = true;
 				if (data == '$')
 					fExit = true; // not sure how the keypad will map so give NL, CR, LF... all implies exit
-
+				else if ((data == 'm') || (data == 'M')) {
+					Serial.println("*** Entered Manual mode, press any key to exit ***");
+					while (Serial.read() != -1);
+					// Tell all servos to go limp...
+					LSS::genericWrite(LSS_BroadcastID, LSS_ActionLimp); // Tell all of the servos to go limp
+					while (Serial.read() == -1);  // wait for some new data
+					while (Serial.read() != -1);
+					Serial.println("*** Manual Mode Exited ***");
+					LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold again.
+					// Now we need to read in the current positions to work with.
+					for (uint8_t i = 0; i < tmServoCount; i++) {
+						myLSS.setServoID(cPinTable[i]);
+						asOffsets[i] = myLSS.getPosition();	// get the position
+						TMSetTargetByIndex(i, asOffsets[i]); // called twice to make sure source and dest are set
+						TMSetTargetByIndex(i, asOffsets[i]); // 
+						Serial.printf("%u:%d ", cPinTable[servo_index], asOffsets[i]);
+					}
+					Serial.println();
+				}
 				else if ((data == '+') || (data == '-')) {
 					if (data == '+')
 						asOffsets[servo_index] += 5;    // increment by 5us
