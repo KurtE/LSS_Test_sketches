@@ -903,7 +903,7 @@ void ServoDriver::FindServoOffsets()
 
 
 	int data;
-	short sSN;       // which servo number
+	short servo_index;       // which servo number
 	boolean fNew = true;  // is this a new servo to work with?
 	boolean fExit = false;  // when to exit
 
@@ -932,14 +932,14 @@ void ServoDriver::FindServoOffsets()
 	//#define NUMSERVOS (NUMSERVOSPERLEG*CNT_LEGS)
 
 	// Lets show some information about each of the servos.
-	for (sSN = 0; sSN < NUMSERVOS; sSN++) {
-		asOffsets[sSN] = 0;
-		myLSS.setServoID(cPinTable[sSN]);
+	for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
+		asOffsets[servo_index] = 0;
+		myLSS.setServoID(cPinTable[servo_index]);
 		Serial.print("Servo: ");
-		Serial.print(apszLegs[sSN % CNT_LEGS]);
-		Serial.print(apszLJoints[sSN / CNT_LEGS]);
+		Serial.print(apszLegs[servo_index % CNT_LEGS]);
+		Serial.print(apszLJoints[servo_index / CNT_LEGS]);
 		Serial.print("(");
-		Serial.print(cPinTable[sSN], DEC);
+		Serial.print(cPinTable[servo_index], DEC);
 		Serial.print(") Pos:");
 		Serial.print(myLSS.getPosition(), DEC);
 		Serial.print("\tO:");
@@ -972,30 +972,33 @@ void ServoDriver::FindServoOffsets()
 		Serial.println(myLSS.getAngularRange(LSS_QueryConfig), DEC);
 	}
 
+	myLSS.setServoID(LSS_BroadcastID);
+	myLSS.setColorLED(LSS_LED_Black);	
 // OK lets move all of the servos to their zero point.
 	Serial.println("Find Servo Zeros.\n$-Exit, +- changes, *-change servo");
 	Serial.println("    0-n Chooses a leg, C-Coxa, F-Femur, T-Tibia");
 
-	sSN = 0;
+	servo_index = 0;
 	bool data_received = false;
 	while (!fExit) {
 		if (fNew) {
-			uint8_t servo_id = cPinTable[sSN];
+			uint8_t servo_id = cPinTable[servo_index];
 			myLSS.setServoID(servo_id);
+			myLSS.setColorLED(LSS_LED_Green);	
 			Serial.print("Servo: ");
-			Serial.print(apszLegs[sSN % CNT_LEGS]);
-			Serial.print(apszLJoints[sSN / CNT_LEGS]);
+			Serial.print(apszLegs[servo_index % CNT_LEGS]);
+			Serial.print(apszLJoints[servo_index / CNT_LEGS]);
 			Serial.print("(");
 			Serial.print(servo_id, DEC);
 			Serial.println(")");
 			// Again avoid MoveT
-			TMSetTargetByID(servo_id, asOffsets[sSN]);
+			TMSetTargetByID(servo_id, asOffsets[servo_index]);
 			TMTimedMove(250);
-			TMSetTargetByID(servo_id, asOffsets[sSN] + 100);
+			TMSetTargetByID(servo_id, asOffsets[servo_index] + 100);
 			TMTimedMove(250);
-			TMSetTargetByID(servo_id, asOffsets[sSN] - 100);
+			TMSetTargetByID(servo_id, asOffsets[servo_index] - 100);
 			TMTimedMove(250);
-			TMSetTargetByID(servo_id, asOffsets[sSN]);
+			TMSetTargetByID(servo_id, asOffsets[servo_index]);
 			TMTimedMove(250);
 			fNew = false;
 		}
@@ -1008,9 +1011,9 @@ void ServoDriver::FindServoOffsets()
 				if (!data_received) {
 					// direct enter of which servo to change
 					fNew = true;
-					sSN++;
-					if (sSN == CNT_LEGS * NUMSERVOSPERLEG)
-						sSN = 0;
+					servo_index++;
+					if (servo_index == CNT_LEGS * NUMSERVOSPERLEG)
+						servo_index = 0;
 				}
 				data_received = false;
 			}
@@ -1021,54 +1024,52 @@ void ServoDriver::FindServoOffsets()
 
 				else if ((data == '+') || (data == '-')) {
 					if (data == '+')
-						asOffsets[sSN] += 5;    // increment by 5us
+						asOffsets[servo_index] += 5;    // increment by 5us
 					else
-						asOffsets[sSN] -= 5;    // increment by 5us
+						asOffsets[servo_index] -= 5;    // increment by 5us
 
 					Serial.print("    ");
-					Serial.println(asOffsets[sSN], DEC);
+					Serial.println(asOffsets[servo_index], DEC);
 
-					TMSetTargetByID(cPinTable[sSN], asOffsets[sSN]);
+					TMSetTargetByID(cPinTable[servo_index], asOffsets[servo_index]);
 					TMTimedMove(100);
+					myLSS.setColorLED(LSS_LED_Red);	
 				}
 				else if ((data >= '0') && (data <= '5')) {
 					// direct enter of which servo to change
 					fNew = true;
-					//sSN = (sSN % NUMSERVOSPERLEG) + (data - '0') * NUMSERVOSPERLEG;
-					sSN = (sSN / CNT_LEGS) * CNT_LEGS + (data - '0');
+					//servo_index = (servo_index % NUMSERVOSPERLEG) + (data - '0') * NUMSERVOSPERLEG;
+					servo_index = (servo_index / CNT_LEGS) * CNT_LEGS + (data - '0');
 				}
 				else if ((data == 'c') || (data == 'C')) {
 					fNew = true;
-					//sSN = (sSN / NUMSERVOSPERLEG) * NUMSERVOSPERLEG + 0;
-					sSN = sSN % CNT_LEGS;
+					//servo_index = (servo_index / NUMSERVOSPERLEG) * NUMSERVOSPERLEG + 0;
+					servo_index = servo_index % CNT_LEGS;
 				}
 				else if ((data == 'f') || (data == 'F')) {
 					fNew = true;
-					//sSN = (sSN / NUMSERVOSPERLEG) * NUMSERVOSPERLEG + 1;
-					sSN = (sSN / NUMSERVOSPERLEG) * NUMSERVOSPERLEG + 1;
-					sSN = CNT_LEGS + (sSN % CNT_LEGS);
+					servo_index = FIRSTFEMURPIN + servo_index % CNT_LEGS;
 				}
 				else if ((data == 't') || (data == 'T')) {
 					// direct enter of which servo to change
 					fNew = true;
-					sSN = (sSN / NUMSERVOSPERLEG) * NUMSERVOSPERLEG + 2;
-					sSN = 2 * CNT_LEGS + (sSN % CNT_LEGS);
+					servo_index = FIRSTTIBIAPIN + servo_index % CNT_LEGS;
 				}
 				else if (data == '*') {
 					// direct enter of which servo to change
 					fNew = true;
-					sSN++;
-					if (sSN == CNT_LEGS * NUMSERVOSPERLEG)
-						sSN = 0;
+					servo_index++;
+					if (servo_index == CNT_LEGS * NUMSERVOSPERLEG)
+						servo_index = 0;
 				}
 			}
 		}
 	}
 	Serial.print("Find Servo exit ");
-	for (sSN = 0; sSN < NUMSERVOS; sSN++) {
+	for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
 		Serial.print("Servo: ");
-		Serial.print(apszLegs[sSN / NUMSERVOSPERLEG]);
-		Serial.print(apszLJoints[sSN % NUMSERVOSPERLEG]);
+		Serial.print(apszLegs[servo_index / NUMSERVOSPERLEG]);
+		Serial.print(apszLJoints[servo_index % NUMSERVOSPERLEG]);
 		Serial.println();
 	}
 
@@ -1079,23 +1080,37 @@ void ServoDriver::FindServoOffsets()
 		;
 
 	if ((data == 'Y') || (data == 'y')) {
-		// Ok they asked for the data to be saved.  We will store the data with a
-		// number of servos (byte)at the start, followed by a byte for a checksum...followed by our offsets array...
-		// Currently we store these values starting at EEPROM address 0. May later change...
+		// Ok they asked for the data to be saved.  So for each servo we will update their Gyre and Offset
+		// settings. 
 		//
-#if 0
-		for (sSN = 0; sSN < CNT_LEGS * NUMSERVOSPERLEG; sSN++) {
-			SSCSerial.print("R");
-			SSCSerial.print(32 + abSSCServoNum[sSN], DEC);
-			SSCSerial.print("=");
-			SSCSerial.println(asOffsetsRead[sSN] + asOffsets[sSN], DEC);
-			delay(10);
+		for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
+			asOffsets[servo_index] = 0;
+			myLSS.setServoID(cPinTable[servo_index]);
+			Serial.print("Servo: ");
+			Serial.print(apszLegs[servo_index % CNT_LEGS]);
+			Serial.print(apszLJoints[servo_index / CNT_LEGS]);
+			Serial.print("(");
+			Serial.print(cPinTable[servo_index], DEC);
+			Serial.print(") Config Servo Offset: From: ");
+			int16_t origin_offset = myLSS.getOriginOffset(LSS_QueryConfig); 
+			Serial.print(origin_offset, DEC);
+			Serial.print(" to: ");
+			origin_offset += asOffsets[servo_index];
+			Serial.print(origin_offset, DEC);
+			myLSS.setOriginOffset(origin_offset, LSS_SetConfig);
+			myLSS.setOriginOffset(origin_offset, LSS_SetSession);
+
+			Serial.print(" Gyre: ");
+			Serial.println(cGyreTable[servo_index], DEC);
+			myLSS.setGyre(cGyreTable[servo_index], LSS_SetConfig);
+			myLSS.setGyre(cGyreTable[servo_index], LSS_SetSession);
 		}
-#endif
-		Serial.println("ServoDriver::Init - reset all servos");
-		myLSS.setServoID(LSS_BroadcastID);
+
+		Serial.println("Find Offsets complete");
+		// Not sure if we need to reset or not??? 
+		/* myLSS.setServoID(LSS_BroadcastID);
 		myLSS.reset();
-		delay(1500);  // make sure all servos reset.
+		delay(1500);  // make sure all servos reset. */
 	}
 	else {
 		//void LoadServosConfig();
