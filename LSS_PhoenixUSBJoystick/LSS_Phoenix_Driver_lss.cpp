@@ -926,17 +926,19 @@ void ServoDriver::FindServoOffsets()
 		Serial.print(cPinTable[sSN], DEC);
 		Serial.print(") Pos:");
 		Serial.print(myLSS.getPosition(), DEC);
-		Serial.print(" Gyre:");
+		Serial.print("\tG:");
 		Serial.print(myLSS.getGyre(), DEC);
-		Serial.print(" EMC:");
+		Serial.print("\tEMC:");
 		Serial.print(myLSS.getIsMotionControlEnabled(), DEC);
-		Serial.print(" FPC:");
+		Serial.print("\tFPC:");
 		Serial.print(myLSS.getFilterPositionCount(), DEC);
-		Serial.print(" Ang Stiff:");
+		Serial.print("\tAS:");
 		Serial.print(myLSS.getAngularStiffness(), DEC);
-		Serial.print(" Origin Offset: ");
+		Serial.print("\tAH:");
+    	Serial.print(myLSS.getAngularHoldingStiffness(), DEC);
+		Serial.print("\tO:");
 		Serial.print(myLSS.getOriginOffset(), DEC);
-		Serial.print(" Angular Range: ");
+		Serial.print("\tAR:");
 		Serial.println(myLSS.getAngularRange(), DEC);
 	}
 
