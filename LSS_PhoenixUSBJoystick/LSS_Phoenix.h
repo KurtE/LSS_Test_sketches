@@ -313,7 +313,7 @@ public:
   uint32_t      tmCyclesLeft = 0;
   uint8_t       tmServoCount = 0;
   bool          tmSetupServos = true;
-  bool          use_servos_timed_moves = false;
+  bool          use_servos_moveT = false;
   bool          servo_debug = false;
 
   // functions for

@@ -126,9 +126,6 @@ EEPROMPoseSeq;      // This is a sequence entry
 
 
 // Some forward references
-extern void DoPyPose(byte* psz);
-extern void EEPROMReadData(word wStart, uint8_t* pv, byte cnt);
-extern void EEPROMWriteData(word wStart, uint8_t* pv, byte cnt);
 extern void TCServoPositions();
 
 extern void TCTrackServos();
@@ -143,8 +140,6 @@ typedef struct {
 	LSS_ConfigGyre  gyre;
 	int16_t         offset;
 	int16_t         max_speed;
-	LSS_Status      move_status;
-	int32_t         time_position;
 } servo_info_t;
 typedef struct {
 	const char    *leg_name;
@@ -171,7 +166,7 @@ leg_info_t legs[] = {
 void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 {
 
-	use_servos_timed_moves = false;
+	use_servos_moveT = false;
 
 	// lets see if we need to set the Origin and GYRE...
 	// start off if the GYRE does not match what we believe we need... Set everything
@@ -248,6 +243,12 @@ void ServoDriver::Init(void) {
 	int     count_missing = 0;
 
 	TMReset(); // reset our servo list
+
+	// Reset all servos in case any are in error state
+	Serial.println("ServoDriver::Init - reset all servos");
+	myLSS.setServoID(LSS_BroadcastID);
+	myLSS.reset();
+	delay(1500);  // make sure all servos reset.
 
 	for (int i = 0; i < NUMSERVOS; i++) {
 		// Set the id
@@ -463,7 +464,7 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
 {
 	g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 	if (ServosEnabled) {
-		if (use_servos_timed_moves) {
+		if (use_servos_moveT) {
 			for (int i = 0; i < NUMSERVOS; i++) {
 				if (g_cur_servo_pos[i] != g_goal_servo_pos[i]) {
 					g_cur_servo_pos[i] = g_goal_servo_pos[i];
@@ -615,7 +616,7 @@ void ServoDriver::MakeSureServosAreOn(void)
 //==============================================================================
 void  ServoDriver::BackgroundProcess(void)
 {
-	if (!use_servos_timed_moves)
+	if (!use_servos_moveT)
 		TMStep(false); // force the first step..
 #ifdef cTurnOffVol          // only do if we a turn off voltage is defined
 #ifndef cVoltagePin         // and we are not doing AtoD type of conversion...
@@ -641,9 +642,6 @@ void ServoDriver::ShowTerminalCommandList(void)
 	DBGSerial.println(F("L - Toggle LSS Servo Debug output"));
 	DBGSerial.println(F("F <FPS> - Set FPS for Interpolation mode"));
 	DBGSerial.println(F("S - Track Servos"));
-#ifdef OPT_PYPOSE
-	DBGSerial.println(F("P<DL PC> - Pypose"));
-#endif
 #ifdef OPT_FIND_SERVO_OFFSETS
 	DBGSerial.println(F("O - Enter Servo offset mode"));
 #endif
@@ -707,8 +705,8 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 	}
 
 	else if ((bLen == 1) && ((*psz == 'a') || (*psz == 'A'))) {
-		use_servos_timed_moves = !use_servos_timed_moves;
-		if (use_servos_timed_moves) {
+		use_servos_moveT = !use_servos_moveT;
+		if (use_servos_moveT) {
 			DBGSerial.println(F("Use Servo moveT"));
 		}
 		else {
@@ -910,9 +908,6 @@ void ServoDriver::FindServoOffsets()
 	//LSS::genericWrite(LSS_BroadcastID, LSS_ActionMove, 0,
 	//                  LSS_ActionParameterTime, 500);  // move in half second
 
-// OK lets move all of the servos to their zero point.
-	Serial.println("Find Servo Zeros.\n$-Exit, +- changes, *-change servo");
-	Serial.println("    0-n Chooses a leg, C-Coxa, F-Femur, T-Tibia");
 	//#define NUMSERVOS (NUMSERVOSPERLEG*CNT_LEGS)
 
 	// Lets show some information about each of the servos.
@@ -942,6 +937,9 @@ void ServoDriver::FindServoOffsets()
 		Serial.println(myLSS.getAngularRange(), DEC);
 	}
 
+// OK lets move all of the servos to their zero point.
+	Serial.println("Find Servo Zeros.\n$-Exit, +- changes, *-change servo");
+	Serial.println("    0-n Chooses a leg, C-Coxa, F-Femur, T-Tibia");
 
 	sSN = 0;
 	bool data_received = false;
@@ -1039,7 +1037,6 @@ void ServoDriver::FindServoOffsets()
 		Serial.println();
 	}
 
-#if 0
 	Serial.print("\nSave Changes? Y/N: ");
 
 	//get user entered data
@@ -1051,7 +1048,7 @@ void ServoDriver::FindServoOffsets()
 		// number of servos (byte)at the start, followed by a byte for a checksum...followed by our offsets array...
 		// Currently we store these values starting at EEPROM address 0. May later change...
 		//
-
+#if 0
 		for (sSN = 0; sSN < CNT_LEGS * NUMSERVOSPERLEG; sSN++) {
 			SSCSerial.print("R");
 			SSCSerial.print(32 + abSSCServoNum[sSN], DEC);
@@ -1059,18 +1056,15 @@ void ServoDriver::FindServoOffsets()
 			SSCSerial.println(asOffsetsRead[sSN] + asOffsets[sSN], DEC);
 			delay(10);
 		}
-
-		// Then I need to have the SSC-32 reboot in order to use the new values.
-		delay(10);    // give it some time to write stuff out.
-		SSCSerial.println("GOBOOT");
-		delay(5);        // Give it a little time
-		SSCSerial.println("g0000");    // tell it that we are done in the boot section so go run the normall SSC stuff...
-		delay(500);                // Give it some time to boot up...
+#endif
+		Serial.println("ServoDriver::Init - reset all servos");
+		myLSS.setServoID(LSS_BroadcastID);
+		myLSS.reset();
+		delay(1500);  // make sure all servos reset.
 	}
 	else {
-		void LoadServosConfig();
+		//void LoadServosConfig();
 	}
-#endif
 	g_ServoDriver.FreeServos();
 
 }
@@ -1086,409 +1080,6 @@ void EEPROMReadData(word wStart, uint8_t* pv, byte cnt) {
 	}
 }
 
-//==============================================================================
-// DoPyPose - This is based off of the Pypose sketch...
-// ArbotiX Test Program for use with PyPose 0013
-// Copyright (c) 2008-2010 Michael E. Ferguson.  All right reserved.
-//
-// The code was put onto a memory diet and extended by me...
-//==============================================================================
-#ifdef OPT_PYPOSE
-
-// Some defines for different modes and commands
-#define ARB_SIZE_POSE   7  // also initializes
-#define ARB_LOAD_POSE   8
-#define ARB_LOAD_SEQ    9
-#define ARB_PLAY_SEQ    10
-#define ARB_LOOP_SEQ    11
-#define ARB_SAVE_EEPROM_SEQ 12
-#define ARB_TEST        25
-
-// Global to this function...
-byte   g_bPoseSize = NUMSERVOS;
-
-short g_poses[540];              // enough for 30 steps...
-typedef struct {
-	byte  pose;    // index of pose to transition to
-	word time;              // time for transition
-}
-sp_trans_t;
-
-sp_trans_t g_sequence[30];   // sequence
-byte g_bParams[90];  // parameters
-
-// Some forward referencs
-extern boolean PyPoseSaveToEEPROM(byte);
-
-
-
-void DoPyPose(byte* psz)
-{
-	int mode = 0;              // where we are in the frame
-
-	byte id = 0;      // id of this frame
-	byte length = 0;  // length of this frame
-	byte ins = 0;     // instruction of this frame
-
-	byte index = 0;   // index in param buffer
-	word wPoseIndex;
-
-	int checksum = 0;              // checksum
-
-
-	//  pose and sequence storage
-	// Put on diet - convert int to short plus convert poses from 2 dimensions to 1 dimension...
-	//
-	byte seqPos;                // step in current sequence
-
-	// See if the user gave us a string to process.  If so it should be the XBEE DL to talk to.
-	// BUGBUG:: if using our XBEE stuff could default to debug terminal...
-#ifdef USEXBEE
-
-#ifdef DBGSerial
-	word wMY;
-	wMY = GetXBeeHVal('M', 'Y');
-
-	DBGSerial.print(F("My: "));
-	DBGSerial.println(wMY, HEX);
-	wMY = GetXBeeHVal('D', 'L');  // I know reused variable...
-	DBGSerial.print(F("PC DL: "));
-	DBGSerial.println(wMY, HEX);
-	DBGSerial.println(F("Exit Terminal and Start Pypose"));
-	DBGSerial.println(F("$TEXTM$"));  // add some support in VB side to convert to text mode...
-#endif
-	// Now lets reset our xbee...
-	APISendXBeeGetCmd('F', 'R'); // Send a Forced reset...
-	delay(2000);
-	while (Serial.read() != -1)
-		;
-
-	if (psz) {
-		word wDL;
-		for (wDL = 0; *psz; psz++) {
-			if ((*psz >= '0') && (*psz <= '9'))
-				wDL = (wDL << 4) + *psz - '0';
-			if ((*psz >= 'a') && (*psz <= 'f'))
-				wDL = (wDL << 4) + *psz - 'a' + 10;
-			if ((*psz >= 'A') && (*psz <= 'F'))
-				wDL = (wDL << 4) + *psz - 'A' + 10;
-		}
-		if (wDL) {
-
-			Serial.print("+++");
-			delay(1000);
-			while ((checksum = Serial.read()) != -1) {
-				//Serial.write((byte)checksum);
-			}
-			// Now lets set the DL and exit command mode...
-			Serial.print("ATDL ");
-			Serial.print(wDL, HEX);
-			Serial.println(",ATCN");
-		}
-	}
-	delay(10);
-	while ((checksum = Serial.read()) != -1) {
-		//Serial.write((byte)checksum);
-	}
-
-#endif
-
-	// process messages
-	for (;;) {
-		while (Serial.available() > 0) {
-			// We need to 0xFF at start of packet
-			if (mode == 0) {       // start of new packet
-				if (Serial.read() == 0xff) {
-					mode = 2;
-					//          digitalWrite(0,HIGH-digitalRead(0));
-				}
-				//}else if(mode == 1){   // another start byte
-				//    if(Serial.read() == 0xff)
-				//        mode = 2;
-				//    else
-				//        mode = 0;
-			}
-			else if (mode == 2) { // next byte is index of servo
-				id = Serial.read();
-				if (id != 0xff)
-					mode = 3;
-			}
-			else if (mode == 3) { // next byte is length
-				length = Serial.read();
-				checksum = id + length;
-				mode = 4;
-			}
-			else if (mode == 4) { // next byte is instruction
-				ins = Serial.read();
-				checksum += ins;
-				index = 0;
-				mode = 5;
-			}
-			else if (mode == 5) { // read data in
-				g_bParams[index] = Serial.read();
-				checksum += (int)g_bParams[index];
-				index++;
-				if (index + 1 == length) { // we've read params & checksum
-					mode = 0;
-					if ((checksum % 256) != 255) {
-						// return a packet: FF FF id Len Err params=None check
-						Serial.write((byte)0xff);
-						Serial.write((byte)0xff);
-						Serial.write((byte)id);
-						Serial.write((byte)2);
-						Serial.write((byte)64);
-						Serial.write((byte)(255 - ((66 + id) % 256)));
-					}
-					else {
-						if (id == 253) {
-							// return a packet: FF FF id Len Err params=None check
-							Serial.write((byte)0xff);
-							Serial.write((byte)0xff);
-							Serial.write((byte)id);
-							Serial.write((byte)2);
-							Serial.write((byte)0);
-							Serial.write((byte)(255 - ((2 + id) % 256)));
-							// special ArbotiX instructions
-							// Pose Size = 7, followed by single param: size of pose
-							// Load Pose = 8, followed by index, then pose positions (# of param = 2*pose_size)
-							// Load Seq = 9, followed by index/times (# of parameters = 3*seq_size)
-							// Play Seq = A, no params
-							if (ins == ARB_SIZE_POSE) {
-								g_bPoseSize = bioloid.poseSize = g_bParams[0];
-								bioloid.readPose();
-								//Serial.println(bioloid.poseSize);
-							}
-							else if (ins == ARB_LOAD_POSE) {
-								int i;
-								//Serial.print("New Pose:");
-								wPoseIndex = g_bParams[0] * g_bPoseSize;
-								for (i = 0; i < bioloid.poseSize; i++) {
-									g_poses[wPoseIndex + i] = g_bParams[(2 * i) + 1] + (g_bParams[(2 * i) + 2] << 8);
-									//Serial.print(g_poses[g_bParams[0]][i]);
-									//Serial.print(",");
-								}
-								//Serial.println("");
-							}
-							else if (ins == ARB_LOAD_SEQ) {
-								int i;
-								for (i = 0; i < (length - 2) / 3; i++) {
-									g_sequence[i].pose = g_bParams[(i * 3)];
-									g_sequence[i].time = g_bParams[(i * 3) + 1] + (g_bParams[(i * 3) + 2] << 8);
-									//Serial.print("New Transition:");
-									//Serial.print((int)g_sequence[i].pose);
-									//Serial.print(" in ");
-									//Serial.println(g_sequence[i].time);
-								}
-							}
-							else if (ins == ARB_PLAY_SEQ) {
-								seqPos = 0;
-								while (g_sequence[seqPos].pose != 0xff) {
-									int i;
-									int p = g_sequence[seqPos].pose;
-									wPoseIndex = p * g_bPoseSize;
-									// are we HALT?
-									if (Serial.read() == 'H') return;
-									// load pose
-									for (i = 0; i < bioloid.poseSize; i++) {
-										bioloid.setNextPose(i + 1, g_poses[wPoseIndex + i]);
-									}
-									// interpolate
-									bioloid.interpolateSetup(g_sequence[seqPos].time);
-									while (bioloid.interpolating)
-										bioloid.interpolateStep();
-									// next transition
-									seqPos++;
-								}
-							}
-							else if (ins == ARB_LOOP_SEQ) {
-								while (1) {
-									seqPos = 0;
-									while (g_sequence[seqPos].pose != 0xff) {
-										int i;
-										int p = g_sequence[seqPos].pose;
-										wPoseIndex = p * g_bPoseSize;
-										// are we HALT?
-										if (Serial.read() == 'H') return;
-										// load pose
-										for (i = 0; i < bioloid.poseSize; i++) {
-											bioloid.setNextPose(i + 1, g_poses[wPoseIndex + i]);
-										}
-										// interpolate
-										bioloid.interpolateSetup(g_sequence[seqPos].time);
-										while (bioloid.interpolating)
-											bioloid.interpolateStep();
-										// next transition
-										seqPos++;
-									}
-								}
-							}
-							else if (ins == ARB_SAVE_EEPROM_SEQ) {
-								// g_bParams[0] = which location to save to...
-								PyPoseSaveToEEPROM(g_bParams[0]);
-							}
-							else if (ins == ARB_TEST) {
-								int i;
-								// Test Digital I/O
-								for (i = 0; i < 8; i++) {
-									// test digital
-									pinMode(i, OUTPUT);
-									digitalWrite(i, HIGH);
-									// test analog
-									pinMode(31 - i, OUTPUT);
-									digitalWrite(31 - i, HIGH);
-
-									delay(500);
-									digitalWrite(i, LOW);
-									digitalWrite(31 - i, LOW);
-								}
-								// Test Ax-12
-								for (i = 452; i < 552; i += 20) {
-									SetPosition(1, i);
-									delay(200);
-								}
-								delay(1500);
-								// Test Analog I/O
-								for (i = 0; i < 8; i++) {
-									// test digital
-									pinMode(i, OUTPUT);
-									digitalWrite(i, HIGH);
-									// test analog
-									pinMode(31 - i, OUTPUT);
-									digitalWrite(31 - i, HIGH);
-
-									delay(500);
-									digitalWrite(i, LOW);
-									digitalWrite(31 - i, LOW);
-								}
-							}
-						}
-						else {
-							int i;
-							// pass thru
-							if (ins == AX_READ_DATA) {
-								ax12GetRegister(id, g_bParams[0], g_bParams[1]);
-								// return a packet: FF FF id Len Err params check
-								if (ax_rx_buffer[3] > 0) {
-									for (i = 0; i < ax_rx_buffer[3] + 4; i++)
-										Serial.write(ax_rx_buffer[i]);
-								}
-								ax_rx_buffer[3] = 0;
-							}
-							else if (ins == AX_WRITE_DATA) {
-								if (length == 4) {
-									ax12SetRegister(id, g_bParams[0], g_bParams[1]);
-								}
-								else {
-									int x = g_bParams[1] + (g_bParams[2] << 8);
-									ax12SetRegister2(id, g_bParams[0], x);
-								}
-								// return a packet: FF FF id Len Err params check
-								Serial.write((byte)0xff);
-								Serial.write((byte)0xff);
-								Serial.write((byte)id);
-								Serial.write((byte)2);
-								Serial.write((byte)0);
-								Serial.write((byte)(255 - ((2 + id) % 256)));
-							}
-						}
-					}
-				}
-			}
-		}
-
-		// update joints
-		bioloid.interpolateStep();
-	}
-}
-
-
-
-void EEPROMWriteData(word wStart, uint8_t* pv, byte cnt) {
-	while (cnt--) {
-		EEPROM.write(wStart++, *pv++);
-	}
-}
-
-// BUGBUG:: keeping it simple to start.  Will clear any sequence number > than the one we are storing...
-boolean PyPoseSaveToEEPROM(byte bSeqNum) {
-	//first verify it is in range...
-	byte iSeq;
-	word w;
-	word wHeaderStart;
-	EEPromPoseHeader eepph;
-	EEPROMPoseSeq eepps;
-	boolean fValidHeaders;
-
-	if (bSeqNum >= GPSEQ_EEPROM_MAX_SEQ)
-		return false;
-
-	// Lets first see where the data should start and do some validation...
-	wHeaderStart = GPSEQ_EEPROM_START_DATA;    // here is where I expect the next one to be...
-	fValidHeaders = true;
-	for (iSeq = 0; iSeq < bSeqNum; iSeq++) {
-		EEPROMReadData(GPSEQ_EEPROM_START + iSeq * sizeof(word), (uint8_t*)&w, sizeof(w));
-		if (w != wHeaderStart) {
-			fValidHeaders = false;
-			break;
-		}
-		EEPROMReadData(w, (uint8_t*)&eepph, sizeof(eepph));
-		if ((eepph.bSeqNum != iSeq) || (eepph.bCntServos != NUMSERVOS)) {
-			fValidHeaders = false;
-			break;
-		}
-		w = wHeaderStart + sizeof(eepph) + (eepph.bCntSteps * sizeof(EEPROMPoseSeq)) + (eepph.bCntPoses * sizeof(word) * NUMSERVOS);
-		if (w >= GPSEQ_EEPROM_SIZE) {
-			fValidHeaders = false;
-			break;
-		}
-		wHeaderStart = w;  // save away the last generated one...
-	}
-
-	// Note: if previous data invalid will try to store data after last valid one...
-	eepph.bSeqNum = iSeq;    // save the sequence number here.
-	eepph.bCntServos = NUMSERVOS;  // say that it has NUMSERVOS steps.
-	eepph.bCntPoses = 0;
-	for (eepph.bCntSteps = 0; g_sequence[eepph.bCntSteps].pose != 0xff; eepph.bCntSteps++) {
-		if (g_sequence[eepph.bCntSteps].pose > eepph.bCntPoses)
-			eepph.bCntPoses = g_sequence[eepph.bCntSteps].pose;
-	}
-	eepph.bCntPoses++;  // Cnt not index...
-
-	// Make sure it will fit!
-	if ((wHeaderStart + sizeof(eepph) + (eepph.bCntSteps * sizeof(EEPROMPoseSeq)) + (eepph.bCntPoses * sizeof(word) * NUMSERVOS)) >= GPSEQ_EEPROM_SIZE)
-		return false;
-
-	// Now lets start writing out the data...
-	EEPROMWriteData(GPSEQ_EEPROM_START + iSeq * sizeof(word), (uint8_t*)&wHeaderStart, sizeof(wHeaderStart));
-
-	// Clear out any other headers...
-	w = 0;
-	while (++iSeq < GPSEQ_EEPROM_MAX_SEQ)
-		EEPROMWriteData(GPSEQ_EEPROM_START + iSeq * sizeof(word), (uint8_t*)&w, sizeof(w));
-
-
-	// Now write out the sequence header
-	EEPROMWriteData(wHeaderStart, (uint8_t*)&eepph, sizeof(eepph));
-	wHeaderStart += sizeof(eepph);  // next location to write to.
-
-	// Now lets write out sequence data
-	for (eepph.bCntSteps = 0; g_sequence[eepph.bCntSteps].pose != 0xff; eepph.bCntSteps++) {
-		eepps.bPoseNum = g_sequence[eepph.bCntSteps].pose;        // which pose to use
-		eepps.wTime = g_sequence[eepph.bCntSteps].time;          // Time to do pose
-		EEPROMWriteData(wHeaderStart, (uint8_t*)&eepps, sizeof(eepps));
-		wHeaderStart += sizeof(eepps);
-	}
-
-	// Last lets write out the Pose data...
-	EEPROMWriteData(wHeaderStart, (uint8_t*)g_poses, eepph.bCntPoses * NUMSERVOS * sizeof(g_poses[0]));
-
-	return true;
-
-}
-
-
-
-#endif  //DOPypose
 
 //=============================================================================
 // Do our own timed moves support functions.
@@ -1518,7 +1109,7 @@ void ServoDriver::TMInitWithCurrentservoPositions() {
 	}
 }
 void ServoDriver::TMConfigureServos() {
-	int em_mode = use_servos_timed_moves ? 1 : 0;
+	int em_mode = use_servos_moveT ? 1 : 0;
 	DBGSerial.printf("Set Servo EM=%u\n", em_mode);
 	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
 		myLSS.setServoID(tmServos[servo].id);
