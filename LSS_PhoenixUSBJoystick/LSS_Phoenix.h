@@ -287,10 +287,16 @@ public:
   // added stuff for bioloid like pose support to bypass servo
   //    firmware support for timed moves
   //=====================================================================
-  enum {MAX_MOVE_SERVOS = 20, DEFAULT_FRAMES_PER_SECOND = 50, DEFAULT_MIN_NOT_WAIT_TIME = 1000};
+  enum {MAX_MOVE_SERVOS = 20, 
+    DEFAULT_FRAMES_PER_SECOND = 50,
+    MAX_FPS = 50, 
+    OUTPUT_SAME_POS_COUNT = 3,
+    DEFAULT_MIN_NOT_WAIT_TIME = 4000
+  };
 
   typedef struct {
     uint8_t id;   // id of servo
+    uint8_t pos_repeated_count;
     int16_t target_pos; // our target position
     int16_t starting_pos; // our target position
     float   pos;        // our current working position
@@ -318,6 +324,7 @@ public:
   void TMSetTargetByIndex(uint8_t index, int16_t target);
   void TMSetupMove(uint32_t move_time);
   int  TMStep(bool wait = true);
+  void TMTimedMove(uint32_t move_time);
   void TMPrintDebugInfo();
   void TMConfigureServos();
 
