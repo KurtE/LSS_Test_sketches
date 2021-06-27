@@ -212,10 +212,10 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
 			myLSS.setAngularStiffness(-4, LSS_SetSession);
 			myLSS.setFilterPositionCount(3, LSS_SetSession);
+				myLSS.setGyre(cGyreTable[FIRSTCOXAPIN + leg], LSS_SetSession);
 
 			if (force_defaults) {
 				Serial.print("@");
-				myLSS.setGyre(cGyreTable[FIRSTCOXAPIN + leg], LSS_SetSession);
 				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTCOXAPIN + leg], LSS_SetSession);
 			}
 		}
@@ -227,9 +227,9 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
 			myLSS.setAngularStiffness(-4, LSS_SetSession);
 			myLSS.setFilterPositionCount(3, LSS_SetSession);
+				myLSS.setGyre(cGyreTable[FIRSTFEMURPIN + leg], LSS_SetSession);
 
 			if (force_defaults) {
-				myLSS.setGyre(cGyreTable[FIRSTFEMURPIN + leg], LSS_SetSession);
 				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTFEMURPIN + leg], LSS_SetSession);
 			}
 		}
@@ -240,9 +240,9 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
 			myLSS.setAngularStiffness(-4, LSS_SetSession);
 			myLSS.setFilterPositionCount(3, LSS_SetSession);
+				myLSS.setGyre(cGyreTable[FIRSTTIBIAPIN + leg], LSS_SetSession);
 
 			if (force_defaults) {
-				myLSS.setGyre(cGyreTable[FIRSTTIBIAPIN + leg], LSS_SetSession);
 				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTTIBIAPIN + leg], LSS_SetSession);
 			}
 		}
@@ -1123,7 +1123,13 @@ void ServoDriver::FindServoOffsets()
 			Serial.print(apszLJoints[servo_index / CNT_LEGS]);
 			Serial.print("(");
 			Serial.print(cPinTable[servo_index], DEC);
-			Serial.print(") Config Servo Offset: From: ");
+			Serial.print(")");
+
+			Serial.print(" Gyre: ");
+			Serial.println(cGyreTable[servo_index], DEC);
+			myLSS.setGyre(cGyreTable[servo_index], LSS_SetConfig);
+			myLSS.setGyre(cGyreTable[servo_index], LSS_SetSession);
+			Serial.print(" Config Servo Offset: From: ");
 			int16_t origin_offset = myLSS.getOriginOffset(); // should use the working set...
 			Serial.print(origin_offset, DEC);
 			Serial.print(" to: ");
@@ -1143,11 +1149,6 @@ void ServoDriver::FindServoOffsets()
 				myLSS.setOriginOffset(origin_offset, LSS_SetConfig);
 				myLSS.setOriginOffset(origin_offset, LSS_SetSession);
 			}
-
-			Serial.print(" Gyre: ");
-			Serial.println(cGyreTable[servo_index], DEC);
-			myLSS.setGyre(cGyreTable[servo_index], LSS_SetConfig);
-			myLSS.setGyre(cGyreTable[servo_index], LSS_SetSession);
 		}
 
 		Serial.println("Find Offsets complete");
@@ -1172,13 +1173,25 @@ void ClearServoOffsets() {
 
 	if ((ch == 'y') || (ch == 'Y')) {
 		for (int servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
+			Serial.printf("%u ", cPinTable[servo_index]);
 			myLSS.setServoID(cPinTable[servo_index]);
+			delay(10);
 			myLSS.setOriginOffset(0, LSS_SetConfig);
+			delay(10);
 			myLSS.setOriginOffset(0, LSS_SetSession);
+			delay(10);
 			myLSS.setGyre(LSS_GyreClockwise, LSS_SetConfig);
+			delay(10);
 			myLSS.setGyre(LSS_GyreClockwise, LSS_SetSession);
 		}
-		Serial.println("Clear complete you should probably restart the program");
+		Serial.println();
+		for (int servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
+			myLSS.setServoID(cPinTable[servo_index]);
+			Serial.printf("%d:%x(%x):%x(%x) ", myLSS.getServoID(), 
+				myLSS.getGyre(LSS_QueryConfig), myLSS.getGyre(LSS_QuerySession),
+				myLSS.getOriginOffset(LSS_QueryConfig), myLSS.getOriginOffset(LSS_QuerySession));
+		}
+		Serial.println("\nClear complete you should probably restart the program");
 	}
 }
 
