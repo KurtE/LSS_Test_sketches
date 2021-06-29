@@ -1607,7 +1607,16 @@ void cycleSmoothTimed() {
       // normalize move time...
       delay(move_time - em);
     }
-    // Ok we finished one cycle, lets update the timing for next
+    // Ok we finished one cycle, print final positions and update the timing for next
+    for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
+      if (legs[leg].leg_found) {
+        Serial.printf("\t%u C:%d F:%d T:%d", leg,
+                      LSSGetServoPosition(legs[leg].coxa.id),
+                      LSSGetServoPosition(legs[leg].femur.id),
+                      LSSGetServoPosition(legs[leg].tibia.id));
+      }
+    }
+    Serial.println();
     if ((move_time == MOVE_TIME_MAX) || (move_time == MOVE_TIME_MIN)) move_time_change = -move_time_change;
     move_time += move_time_change;
   }

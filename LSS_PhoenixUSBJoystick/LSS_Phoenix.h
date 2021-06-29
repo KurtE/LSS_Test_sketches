@@ -329,8 +329,8 @@ public:
   void TMConfigureServos();
 
   // helper functions...
-  void MakeSureServosAreOn(void);
-  void FindServoOffsets();
+  bool MakeSureServosAreOn(void);
+  void FindServoOffsets(bool force_manual_mode);
 
 
 

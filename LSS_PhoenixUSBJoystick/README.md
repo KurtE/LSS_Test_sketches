@@ -15,6 +15,7 @@ L | Toggle LSS Servo Debug output
 F <FPS> | Set FPS for Interpolation mode
 S | Track Servos
 O | Enter Servo offset mode
+OM| Enter Servo offset mode in manual mode
 C | clear Servo Offsets
   
 ### Servo Offset Mode

@@ -578,17 +578,17 @@ void ServoDriver::showUserFeedback(int feedback_state) {
 //  transistioning from servos all off to being on.  May need to read
 //  in the current pose...
 //--------------------------------------------------------------------
-void ServoDriver::MakeSureServosAreOn(void)
+bool ServoDriver::MakeSureServosAreOn(void)
 {
+	boolean servos_reset = false;
 	if (ServosEnabled) {
 		if (!g_fServosFree)
-			return;    // we are not free
+			return false;    // we are not free
 
 		g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
 
 		LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold a position.
 		delay(50);
-		boolean servos_reset = false;
 		for (int i = 0; i < NUMSERVOS; i++) {
 			g_cur_servo_pos[i] = 32768; // set to a value that is not valid to force next output
 			// lets make sure that servos are not in an error state.
@@ -630,6 +630,8 @@ void ServoDriver::MakeSureServosAreOn(void)
 		g_InputController.AllowControllerInterrupts(true);
 		g_fServosFree = false;
 	}
+
+	return (servos_reset);
 }
 
 //==============================================================================
@@ -665,7 +667,7 @@ void ServoDriver::ShowTerminalCommandList(void)
 	DBGSerial.println(F("F <FPS> - Set FPS for Interpolation mode"));
 	DBGSerial.println(F("S - Track Servos"));
 #ifdef OPT_FIND_SERVO_OFFSETS
-	DBGSerial.println(F("O - Enter Servo offset mode"));
+	DBGSerial.println(F("O[m] - Enter Servo offset mode (m - manual mode)"));
 	DBGSerial.println(F("C - clear Servo Offsets"));
 #endif
 }
@@ -762,8 +764,11 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 
 
 #ifdef OPT_FIND_SERVO_OFFSETS
-	else if ((bLen == 1) && ((*psz == 'o') || (*psz == 'O'))) {
-		FindServoOffsets();
+	else if ((*psz == 'o') || (*psz == 'O')) {
+		psz++; 
+		// Did the user want to force manual mode?
+		FindServoOffsets((*psz == 'm') || (*psz == 'M'));
+		return true;
 	}
 	else if ((bLen == 1) && ((*psz == 'c') || (*psz == 'C'))) {
 		ClearServoOffsets();
@@ -894,7 +899,7 @@ void TCTrackServos()
 #define NUMSERVOSPERLEG 3
 #endif
 
-void ServoDriver::FindServoOffsets()
+void ServoDriver::FindServoOffsets(bool force_manual_mode)
 {
 	// not clean but...
 	signed short asOffsets[NUMSERVOSPERLEG * CNT_LEGS];      // we have 18 servos to find/set offsets for...
@@ -929,12 +934,16 @@ void ServoDriver::FindServoOffsets()
 	// LSS_ActionMove is DOA so have to roll our own!
 	for (uint8_t i = 0; i < tmServoCount; i++) TMSetTargetByIndex(i, 0); // set all to 0
 
-	TMTimedMove(500);
-
+	// Don't go to zero if told to go into manual mode... If not told to be manual
+	// next loop will see if any servos are not in valid state and again reset...
+	if (!force_manual_mode) {
+		TMTimedMove(500);
+		// hack to make sure this did not error any of the servos out...
+		force_manual_mode = MakeSureServosAreOn(); // returns true if any servo was in error
+	}
 	//LSS::genericWrite(LSS_BroadcastID, LSS_ActionMove, 0,
 	//                  LSS_ActionParameterTime, 500);  // move in half second
 
-	//#define NUMSERVOS (NUMSERVOSPERLEG*CNT_LEGS)
 	Serial.println("\nUpdate Servos Offsets and their rotation direction(Gyre)");
 	Serial.println("Current Servo Information");
 	// Lets show some information about each of the servos.
@@ -987,9 +996,33 @@ void ServoDriver::FindServoOffsets()
 	Serial.println("    0-n Chooses a leg, C-Coxa, F-Femur, T-Tibia");
 	Serial.println("    m - manually move mode to get close");
 
+	if (force_manual_mode) Serial.println("*** starting off in manual mode ***");
+
 	servo_index = 0;
 	bool data_received = false;
 	while (!fExit) {
+		if (force_manual_mode ) {  // warning we reused this parameter...
+			force_manual_mode = false; 
+			Serial.println("*** Entered Manual mode, press any key to exit ***");
+			while (Serial.read() != -1);
+			// Tell all servos to go limp...
+			LSS::genericWrite(LSS_BroadcastID, LSS_ActionLimp); // Tell all of the servos to go limp
+			while (Serial.read() == -1);  // wait for some new data
+			while (Serial.read() != -1);
+			Serial.println("*** Manual Mode Exited ***");
+			LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold again.
+			// Now we need to read in the current positions to work with.
+			for (uint8_t i = 0; i < tmServoCount; i++) {
+				myLSS.setServoID(cPinTable[i]);
+				asOffsets[i] = myLSS.getPosition();	// get the position
+				TMSetTargetByIndex(i, asOffsets[i]); // called twice to make sure source and dest are set
+				TMSetTargetByIndex(i, asOffsets[i]); //
+				Serial.printf("%u:%d ", cPinTable[servo_index], asOffsets[i]);
+				// set leds to get an idea of which ones may have moved...
+				myLSS.setColorLED((abs(asOffsets[i]) < 10)? LSS_LED_Black : LSS_LED_Red);
+			}
+			Serial.println();
+		}
 		if (fNew) {
 			uint8_t servo_id = cPinTable[servo_index];
 			myLSS.setServoID(servo_id);
@@ -1031,23 +1064,7 @@ void ServoDriver::FindServoOffsets()
 				if (data == '$')
 					fExit = true; // not sure how the keypad will map so give NL, CR, LF... all implies exit
 				else if ((data == 'm') || (data == 'M')) {
-					Serial.println("*** Entered Manual mode, press any key to exit ***");
-					while (Serial.read() != -1);
-					// Tell all servos to go limp...
-					LSS::genericWrite(LSS_BroadcastID, LSS_ActionLimp); // Tell all of the servos to go limp
-					while (Serial.read() == -1);  // wait for some new data
-					while (Serial.read() != -1);
-					Serial.println("*** Manual Mode Exited ***");
-					LSS::genericWrite(LSS_BroadcastID, LSS_ActionHold); // Tell all of the servos to hold again.
-					// Now we need to read in the current positions to work with.
-					for (uint8_t i = 0; i < tmServoCount; i++) {
-						myLSS.setServoID(cPinTable[i]);
-						asOffsets[i] = myLSS.getPosition();	// get the position
-						TMSetTargetByIndex(i, asOffsets[i]); // called twice to make sure source and dest are set
-						TMSetTargetByIndex(i, asOffsets[i]); //
-						Serial.printf("%u:%d ", cPinTable[servo_index], asOffsets[i]);
-					}
-					Serial.println();
+					force_manual_mode = true; // reused parameter...
 				}
 				else if ((data == '+') || (data == '-')) {
 					if (data == '+')
