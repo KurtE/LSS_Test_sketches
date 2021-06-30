@@ -288,9 +288,9 @@ public:
   //    firmware support for timed moves
   //=====================================================================
   enum {MAX_MOVE_SERVOS = 20, 
-    DEFAULT_FRAMES_PER_SECOND = 80,
+    DEFAULT_FRAMES_PER_SECOND = 60,
     MAX_FPS = 80, 
-    OUTPUT_SAME_POS_COUNT = 3,
+    OUTPUT_SAME_POS_COUNT = 7,
     DEFAULT_MIN_NOT_WAIT_TIME = 4000
   };
 

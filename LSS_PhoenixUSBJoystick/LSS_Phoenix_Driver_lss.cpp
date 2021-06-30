@@ -190,19 +190,6 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 	}
 
 	// Either the caller to setup defaults or quick check above said to...
-	// First lets try broadcasts for the LSS=0 crud
-	/*
-	myLSS.setServoID(LSS_BroadcastID);
-	myLSS.setMotionControlEnabled(0);
-	delay(5);
-	myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
-	delay(5);
-	myLSS.setAngularStiffness(-4, LSS_SetSession);
-	delay(5);
-	myLSS.setFilterPositionCount(5, LSS_SetSession);
-	delay(5);
-	*/
-
 	for (uint8_t leg = 0; leg < COUNT_LEGS; leg++) {
 		legs[leg].leg_found = true;
 		myLSS.setServoID(cPinTable[FIRSTCOXAPIN + leg]);
@@ -212,7 +199,7 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
 			myLSS.setAngularStiffness(-4, LSS_SetSession);
 			myLSS.setFilterPositionCount(3, LSS_SetSession);
-				myLSS.setGyre(cGyreTable[FIRSTCOXAPIN + leg], LSS_SetSession);
+			myLSS.setGyre(cGyreTable[FIRSTCOXAPIN + leg], LSS_SetSession);
 
 			if (force_defaults) {
 				Serial.print("@");
@@ -227,7 +214,7 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
 			myLSS.setAngularStiffness(-4, LSS_SetSession);
 			myLSS.setFilterPositionCount(3, LSS_SetSession);
-				myLSS.setGyre(cGyreTable[FIRSTFEMURPIN + leg], LSS_SetSession);
+			myLSS.setGyre(cGyreTable[FIRSTFEMURPIN + leg], LSS_SetSession);
 
 			if (force_defaults) {
 				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTFEMURPIN + leg], LSS_SetSession);
@@ -240,7 +227,7 @@ void ServoDriver::checkAndInitServosConfig(bool force_defaults)
 			myLSS.setAngularHoldingStiffness(4, LSS_SetSession);
 			myLSS.setAngularStiffness(-4, LSS_SetSession);
 			myLSS.setFilterPositionCount(3, LSS_SetSession);
-				myLSS.setGyre(cGyreTable[FIRSTTIBIAPIN + leg], LSS_SetSession);
+			myLSS.setGyre(cGyreTable[FIRSTTIBIAPIN + leg], LSS_SetSession);
 
 			if (force_defaults) {
 				myLSS.setOriginOffset(cDefaultServoOffsets[FIRSTTIBIAPIN + leg], LSS_SetSession);
@@ -665,6 +652,7 @@ void ServoDriver::ShowTerminalCommandList(void)
 	DBGSerial.println(F("A - Toggle LSS speed control"));
 	DBGSerial.println(F("L - Toggle LSS Servo Debug output"));
 	DBGSerial.println(F("F <FPS> - Set FPS for Interpolation mode"));
+	DBGSerial.println(F("B <FPC> - Set Filter Position Count for Interpolation mode"));
 	DBGSerial.println(F("S - Track Servos"));
 #ifdef OPT_FIND_SERVO_OFFSETS
 	DBGSerial.println(F("O[m] - Enter Servo offset mode (m - manual mode)"));
@@ -761,11 +749,25 @@ boolean ServoDriver::ProcessTerminalCommand(byte* psz, byte bLen)
 		tmCycleTime = 1000000 / fps;
 		DBGSerial.printf("Set FPS to: %u Cycle time\n", fps, tmCycleTime);
 	}
+	else if ((*psz == 'b') || (*psz == 'B')) {
+		uint16_t fpc = 0;
+		psz++;
+		while (*psz == ' ') psz++; // ignore any blanks.
+		while ((*psz >= '0') && (*psz <= '9')) {
+			fpc = fpc * 10 + *psz++ - '0';
+		}
+		DBGSerial.printf("Set FPC to: %u\n", fpc);
+		for (uint8_t servo = 0; servo < tmServoCount; servo++) {
+			myLSS.setServoID(tmServos[servo].id);
+			myLSS.setFilterPositionCount(fpc, LSS_SetSession);
+		}
+
+	}
 
 
 #ifdef OPT_FIND_SERVO_OFFSETS
 	else if ((*psz == 'o') || (*psz == 'O')) {
-		psz++; 
+		psz++;
 		// Did the user want to force manual mode?
 		FindServoOffsets((*psz == 'm') || (*psz == 'M'));
 		return true;
@@ -801,13 +803,13 @@ void TCServoPositions() {
 	DBGSerial.println("Servo positions shown by leg joints\n(Rear)");
 	DBGSerial.println("    T     F     C |     C     F     T");
 	for (int legs = 0; legs < 3; legs++) {
-		DBGSerial.printf("%5d(%u) %5d(%u) %5d(%u) | %5d(%u) %5d(%u) %5d(%u)\n",
-		                 servo_pos[FIRSTTIBIAPIN + legs], 	 servo_status[FIRSTTIBIAPIN + legs],
-		                 servo_pos[FIRSTFEMURPIN + legs], 	 servo_status[FIRSTFEMURPIN + legs],
-		                 servo_pos[FIRSTCOXAPIN + legs], 	 servo_status[FIRSTCOXAPIN + legs],
-		                 servo_pos[FIRSTCOXAPIN + legs + 3],  servo_status[FIRSTCOXAPIN + legs + 3],
-		                 servo_pos[FIRSTFEMURPIN + legs + 3], servo_status[FIRSTFEMURPIN + legs + 3],
-		                 servo_pos[FIRSTTIBIAPIN + legs + 3], servo_status[FIRSTTIBIAPIN + legs + 3]);
+		DBGSerial.printf("%5d(%u:%u) %5d(%u:%u) %5d(%u:%u) | %5d(%u:%u) %5d(%u:%u) %5d(%u:%u)\n",
+		                 servo_pos[FIRSTTIBIAPIN + legs],	cPinTable[FIRSTTIBIAPIN + legs], 	  	servo_status[FIRSTTIBIAPIN + legs],
+		                 servo_pos[FIRSTFEMURPIN + legs],	cPinTable[FIRSTFEMURPIN + legs], 	  	servo_status[FIRSTFEMURPIN + legs],
+		                 servo_pos[FIRSTCOXAPIN + legs],	cPinTable[FIRSTCOXAPIN + legs], 	  	servo_status[FIRSTCOXAPIN + legs],
+		                 servo_pos[FIRSTCOXAPIN + legs + 3], cPinTable[FIRSTCOXAPIN + legs + 3],   	servo_status[FIRSTCOXAPIN + legs + 3],
+		                 servo_pos[FIRSTFEMURPIN + legs + 3], cPinTable[FIRSTFEMURPIN + legs + 3], 	servo_status[FIRSTFEMURPIN + legs + 3],
+		                 servo_pos[FIRSTTIBIAPIN + legs + 3], cPinTable[FIRSTTIBIAPIN + legs + 3], 	servo_status[FIRSTTIBIAPIN + legs + 3]);
 	}
 }
 
@@ -1002,7 +1004,7 @@ void ServoDriver::FindServoOffsets(bool force_manual_mode)
 	bool data_received = false;
 	while (!fExit) {
 		if (force_manual_mode ) {  // warning we reused this parameter...
-			force_manual_mode = false; 
+			force_manual_mode = false;
 			Serial.println("*** Entered Manual mode, press any key to exit ***");
 			while (Serial.read() != -1);
 			// Tell all servos to go limp...
@@ -1019,7 +1021,7 @@ void ServoDriver::FindServoOffsets(bool force_manual_mode)
 				TMSetTargetByIndex(i, asOffsets[i]); //
 				Serial.printf("%u:%d ", cPinTable[servo_index], asOffsets[i]);
 				// set leds to get an idea of which ones may have moved...
-				myLSS.setColorLED((abs(asOffsets[i]) < 10)? LSS_LED_Black : LSS_LED_Red);
+				myLSS.setColorLED((abs(asOffsets[i]) < 10) ? LSS_LED_Black : LSS_LED_Red);
 			}
 			Serial.println();
 		}
@@ -1116,7 +1118,7 @@ void ServoDriver::FindServoOffsets(bool force_manual_mode)
 		Serial.print(apszLegs[servo_index / NUMSERVOSPERLEG]);
 		Serial.print(apszLJoints[servo_index % NUMSERVOSPERLEG]);
 		Serial.print("Session Offset: ");
-		Serial.print(myLSS.getOriginOffset(), DEC); 
+		Serial.print(myLSS.getOriginOffset(), DEC);
 		Serial.print(" Delta: ");
 		Serial.println(asOffsets[servo_index]);
 	}
@@ -1131,8 +1133,8 @@ void ServoDriver::FindServoOffsets(bool force_manual_mode)
 		// Ok they asked for the data to be saved.  So for each servo we will update their Gyre and Offset
 		// settings.
 		//
-		while (Serial.read() != -1) ; 
-		bool manually_choose = (data == 'c') || (data == 'C'); 
+		while (Serial.read() != -1) ;
+		bool manually_choose = (data == 'c') || (data == 'C');
 		for (servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
 			myLSS.setServoID(cPinTable[servo_index]);
 			Serial.print("Servo: ");
@@ -1153,13 +1155,13 @@ void ServoDriver::FindServoOffsets(bool force_manual_mode)
 			origin_offset += asOffsets[servo_index];
 			Serial.print(origin_offset, DEC);
 			if (manually_choose) {
-				Serial.print(" Update ?"); 
-				int ch; 
+				Serial.print(" Update ?");
+				int ch;
 				while ((ch = Serial.read()) == -1);
 				if ((ch == 'Y') || (ch == 'y')) {
 					myLSS.setOriginOffset(origin_offset, LSS_SetConfig);
 					myLSS.setOriginOffset(origin_offset, LSS_SetSession);
-					Serial.print("*Updated*");					
+					Serial.print("*Updated*");
 				}
 
 			} else {
@@ -1184,7 +1186,7 @@ void ServoDriver::FindServoOffsets(bool force_manual_mode)
 void ClearServoOffsets() {
 	Serial.println("This will clear out all of the servo offsets and Gyre, do you wish to continue (Y/N):");
 	while (Serial.read() != -1);
-	int ch; 
+	int ch;
 	while ((ch = Serial.read()) == -1) ;
 	while (Serial.read() != -1);
 
@@ -1204,9 +1206,9 @@ void ClearServoOffsets() {
 		Serial.println();
 		for (int servo_index = 0; servo_index < NUMSERVOS; servo_index++) {
 			myLSS.setServoID(cPinTable[servo_index]);
-			Serial.printf("%d:%x(%x):%x(%x) ", myLSS.getServoID(), 
-				myLSS.getGyre(LSS_QueryConfig), myLSS.getGyre(LSS_QuerySession),
-				myLSS.getOriginOffset(LSS_QueryConfig), myLSS.getOriginOffset(LSS_QuerySession));
+			Serial.printf("%d:%x(%x):%x(%x) ", myLSS.getServoID(),
+			              myLSS.getGyre(LSS_QueryConfig), myLSS.getGyre(LSS_QuerySession),
+			              myLSS.getOriginOffset(LSS_QueryConfig), myLSS.getOriginOffset(LSS_QuerySession));
 		}
 		Serial.println("\nClear complete you should probably restart the program");
 	}
@@ -1323,17 +1325,18 @@ void ServoDriver::TMSetupMove(uint32_t move_time) {
 
 int  ServoDriver::TMStep(bool wait) {
 	if (!tmCyclesLeft) return 0;
-
 	// BUGBUG not processing wait yet... but normally
 	// can set false so can return between steps to do other stuff.
 	int time_left_in_cycle = (int)(tmCycleTime - tmTimer);
 	if (!wait && (time_left_in_cycle > (int)tmMinNotwaitTime)) return time_left_in_cycle; //
 
+	//static uint8_t pos_count = 0;
+	//Serial.print("!"); pos_count++; if (pos_count == 80) {pos_count=0; Serial.println();}
+
 	while (tmTimer < tmCycleTime) ;
 	// how many cycles.
 	for (uint8_t servo = 0; servo < tmServoCount; servo++) {
 		if (tmServos[servo].cycle_delta) {
-
 			int cur_pos = tmServos[servo].pos;
 			tmServos[servo].pos += tmServos[servo].cycle_delta;
 			int next_pos = tmServos[servo].pos;
@@ -1363,13 +1366,13 @@ int  ServoDriver::TMStep(bool wait) {
 #endif
 			}
 
-#if (OUTPUT_ONLY_CHANGED_SERVOS == 0)  // output every servo on every step.
-			if (tmServos[tmServoCount].pos_repeated_count < OUTPUT_SAME_POS_COUNT) {
-				myLSS.setServoID(tmServos[servo].id);
-				myLSS.move(next_pos);
-			}
-#endif
 		}
+#if (OUTPUT_ONLY_CHANGED_SERVOS == 0)  // output every servo on every step.
+		if (tmServos[tmServoCount].pos_repeated_count < OUTPUT_SAME_POS_COUNT) {
+			myLSS.setServoID(tmServos[servo].id);
+			myLSS.move(tmServos[servo].pos);
+		}
+#endif
 	}
 	tmCyclesLeft--;
 	tmTimer -= tmCycleTime;
