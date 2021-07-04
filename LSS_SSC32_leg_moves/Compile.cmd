@@ -18,8 +18,6 @@ set TyTools=C:\Program Files\TyQt
 rem set TyTools=D:\GitHub\tytools\build\win64\Release
 set libs=C:\Users\kurte\Documents\Arduino\libraries
 set tools=D:\GitHub\Tset
-REM Pick a TEMP folder IF not the Windows Default folder - remove REM
-REM set TsetTemp=t:\temp
 
 rem *******************************
 rem Set Teensy-specific variables here:

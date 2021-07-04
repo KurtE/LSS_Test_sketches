@@ -1,5 +1,5 @@
-static const uint32_t from_speed = 500000;
-static const uint32_t to_speed = 250000;
+static const uint32_t from_speed = 921600;
+static const uint32_t to_speed = 500000 ;
 void setup()
 {
   while (!Serial && millis() < 5000) ;

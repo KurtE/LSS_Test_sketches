@@ -1,0 +1,16 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		},
+		{
+			"follow_symlinks": false,
+			"path": "C:\\Users\\kurte\\Documents\\Arduino\\libraries\\LSS_Library_Arduino"
+		},
+		{
+			"follow_symlinks": false,
+			"path": "C:\\Users\\kurte\\Documents\\Arduino\\libraries\\USBHost_t36"
+		}
+	]
+}
