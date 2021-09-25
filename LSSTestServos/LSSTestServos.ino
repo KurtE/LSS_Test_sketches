@@ -3,7 +3,7 @@
 // Kurts Test program to try out different ways to manipulate the AX12 servos on the PhantomX
 // This is a test, only a test...
 //
-// This version for Robotis OpenCM9.04
+// This version for Lynxmotion LSS servos
 //====================================================================================================
 //============================================================================
 // Global Include files
@@ -240,6 +240,7 @@ void loop() {
   Serial.println("s - Cycle Smooth");
   Serial.println("m - move all servos");
   Serial.println("q - test/time Q command");
+  Serial.println("z - Set Slots");
   Serial.println("r - Reboot [<sn>]");
 
   Serial.print(":");
@@ -316,6 +317,10 @@ void loop() {
     case 'q':
     case 'Q':
       QueryAllServos();
+      break;
+    case 'z':
+    case 'Z':
+      SetServoSlots();
       break;
     case 'r':
     case 'R':
@@ -637,7 +642,18 @@ void QueryAllServos() {
     Serial.printf("  %u: %u T:%u\n", g_ids[i], servo_status[i], query_time[i]);
   }
 }
-
+void SetServoSlots() {
+  if (!g_count_servos_found) {
+    Serial.println("Previous Find Servos failed to locate any servos: so retry");
+    FindServos();
+    return;
+  }
+  LSS_SERIAL.print("#254SLOTCOUNT3\r");
+  for (int i = 0; i < g_count_servos_found; i++) {
+    LSS_SERIAL.printf("#%uSLOT%u\r", g_ids[i], i);
+  }
+  Serial.println("Slots set");
+}
 
 //=======================================================================================
 

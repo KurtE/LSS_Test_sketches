@@ -1,4 +1,4 @@
-static const uint32_t from_speed = 921600;
+static const uint32_t from_speed = 115200;
 static const uint32_t to_speed = 500000 ;
 void setup()
 {
