@@ -1,7 +1,10 @@
-
 //====================================================================================================
-// Kurts Test program to try out different ways to manipulate the AX12 servos on the PhantomX
+// Kurts Test program to try out different ways to manipulate the LSS Servos on their
+// prototype Hexapod setup.
 // This is a test, only a test...
+//
+// Testing out to see if the servos can do simple moves and output
+// data from query at the same time.
 //
 // This version for Lynxmotion LSS servos
 //====================================================================================================
@@ -32,12 +35,14 @@ LSS myLSS = LSS(LSS_ID);
 uint8_t g_ids[COUNT_SERVOS];
 uint8_t g_count_servos_found = 0;
 
+int  g_read_error_count = 0;
+
 // by servo ids...
 int servo_gyre[] = {0,
-  LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise,
-  LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise,
-  LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise
-};
+                    LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise,
+                    LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise,
+                    LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise, LSS_GyreClockwise, LSS_GyreCounterClockwise
+                   };
 
 
 //====================================================================================================
@@ -52,7 +57,12 @@ void setup() {
   while (!Serial && (millis() < 3000)) ;  // Give time for Teensy and other USB arduinos to create serial port
   Serial.begin(38400);  // start off the serial port.
   Serial.println("\nLSS Servo Test program");
-
+  pinMode(2, OUTPUT);
+  digitalWriteFast(2, LOW);
+  pinMode(3, OUTPUT);
+  digitalWriteFast(3, LOW);
+  pinMode(4, OUTPUT);
+  digitalWriteFast(4, LOW);
 
   delay(1000);
   // Lets start of trying to locate all servos.
@@ -89,7 +99,7 @@ void AllServosOff(void) {
   // Quick and dirty way to do it by broadcast...
 
   // See if we can do by broadcast
-  LSS::genericWrite(LSS_BroadcastID, LSS_ActionLimp); // Tell all of the servos to go limp
+  LSS::genericWrite(LSS_BroadcastID, LSS_ActionLimp); // Tell all of the servos to hold
 }
 
 void AllServosOn(void) {
@@ -124,10 +134,13 @@ void MoveAllServos(void) {
   while (Serial.read() != -1);
 
   while (!Serial.available()) {
+    delay(25); // make sure gap in outputs to make easier to see on LA
+
     elapsedMillis em = 0;
     servo_angle += servo_increment;
     if (servo_angle >= MAX_SERVO_POS) servo_increment = -50;
     if (servo_angle <= MIN_SERVO_POS) servo_increment = 50;
+    g_read_error_count = 0; // clear out error count each pass
 #if WHEN_TO_CHEW == 2
     // Lets ask for Voltage and Temp
     Serial1.print("#254QV0QT0\r");
@@ -156,13 +169,17 @@ void MoveAllServos(void) {
       if (servo_index < g_count_servos_found) {
         if (strcmp(cmd_str, "QV") == 0) voltages[servo_index] = servo_value;
         else if (strcmp(cmd_str, "QT") == 0) temps[servo_index] = servo_value;
+        else if (*cmd_str) {  // lets not toggle for something probably reported else where
+          g_read_error_count++; // Not CMD string I expect...
+          digitalToggleFast(4);
+        }
         responses_remaining--;
         servo_index++;
         if (servo_index == g_count_servos_found) servo_index = 0;
       }
     }
 #endif
-    Serial.printf("servo_angle:%d QT: %u RR:%u\n", servo_angle, (uint32_t)em, responses_remaining);
+    Serial.printf("servo_angle:%d QT: %u RR:%u Errors:%u\n", servo_angle, (uint32_t)em, responses_remaining, g_read_error_count);
     while (em < (2 * move_time)) ;
   }
 }
@@ -215,14 +232,24 @@ char receive_buffer[256];
 char * LSS_ReceiveServoString(uint8_t &id)
 {
 
-  if (!(Serial1.find(LSS_CommandReplyStart)))
+  // lets do this directly ourself... looking for *
+  int c;
+  elapsedMillis em = 0;
+  while (((c = Serial1.read()) != '*') && (em < 20)) {
+    if (c != -1) {
+      digitalToggleFast(2);
+      g_read_error_count++;
+    }
+  }
+  if (c != '*')
   {
+    digitalToggleFast(2);
+    g_read_error_count++;
     return ((char *) nullptr);
   }
 
   // Ok we have the * now now lets get the servo ID from the message.
   uint8_t readID = 0;
-  int c;
   bool valid_field = 0;
   while ((c = LSS::timedRead()) >= 0)
   {
@@ -233,6 +260,8 @@ char * LSS_ReceiveServoString(uint8_t &id)
 
   if (!valid_field)
   {
+    digitalToggleFast(2);
+    g_read_error_count++;
     return ((char *) nullptr);
   }
 
@@ -254,6 +283,8 @@ char * LSS_ReceiveServoString(uint8_t &id)
   if (c < 0)
   {
     // did not get the ending CR
+      digitalToggleFast(2);
+    g_read_error_count++;
     return ((char *) nullptr);
   }
 
@@ -270,7 +301,16 @@ int16_t LSS_Read_Servo_s16(uint8_t &id, char *cmd)
 
   // convert the value string to value
   // Lets skip over everything that is likely cmd...
-  while (*valueStr && !((*valueStr >= '0') && (*valueStr <= '9'))) *cmd++ = valueStr++;
+  uint8_t max_cmd_chars = 9;
+  while (*valueStr && !((*valueStr == '-') || ((*valueStr >= '0') && (*valueStr <= '9')))) {
+    *cmd++ = valueStr++;
+    if (--max_cmd_chars == 0) {
+      // looks like bad CMD string...
+      digitalToggleFast(3);
+      g_read_error_count++;
+      break; // don't overwrite memory...
+    }
+  }
   *cmd = 0; // NULL terminate.
   int16_t value = 0;
   int16_t value_sign = 1;
@@ -285,7 +325,11 @@ int16_t LSS_Read_Servo_s16(uint8_t &id, char *cmd)
     valueStr++;
   }
   // now see if we exited with valid number
-  if (*valueStr != '\0') return 0;
+  if (*valueStr != '\0') {
+    g_read_error_count++;
+      digitalToggleFast(3);
+    return 0;
+  }
   // return the computed value
   return value * value_sign;
 }
